@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>School Project — Founding Principal Console</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: { 950:'#0b1220', 900:'#101a2e', 800:'#162038', 700:'#1f2b48' },
+          ochre: { 500:'#b46a3a', 400:'#c98052' },
+          gum: { 600:'#3f6b46', 500:'#4d8456' },
+          sand: { 100:'#f7f1e8', 200:'#ece1cc' },
+        },
+      }
+    }
+  };
+</script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.6.0/dist/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+<style>
+  html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;}
+  ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:4px}::-webkit-scrollbar-track{background:transparent}
+  .pulse-dot::before{content:"";position:absolute;inset:-2px;border-radius:9999px;animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(59,130,246,.55)}70%{box-shadow:0 0 0 8px rgba(59,130,246,0)}100%{box-shadow:0 0 0 0 rgba(59,130,246,0)}}
+  .gridcol-auto{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+  .fade-in{animation:fade .35s ease both}@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+<div id="root"></div>
+<noscript>This console requires JavaScript.</noscript>
+
+<script type="text/babel" data-presets="env,react">
+const { useState, useEffect, useMemo, useRef, Fragment } = React;
+
+/* ========== ANCHOR DATES & CONSTANTS ========== */
+const TODAY = new Date('2026-05-28');
+const LAUNCH_DATE = new Date('2028-01-27');   // Year 1, Term 1
+const FULL_REG_DATE = new Date('2030-01-27'); // Year 3, full NESA registration
+
+const monthsBetween = (a, b) => Math.round((b - a) / (1000*60*60*24*30.44));
+const monthsToLaunch = monthsBetween(TODAY, LAUNCH_DATE); // ~ +20
+const fmtAUD = (n) => '$' + Math.round(n).toLocaleString('en-AU');
+const fmtDate = (d) => new Date(d).toLocaleDateString('en-AU', { day:'2-digit', month:'short', year:'numeric' });
+
+const SCHOOL = {
+  name: 'School Project',
+  shortName: 'SP',
+  subtitle: 'A Project-Based Learning School on Darug Country',
+  location: 'Parramatta, NSW · City of Parramatta LGA',
+  acknowledgement: 'We acknowledge the Dharug people, traditional custodians of the land on which the School Project will stand in the Parramatta region, and pay respects to Elders past, present, and emerging.',
+  principal: 'Khaled Altarawneh',
+  role: 'Founding Principal (T-20 months to launch)',
+  email: 'principal@schoolproject.nsw.edu.au',
+  launchTermDate: LAUNCH_DATE,
+  fullRegDate: FULL_REG_DATE,
+  pedagogy: 'Project-Based Learning · Gold Standard PBL · NSW Syllabus & Australian Curriculum v9',
+  initialCohort: 'Years 7–9 (Year 1) · scaling to 7–12 by Year 4',
+  capacity: '480 students at maturity (4 advisory crews × 30 × 4 stages)',
+};
+
+/* ========== PHASES (Foundation Roadmap) ========== */
+const PHASES = [
+  { id:'P0', name:'Vision & Business Case',           startMo:-30, endMo:-24, status:'complete', progress:100,
+    desc:'Define mission, pedagogical model, founding board, capital partner, site brief.',
+    deliverables:['Strategic plan v1','Founding Board charter','Capital plan term sheet','Site shortlist (3)','Brand & name'] },
+  { id:'P1', name:'Pre-NESA Readiness',                startMo:-24, endMo:-18, status:'active', progress:38,
+    desc:'NESA pre-application engagement, site selection, founding hires #2–#5, policy library v1.',
+    deliverables:['NESA pre-app briefing','Site option signed','Curriculum Director appointed','Business Manager appointed','Policy suite v1 (28 docs)'] },
+  { id:'P2', name:'NESA Section 83 Application',       startMo:-18, endMo:-12, status:'planned', progress:0,
+    desc:'Lodge registration application; secure DA & premises certificate; expand staff to 8–12.',
+    deliverables:['NESA application lodged','Council DA approval','Premises certificate','Lead teachers hired (Stage 4 + 5)','Enrolment marketing launch'] },
+  { id:'P3', name:'Provisional Registration & Fit-Out', startMo:-12, endMo:-6,  status:'planned', progress:0,
+    desc:'Build/fit-out, hire 12→25, embed Sentral + Toddle + Canvas, finalise PBL scope & sequence.',
+    deliverables:['Provisional registration granted','Site fit-out 80% complete','Subject teachers contracted','Scope & sequence (Stage 4–5) signed off','LMS/SIS live'] },
+  { id:'P4', name:'Pre-Launch',                         startMo:-6,  endMo:0,   status:'planned', progress:0,
+    desc:'Enrolment to 80% of Year 1 target; staff induction; family onboarding; dry-run week.',
+    deliverables:['Year 1 enrolment ≥ 80% target','Staff induction (8 days)','Family welcome day','Dry-run timetable week','Open Day #4'] },
+  { id:'P5', name:'Year 1 Operations',                  startMo:0,   endMo:12,  status:'planned', progress:0,
+    desc:'Open with Years 7–9; first PBL exhibitions; first NESA verification; year-end review.',
+    deliverables:['First day, Term 1','PBL Exhibition Night #1 (T2)','NESA inspection passed','Year 1 retention ≥ 92%','Year 2 enrolment open'] },
+  { id:'P6', name:'Maturation & Full Registration',     startMo:12,  endMo:24,  status:'planned', progress:0,
+    desc:'Add Year 10; HSC Stage 6 design; pursue full (not provisional) registration; alumni & partner program.',
+    deliverables:['Full NESA registration','Year 10 cohort onboarded','Stage 6 curriculum approved','Industry partner consortium (10+ partners)','Operating surplus'] },
+];
+
+/* ========== HEALTH CHECK PILLARS ========== */
+const HEALTH_PILLARS = [
+  { key:'regulatory',   label:'Regulatory (NESA)',         score:62, tone:'amber',
+    note:'Pre-application briefing booked. Premises certificate path identified. 4 of 28 NESA-required policies finalised.' },
+  { key:'governance',   label:'Governance & Board',        score:74, tone:'amber',
+    note:'Chair + 2 directors appointed (Finance, Education). Outstanding: Indigenous director, Legal director, Community director.' },
+  { key:'pedagogy',     label:'Pedagogical Fidelity (PBL)',score:81, tone:'green',
+    note:'PBL Works Gold Standard framework adopted; Toddle LMS shortlisted; 2 PBL coaches identified.' },
+  { key:'people',       label:'People & Culture',          score:48, tone:'amber',
+    note:'Founding Principal in role. Curriculum Director shortlist (3). Business Manager job ad live.' },
+  { key:'facilities',   label:'Facilities & Site',         score:55, tone:'amber',
+    note:'Site option in Parramatta CBD secured; architect briefed; DA pre-lodgement scheduled 2026-07.' },
+  { key:'finance',      label:'Finance & Cash Runway',     score:71, tone:'green',
+    note:'Capex term sheet $9.4M; opex 24-month runway; Commonwealth recurrent funding modelled at SES 95.' },
+  { key:'enrolment',    label:'Enrolment Pipeline',        score:34, tone:'red',
+    note:'Marketing launch deferred to P2. Expression-of-interest list = 41 families. Year-1 target 180.' },
+  { key:'compliance',   label:'Child Safety & Compliance', score:69, tone:'amber',
+    note:'Child Safe Standards (NSW OCG) policy adopted; Reportable Conduct Scheme protocol drafted; WWCC tracker live.' },
+  { key:'partnerships', label:'Industry & Community',      score:42, tone:'amber',
+    note:'WSU partnership MoU drafted; 5 industry partners letters-of-intent (Western Sydney health, civic, tech).' },
+  { key:'tech',         label:'IT, LMS & Data',            score:58, tone:'amber',
+    note:'Sentral SIS + Toddle LMS + Canvas selected as stack. Cyber baseline = ACSC Essential Eight Maturity 1.' },
+  { key:'cultural',     label:'Indigenous & Cultural',     score:64, tone:'amber',
+    note:'Engagement underway with Dharug Strategic Management Group and Deerubbin LALC. Welcome to Country protocol drafted.' },
+  { key:'wellbeing',    label:'Student Wellbeing & DSE',   score:52, tone:'amber',
+    note:'Pastoral structure = Crew Advisory (1:15). DSE policy drafted; NCCD process scoped; Learning Support model designed.' },
+];
+
+/* ========== KPI CARDS ========== */
+const KPIS = [
+  { label:'NESA Registration Readiness', value:38, suffix:'%', delta:'+6 pts (90d)', tone:'amber',
+    spark:[18,22,25,28,30,34,38] },
+  { label:'Founding Team Filled',        value:'3 / 12', suffix:'', delta:'+1 (90d)', tone:'amber',
+    spark:[1,1,2,2,2,3,3] },
+  { label:'Year-1 EOI Pipeline',         value:41, suffix:' families', delta:'+12 (30d)', tone:'red',
+    spark:[8,12,18,22,29,33,41] },
+  { label:'Capex Secured',               value:9.4, suffix:'M AUD', delta:'committed', tone:'green',
+    spark:[2,3,5,5,7,8.5,9.4] },
+  { label:'Risk Score (overall)',        value:14.2, suffix:' (avg L×C)', delta:'-1.1', tone:'amber',
+    spark:[16,15.8,15.6,15.1,14.9,14.5,14.2] },
+  { label:'Policy Library Complete',     value:'4 / 28', suffix:'', delta:'+2 (30d)', tone:'amber',
+    spark:[0,1,1,2,2,3,4] },
+  { label:'Stakeholder Engagement Score',value:62, suffix:'/100', delta:'+9', tone:'amber',
+    spark:[42,46,50,53,57,60,62] },
+  { label:'Compliance Score (NSW)',      value:69, suffix:'/100', delta:'+4', tone:'amber',
+    spark:[58,60,62,64,66,68,69] },
+];
+
+/* ========== COMPLIANCE TRACKER ========== */
+const COMPLIANCE = [
+  ['NESA Section 83 Registration','Section 83 application package','in_progress','Drafting; lodgement target 2026-08-15','Khaled','2026-08-15'],
+  ['NESA Section 83 Registration','Curriculum policy & scope and sequence','in_progress','Stage 4–5 70% complete','Curriculum Dir.','2026-09-30'],
+  ['NESA Section 83 Registration','Premises certificate (NESA)','planned','Awaiting fit-out completion','Facilities Lead','2027-04-30'],
+  ['NESA Section 83 Registration','Annual financial viability evidence','complete','Capital plan signed by board','Business Mgr','2026-04-12'],
+  ['Child Safe Standards (OCG NSW)','Child Safe Standards policy','complete','Adopted by board','Principal','2026-03-01'],
+  ['Child Safe Standards (OCG NSW)','Reportable Conduct Scheme protocol','in_progress','Drafted; legal review pending','Principal','2026-06-30'],
+  ['Child Safe Standards (OCG NSW)','WWCC tracker (all adults on site)','complete','Sentral module live','Operations','2026-04-22'],
+  ['Building & Premises','Council DA (City of Parramatta)','planned','Pre-lodgement meeting 2026-07-22','Architect/PM','2026-12-15'],
+  ['Building & Premises','BCA Class 9b compliance certification','planned','Built into fit-out scope','Builder','2027-06-30'],
+  ['Building & Premises','Disability Standards for Education','in_progress','Accessibility audit on draft plans','Architect','2026-08-31'],
+  ['WHS','Workplace health & safety system','in_progress','Risk register & induction in design','Operations','2026-09-30'],
+  ['Privacy & Data','Privacy policy (APP & PPIP)','in_progress','First draft circulated','Legal','2026-07-31'],
+  ['Privacy & Data','Cyber posture (ACSC Essential Eight ML1)','planned','RFI to MSP issued','IT Lead','2026-11-30'],
+  ['Funding & Reporting','Commonwealth recurrent funding eligibility','in_progress','SES score modelled at 95','Business Mgr','2027-03-31'],
+  ['Funding & Reporting','ACNC registration (charity status)','in_progress','Lawyers preparing application','Legal','2026-09-30'],
+  ['Curriculum','Australian Curriculum v9 mapping','in_progress','Stage 4 complete; Stage 5 60%','Curriculum Dir.','2026-10-31'],
+  ['Curriculum','HSC Stage 6 pathway plan','planned','Workshop scheduled Term 4 2026','Curriculum Dir.','2026-12-31'],
+  ['Curriculum','Assessment & Reporting policy','in_progress','PBL-aligned rubric framework drafted','Curriculum Dir.','2026-09-30'],
+  ['Aboriginal Education','NSW Aboriginal Education Policy plan','in_progress','Drafted with Dharug SMG input','Principal','2026-10-31'],
+  ['Aboriginal Education','Narragunnawali RAP (Reconciliation Action Plan)','planned','Workshop scheduled with staff','Principal','2027-03-31'],
+  ['Inclusion','NCCD process & systems','planned','To embed in Sentral','Wellbeing Lead','2027-06-30'],
+  ['Inclusion','Learning Support model','in_progress','Tiered support design v1','Wellbeing Lead','2026-11-30'],
+  ['Insurance','School indemnity & liability','planned','Broker engaged','Business Mgr','2027-09-30'],
+  ['Insurance','Cyber insurance','planned','Quotes pending IT baseline','Business Mgr','2027-11-30'],
+  ['Governance','Constitution & ACNC structure','complete','Filed 2026-02-14','Legal','2026-02-14'],
+  ['Governance','Board sub-committees (Audit, People, Education)','in_progress','Audit committee formed','Chair','2026-09-30'],
+  ['Governance','Conflict of interest register','complete','Adopted','Chair','2026-03-15'],
+  ['Marketing','Trademark "School Project"','in_progress','Filed IP Australia','Legal','2026-07-15'],
+];
+
+/* ========== STAFFING PLAN ========== */
+const STAFF_PLAN = [
+  { phase:'P0', role:'Founding Principal', count:1, name:'Khaled Altarawneh', status:'appointed', salaryK:230, criticalPath:true,
+    depends:'—', whyNow:'Anchor of the project; carries pedagogical, regulatory, and brand load.' },
+  { phase:'P0', role:'Founding Board Chair', count:1, name:'Appointed (TBC public)', status:'appointed', salaryK:0, criticalPath:true,
+    depends:'—', whyNow:'Governance credibility before NESA engagement.' },
+  { phase:'P0', role:'Founding Board Directors', count:4, name:'Finance + Education appointed; Indigenous, Legal, Community open', status:'partial', salaryK:0,
+    depends:'Board Chair', whyNow:'Sub-committee coverage and NESA fit-and-proper test.' },
+  { phase:'P1', role:'Business Manager / CFO', count:1, name:'Job ad live · 12 applicants', status:'recruiting', salaryK:185, criticalPath:true,
+    depends:'Principal', whyNow:'Financial credibility for capital partner and NESA viability evidence.' },
+  { phase:'P1', role:'Curriculum Director (PBL)', count:1, name:'Shortlist of 3', status:'shortlist', salaryK:175, criticalPath:true,
+    depends:'Principal', whyNow:'Owns NESA curriculum submission and PBL scope & sequence.' },
+  { phase:'P1', role:'Enrolment & Marketing Manager', count:1, name:'Brief to recruiter', status:'briefed', salaryK:145,
+    depends:'Principal', whyNow:'EOI pipeline must reach 200+ before P3 to de-risk Year-1 enrolment.' },
+  { phase:'P1', role:'NESA Compliance & Quality Officer', count:1, name:'Internal search', status:'planned', salaryK:135, criticalPath:true,
+    depends:'Curriculum Director', whyNow:'Owns the 28 policy library and registration evidence.' },
+  { phase:'P2', role:'Lead Teacher — Stage 4 (Yr 7–8)', count:2, name:'Pipeline build', status:'planned', salaryK:130,
+    depends:'Curriculum Director', whyNow:'Anchor PBL fidelity in Stage 4 launch cohort.' },
+  { phase:'P2', role:'Lead Teacher — Stage 5 (Yr 9)', count:1, name:'Pipeline build', status:'planned', salaryK:130,
+    depends:'Curriculum Director', whyNow:'Stage 5 elective design and HSC pathway readiness.' },
+  { phase:'P2', role:'Wellbeing & Inclusion Coordinator', count:1, name:'Pipeline build', status:'planned', salaryK:140,
+    depends:'Principal', whyNow:'Crew Advisory rollout and DSE/NCCD systems.' },
+  { phase:'P2', role:'IT & Systems Lead', count:1, name:'Pipeline build', status:'planned', salaryK:130,
+    depends:'Business Mgr', whyNow:'Sentral + Toddle + Canvas implementation and ACSC E8.' },
+  { phase:'P2', role:'Facilities & Operations Manager', count:1, name:'Pipeline build', status:'planned', salaryK:125,
+    depends:'Business Mgr', whyNow:'DA, fit-out, premises certificate.' },
+  { phase:'P3', role:'Subject Teachers (English, Maths, Science, HSIE, PDHPE, Technologies, CAPA, LOTE)', count:10, name:'Mass recruitment', status:'planned', salaryK:115,
+    depends:'Lead Teachers', whyNow:'Stage 4–5 coverage; advisory crew leaders.' },
+  { phase:'P3', role:'Learning Support Teachers', count:2, name:'Mass recruitment', status:'planned', salaryK:115,
+    depends:'Wellbeing Coordinator', whyNow:'Tiered support and NCCD evidence.' },
+  { phase:'P3', role:'School Counsellor / Psychologist', count:1, name:'Search', status:'planned', salaryK:135,
+    depends:'Wellbeing Coordinator', whyNow:'Pastoral safety net before enrolment opens fully.' },
+  { phase:'P3', role:'Reception / Admin Officers', count:2, name:'Open', status:'planned', salaryK:75,
+    depends:'Operations Mgr', whyNow:'First face of school to families.' },
+  { phase:'P3', role:'Aboriginal Education Liaison', count:1, name:'Open (community-nominated)', status:'planned', salaryK:120,
+    depends:'Principal + Dharug SMG', whyNow:'Authentic cultural integrity and student support.' },
+  { phase:'P4', role:'Library/Learning Commons Lead', count:1, name:'Open', status:'planned', salaryK:115,
+    depends:'Curriculum Director', whyNow:'Resource curation and research literacy for PBL.' },
+  { phase:'P4', role:'IT Support', count:1, name:'Open', status:'planned', salaryK:85,
+    depends:'IT Lead', whyNow:'Day-1 device & LMS readiness.' },
+  { phase:'P5', role:'Subject teachers (Yr 10 expansion)', count:6, name:'Year 2 recruitment', status:'planned', salaryK:115,
+    depends:'Lead Teachers', whyNow:'Year-2 cohort growth.' },
+];
+
+/* ========== RISK REGISTER (RAID) ========== */
+const RISKS = [
+  { id:'R-001', title:'NESA conditional approval or delay',           cat:'Regulatory', L:4, C:5, owner:'Principal',           review:'Monthly', mitig:'Pre-app NESA briefing; external NESA-experienced reviewer; over-evidence policies; 10-week slack in P2.', status:'active' },
+  { id:'R-002', title:'Year-1 enrolment shortfall (<60% target)',     cat:'Commercial', L:4, C:4, owner:'Enrolment Mgr',       review:'Fortnightly', mitig:'Multi-language marketing; EOI nurture; 4 open days; community ambassadors; partial-cohort plan.', status:'active' },
+  { id:'R-003', title:'Capital cost overrun on fit-out',              cat:'Financial', L:3, C:4, owner:'Business Mgr',         review:'Monthly', mitig:'Fixed-price builder contract; 12% contingency; phased fit-out (Y2 expansion zone deferred).', status:'active' },
+  { id:'R-004', title:'Key person dependency (founding principal)',   cat:'People',    L:3, C:5, owner:'Board Chair',          review:'Quarterly', mitig:'Deputy Principal hire by P3; written operating manual; succession plan; KMI insurance.', status:'active' },
+  { id:'R-005', title:'Child safety incident (catastrophic)',         cat:'Safety',    L:2, C:5, owner:'Principal',            review:'Monthly', mitig:'Child Safe Standards embedded; Reportable Conduct Scheme; mandatory training; safe-by-design facilities.', status:'active' },
+  { id:'R-006', title:'PBL credibility gap with parents',             cat:'Brand',     L:3, C:4, owner:'Principal',            review:'Monthly', mitig:'Parent education series; HSC pathway clarity; comparator-school success stories; data-led communication.', status:'active' },
+  { id:'R-007', title:'Workforce shortage (Western Sydney teachers)', cat:'People',    L:4, C:3, owner:'Principal',            review:'Monthly', mitig:'Above-award salary band; relocation support; WSU pre-service partnership; international pipeline.', status:'active' },
+  { id:'R-008', title:'Council DA delay',                             cat:'Facilities',L:3, C:4, owner:'Architect/PM',         review:'Fortnightly', mitig:'Pre-lodgement meeting; planning consultant engaged; backup site shortlist retained.', status:'active' },
+  { id:'R-009', title:'Cyber / data breach',                          cat:'IT/Privacy',L:3, C:4, owner:'IT Lead',              review:'Quarterly', mitig:'ACSC Essential Eight Maturity 1; MFA; vendor due diligence; cyber insurance; tabletop exercise.', status:'active' },
+  { id:'R-010', title:'Indigenous engagement perceived as tokenistic',cat:'Cultural',  L:2, C:5, owner:'Principal',            review:'Quarterly', mitig:'Paid advisory role; Dharug SMG MoU; Narragunnawali RAP; long-term partnership cadence.', status:'active' },
+  { id:'R-011', title:'Industrial action / IEU disputes',             cat:'People',    L:2, C:3, owner:'Business Mgr',         review:'Quarterly', mitig:'Above-award EBA; transparent workload model; staff advisory council from Day 1.', status:'active' },
+  { id:'R-012', title:'Pandemic / extended school closure',           cat:'External',  L:2, C:4, owner:'Principal',            review:'Annual', mitig:'1:1 device program; Toddle/Canvas remote-first design; family connectivity plan.', status:'monitor' },
+  { id:'R-013', title:'Indigenous land council / heritage objection', cat:'Cultural',  L:2, C:4, owner:'Architect/PM',         review:'At site events', mitig:'Heritage assessment; Deerubbin LALC consultation; alternative site retained.', status:'active' },
+  { id:'R-014', title:'Reputational / media risk (PBL controversy)',  cat:'Brand',     L:3, C:3, owner:'Principal',            review:'Monthly', mitig:'Proactive media strategy; community ambassadors; transparent KPI publication.', status:'active' },
+  { id:'R-015', title:'Critical supplier failure (LMS/SIS vendor)',   cat:'IT/Privacy',L:2, C:3, owner:'IT Lead',              review:'Quarterly', mitig:'Data portability clauses; quarterly DR test; alternative vendor evaluated annually.', status:'monitor' },
+  { id:'R-016', title:'Enrolment skew (low diversity)',               cat:'Equity',    L:3, C:3, owner:'Enrolment Mgr',        review:'Termly', mitig:'Equity scholarship pool 10%; multilingual marketing; community partnerships; bus route subsidy.', status:'active' },
+];
+
+/* ========== STAKEHOLDERS ========== */
+const STAKEHOLDERS = [
+  { group:'Regulator', name:'NESA — NSW Education Standards Authority', interest:5, influence:5, cadence:'Quarterly + ad-hoc', strategy:'Manage Closely', owner:'Principal' },
+  { group:'Regulator', name:'NSW Office of the Children\'s Guardian', interest:5, influence:5, cadence:'Quarterly', strategy:'Manage Closely', owner:'Principal' },
+  { group:'Regulator', name:'City of Parramatta Council', interest:3, influence:5, cadence:'Phased (DA cycle)', strategy:'Manage Closely', owner:'Architect/PM' },
+  { group:'Regulator', name:'ACNC', interest:2, influence:3, cadence:'Annual', strategy:'Keep Informed', owner:'Legal' },
+  { group:'Regulator', name:'Commonwealth DoE (funding)', interest:3, influence:5, cadence:'Annual', strategy:'Manage Closely', owner:'Business Mgr' },
+  { group:'Industry body', name:'AISNSW', interest:4, influence:3, cadence:'Quarterly', strategy:'Keep Satisfied', owner:'Principal' },
+  { group:'Industry body', name:'IEU NSW/ACT', interest:4, influence:3, cadence:'Quarterly', strategy:'Keep Satisfied', owner:'Business Mgr' },
+  { group:'Community', name:'Dharug Strategic Mgmt Group', interest:5, influence:4, cadence:'Monthly', strategy:'Manage Closely', owner:'Principal' },
+  { group:'Community', name:'Deerubbin LALC', interest:4, influence:3, cadence:'Quarterly', strategy:'Manage Closely', owner:'Principal' },
+  { group:'Community', name:'Parramatta multicultural orgs (10+)', interest:4, influence:3, cadence:'Termly', strategy:'Keep Satisfied', owner:'Enrolment Mgr' },
+  { group:'School community', name:'Founding Board', interest:5, influence:5, cadence:'Monthly', strategy:'Manage Closely', owner:'Principal' },
+  { group:'School community', name:'Founding staff', interest:5, influence:4, cadence:'Weekly', strategy:'Manage Closely', owner:'Principal' },
+  { group:'School community', name:'Prospective families', interest:5, influence:3, cadence:'Continuous', strategy:'Keep Informed', owner:'Enrolment Mgr' },
+  { group:'School community', name:'Prospective students', interest:5, influence:2, cadence:'Open days/forums', strategy:'Keep Informed', owner:'Enrolment Mgr' },
+  { group:'Education partners', name:'Western Sydney University', interest:4, influence:3, cadence:'Quarterly', strategy:'Manage Closely', owner:'Principal' },
+  { group:'Education partners', name:'TAFE NSW Western Sydney', interest:3, influence:3, cadence:'Termly', strategy:'Keep Satisfied', owner:'Curriculum Dir.' },
+  { group:'Education partners', name:'PBL Works (intl) / Big Picture Learning Australia', interest:3, influence:2, cadence:'Annual', strategy:'Keep Informed', owner:'Curriculum Dir.' },
+  { group:'Commercial', name:'Capital partner / bank', interest:5, influence:5, cadence:'Monthly', strategy:'Manage Closely', owner:'Board Chair' },
+  { group:'Commercial', name:'Architect & builder', interest:4, influence:4, cadence:'Fortnightly', strategy:'Manage Closely', owner:'Architect/PM' },
+  { group:'Commercial', name:'LMS/SIS vendors (Sentral, Toddle, Canvas)', interest:3, influence:3, cadence:'Quarterly', strategy:'Keep Satisfied', owner:'IT Lead' },
+  { group:'Industry partners', name:'WSLHD (Western Sydney Local Health District)', interest:3, influence:3, cadence:'Termly', strategy:'Keep Satisfied', owner:'Curriculum Dir.' },
+  { group:'Industry partners', name:'City of Parramatta (civic projects)', interest:3, influence:3, cadence:'Termly', strategy:'Keep Satisfied', owner:'Curriculum Dir.' },
+  { group:'Media', name:'Parramatta Advertiser / Western Sydney media', interest:3, influence:3, cadence:'As needed', strategy:'Keep Informed', owner:'Principal' },
+];
+
+/* ========== BUDGET ========== */
+const BUDGET = {
+  capex: [
+    { item:'Site fit-out (Class 9b)',                amount:5400000 },
+    { item:'ICT (1:1 devices Yr1 cohort + infra)',   amount:780000 },
+    { item:'Furniture & PBL studios',                amount:1100000 },
+    { item:'AV & exhibition technology',             amount:420000 },
+    { item:'Brand, signage, wayfinding',             amount:160000 },
+    { item:'Library & resource baseline',            amount:240000 },
+    { item:'Compliance & accreditation costs',       amount:300000 },
+    { item:'Contingency (12%)',                      amount:1000000 },
+  ],
+  opexYear1: [
+    { item:'Salaries & on-costs (28 FTE)',          amount:3850000 },
+    { item:'Facilities (lease/utilities)',           amount:980000 },
+    { item:'Curriculum & LMS subscriptions',         amount:215000 },
+    { item:'Marketing & enrolment',                  amount:340000 },
+    { item:'Insurances',                             amount:180000 },
+    { item:'Professional learning',                  amount:120000 },
+    { item:'Operating contingency',                  amount:250000 },
+    { item:'Board & governance',                     amount:60000 },
+  ],
+  revenueYear1: [
+    { item:'Tuition fees (180 students × $24,500)', amount:4410000 },
+    { item:'Commonwealth recurrent (SES 95)',        amount:2700000 },
+    { item:'NSW State recurrent',                    amount:980000 },
+    { item:'Philanthropy & founding gifts',          amount:450000 },
+    { item:'Other (ancillary, hire of facilities)',  amount:120000 },
+  ],
+  enrolmentScenarios: [
+    { scenario:'Base (180)',     enrol:180, fees:4410000, runwayMonths:24 },
+    { scenario:'Adverse (108)',  enrol:108, fees:2646000, runwayMonths:11 },
+    { scenario:'Stretch (220)',  enrol:220, fees:5390000, runwayMonths:30 },
+  ],
+};
+
+/* ========== CURRICULUM ========== */
+const CURRICULUM = [
+  { stage:'Stage 4 (Yr 7–8)', subjects:'English, Mathematics, Science, HSIE (History/Geography), PDHPE, Technologies (Mandatory), CAPA (Visual Arts + Music), LOTE',
+    pbl:'2 cross-disciplinary projects per term anchored on driving questions. Public exhibition every term.',
+    assessment:'Rubric-based, portfolio + exhibition + benchmark assessments (PAT/PAT-R baseline, then NAPLAN Y7).',
+    nesa:'Mandatory hours mapped against NESA requirements; all KLAs covered; assessment policy NESA-aligned.' },
+  { stage:'Stage 5 (Yr 9–10)', subjects:'English, Mathematics, Science, HSIE (Aus History + Aus Geography), PDHPE, plus 200-hour electives: Design & Tech, Information & Software Tech, Visual Arts, Music, Commerce, Food Tech, PASS, iSTEM',
+    pbl:'2 deeper projects + 1 self-directed Big Picture–style inquiry per year. Industry mentor matched per student.',
+    assessment:'RoSA-aligned A–E grading; PBL rubric + summative tasks; HSC readiness checks.',
+    nesa:'200-hour mandatory electives; 100-hour optional electives; RoSA reporting.' },
+  { stage:'Stage 6 (Yr 11–12)', subjects:'English (Std/Adv/Ext), Mathematics (Std/Adv/Ext 1&2), Science (Bio/Chem/Phys/Inv), Social Sciences (Mod Hist, Geo, Econ, Bus Studies, Legal), Tech (SDD, Eng, IPT), CAPA, LOTE, VET pathways.',
+    pbl:'Capstone projects (Year 12) replace or complement major works; school-based apprenticeships supported.',
+    assessment:'NESA HSC; SBATs; ATAR support; Industry & ALP pathways equally celebrated.',
+    nesa:'Full HSC delivery from 2030; school-based and external assessments per NESA rules.' },
+];
+
+const LMS_OPTIONS = [
+  { name:'Sentral', type:'SIS (NSW standard)', pbl:'★★★☆☆', cost:'$18–24/student/yr', nsw:'Yes — used by majority of NSW indep schools', pros:'NESA-aware reporting, attendance, wellbeing, parent portal',         cons:'Not PBL-native; complementary LMS needed' },
+  { name:'Compass School Manager', type:'SIS', pbl:'★★★☆☆', cost:'$20–28/student/yr', nsw:'Growing in NSW', pros:'Strong UX, parent app, scheduling, finance', cons:'Less mature reporting than Sentral; cost' },
+  { name:'TASS', type:'SIS', pbl:'★★☆☆☆', cost:'$25–30/student/yr', nsw:'Common in indep sector', pros:'Mature finance/HR/SIS integration', cons:'Heavyweight; longer implementation' },
+  { name:'Toddle', type:'LMS (PBL-native, IB/PYP/MYP heritage)', pbl:'★★★★★', cost:'$18–22/student/yr', nsw:'Yes (boutique uptake)', pros:'PBL planner, portfolio, exhibitions, parent visibility, rubric-first', cons:'Smaller AU support footprint; integrates via API' },
+  { name:'Canvas LMS', type:'LMS', pbl:'★★★★☆', cost:'$15–22/student/yr', nsw:'Yes', pros:'Open, rich-media, modules, mobile, deep LTI ecosystem', cons:'Not purpose-built for PBL — needs design discipline' },
+  { name:'Google Workspace + Classroom', type:'LMS/productivity', pbl:'★★★☆☆', cost:'Free (Education Fundamentals)', nsw:'Ubiquitous', pros:'Cost, collaboration, accessibility', cons:'Light on assessment & rubrics; needs add-ons' },
+  { name:'Schoology', type:'LMS', pbl:'★★★☆☆', cost:'$12–18/student/yr', nsw:'Limited AU footprint', pros:'Solid LMS, easy UX', cons:'Smaller AU support; not PBL-native' },
+  { name:'Moodle', type:'LMS (open)', pbl:'★★★☆☆', cost:'Hosting only', nsw:'Yes (mature)', pros:'Open, customisable, no per-user cost', cons:'Heavy admin lift; UX dated' },
+];
+
+/* ========== COMPARATOR SCHOOLS ========== */
+const COMPARATORS = [
+  { name:'Lindfield Learning Village', location:'Lindfield, NSW · NSW DoE', founded:2019, model:'K-12 PBL, multi-age, no bells, advisory crew', scale:'~1,000 students at maturity',
+    site:'https://lindfieldlearningvillage.nsw.edu.au', lessons:[
+      'Multi-age stage groupings reduce timetable rigidity and free PBL time.',
+      'Crew advisory (1:15) as the pastoral spine — strong evidence base from EL Education.',
+      'Site reuse of UTS Ku-ring-gai campus shows brownfield can outperform greenfield on speed.',
+      'NSW DoE governance is different — but the pedagogical playbook transfers directly.',
+    ]},
+  { name:'Prahran High School', location:'Prahran, VIC · VIC DET', founded:2019, model:'Vertical/PBL, 5-period day, project sprints', scale:'~650 students',
+    site:'https://prahranhighschool.vic.edu.au', lessons:[
+      'Vertical learning (mixed-year-level projects) requires deliberate timetable redesign.',
+      'Project sprints + exhibition cadence (every 6–8 weeks) is operationally tight but effective.',
+      'Industry partnerships (e.g. Alfred Hospital, RACV) act as both authentic context and marketing.',
+      'Parent communication needs to translate PBL outputs into recognisable academic milestones.',
+    ]},
+  { name:'Arcadia College', location:'Pimpama, QLD · Independent', founded:2018, model:'PBL philosophy, Years 7–12, place-based',
+    scale:'~600 students target', site:'https://www.arcadia.qld.edu.au', lessons:[
+      'Place-based PBL anchors the school in its local geography — Parramatta River, Burramatta history, Western Sydney health/civic system give equivalent grounding.',
+      'Smaller advisory ratios (1:12–1:15) carry the wellbeing load.',
+      'PBL → HSC/QCE pathway must be communicated as “and” not “or”.',
+      'Parents want quantitative signals; rubric portfolios alone do not satisfy.',
+    ]},
+  { name:'Templestowe College', location:'Templestowe, VIC · VIC DET', founded:1965 (transformed 2009), model:'Personalised learning, student agency, fluid timetable',
+    scale:'~1,200 students', site:'https://www.tc.vic.edu.au', lessons:[
+      'Student agency requires explicit scaffolding — not absence of structure.',
+      'Subject choice flexibility is a recruitment magnet; needs operational discipline.',
+      'Change-management of staff culture is the hardest mile.',
+    ]},
+  { name:'Australian Science & Mathematics School', location:'Bedford Park, SA · Flinders Uni partnership', founded:2003, model:'Inquiry-based, integrated STEM',
+    scale:'~400 students', site:'https://www.asms.sa.edu.au', lessons:[
+      'University partnership underwrites curriculum innovation credibility.',
+      'Integrated STEM via long blocks (90+ minute) enables deep inquiry.',
+      'Authentic researchers in the building shift student aspirations.',
+    ]},
+  { name:'Big Picture Learning Australia', location:'National network · indep + state', founded:2006 (AU), model:'1 advisory, internships, exhibitions, ILP',
+    scale:'Network of 40+ schools', site:'https://www.bigpicture.org.au', lessons:[
+      'Internship (Leaving To Learn) is operationally heavy but transformative.',
+      'Individual Learning Plan (ILP) is the artefact that anchors agency.',
+      'Network membership reduces isolation and improves audit defensibility.',
+    ]},
+  { name:'High Tech High', location:'San Diego, USA', founded:2000, model:'PBL with public exhibitions; teacher-led design; documentary "Most Likely To Succeed"',
+    scale:'~6,000 students across 16 schools', site:'https://www.hightechhigh.org', lessons:[
+      'Exhibition is the assessment, not a sideshow — design back from it.',
+      'Teacher PD time (1 day/wk in early years) is non-negotiable to PBL fidelity.',
+      'College outcomes can match traditional schools while delivering far richer process.',
+    ]},
+  { name:'NuVu Studio', location:'Cambridge MA, USA', founded:2010, model:'Studio-based, no subjects, no grades, design-thinking',
+    scale:'~80 students', site:'https://nuvustudio.com', lessons:[
+      'Studio-only model is a radical end of the spectrum — useful for stretch design thinking.',
+      'Daily critique culture matters more than tools or kit.',
+    ]},
+];
+
+/* ========== VARIABLE INTERACTION MATRIX ========== */
+const VARIABLES = [
+  { id:'V1', label:'NESA registration risk' },
+  { id:'V2', label:'Enrolment pipeline' },
+  { id:'V3', label:'Cash runway' },
+  { id:'V4', label:'Staff calibre' },
+  { id:'V5', label:'Pedagogical fidelity (PBL)' },
+  { id:'V6', label:'Community trust' },
+  { id:'V7', label:'Child safety' },
+  { id:'V8', label:'Student wellbeing' },
+  { id:'V9', label:'Capital partner confidence' },
+  { id:'V10', label:'Founding team capacity' },
+  { id:'V11', label:'Brand differentiation' },
+  { id:'V12', label:'Regulatory headroom' },
+  { id:'V13', label:'Operational complexity' },
+  { id:'V14', label:'Indigenous & cultural integrity' },
+  { id:'V15', label:'Inclusion / DSE compliance' },
+  { id:'V16', label:'ESG / sustainability' },
+];
+
+// Strong interaction pairs (drives heatmap visualisation)
+const INTERACTIONS = [
+  ['V1','V2', 4, 'NESA conditional approval delays marketing window → enrolment drops.'],
+  ['V1','V3', 4, 'Registration delay extends opex burn without revenue.'],
+  ['V1','V5', 3, 'Tight NESA evidence pushes traditional assessment, eroding PBL fidelity.'],
+  ['V2','V3', 5, 'Enrolment is the dominant revenue lever; <60% target threatens Year-2 viability.'],
+  ['V2','V11',4, 'Brand clarity drives EOI; ambiguous PBL story chokes pipeline.'],
+  ['V2','V6', 4, 'Community trust precedes enrolment in Western Sydney multicultural context.'],
+  ['V4','V5', 5, 'Without PBL-fluent staff, model collapses to "thematic units".'],
+  ['V4','V10',4, 'Wrong early hires consume founder bandwidth fixing rather than building.'],
+  ['V5','V8', 3, 'Strong PBL with crew advisory boosts wellbeing; weak PBL increases anxiety.'],
+  ['V5','V11',5, 'Pedagogy IS the brand; weak fidelity = no differentiation = generic indep school.'],
+  ['V7','V12',5, 'Child-safety incident triggers NESA scrutiny and conditional registration.'],
+  ['V7','V6', 5, 'Single safeguarding failure destroys 18 months of community trust.'],
+  ['V9','V3', 4, 'Capital partner confidence sets debt headroom and cash runway.'],
+  ['V9','V11',3, 'Strong brand earns capital partner equity multiplier.'],
+  ['V10','V13',4,'Thin founding team magnifies operational complexity into burnout risk.'],
+  ['V13','V3', 3, 'Operational complexity quietly bleeds cash via manual workarounds.'],
+  ['V14','V6', 5, 'Authentic Indigenous engagement is community-trust amplifier; tokenism is destructive.'],
+  ['V14','V11',3, 'Authentic place-based identity differentiates from generic independent brands.'],
+  ['V15','V7', 4, 'Strong DSE/NCCD systems are part of child-safe ecosystem.'],
+  ['V15','V12',3, 'NCCD evidence is part of NESA & Commonwealth funding compliance.'],
+  ['V16','V11',2, 'Sustainability story supports brand with values-aligned families.'],
+];
+
+/* ========== OPERATIONAL DAY ========== */
+const DAILY_OPS = [
+  { time:'07:30', activity:'Daily ops huddle (Principal + Ops + Wellbeing + Lead Teachers)', who:'SLT', cadence:'Daily' },
+  { time:'08:00', activity:'Site safety walk; sign-on board', who:'Ops Mgr', cadence:'Daily' },
+  { time:'08:30', activity:'Crew Advisory (15 min) — wellbeing check-in, day planner', who:'All staff', cadence:'Daily' },
+  { time:'08:45', activity:'Block 1 — Project Studios / Subject seminars', who:'Teaching staff', cadence:'Daily' },
+  { time:'10:30', activity:'Recess + connection time', who:'All', cadence:'Daily' },
+  { time:'10:50', activity:'Block 2 — Project Studios / Workshops', who:'Teaching staff', cadence:'Daily' },
+  { time:'12:30', activity:'Lunch + community lunch (Tue/Thu)', who:'All', cadence:'Daily' },
+  { time:'13:15', activity:'Block 3 — Inquiry / Studios / Electives', who:'Teaching staff', cadence:'Daily' },
+  { time:'14:45', activity:'Reflection & exhibition prep (Crew)', who:'All staff', cadence:'Daily' },
+  { time:'15:00', activity:'End-of-day debrief; risk log update; safeguarding check', who:'SLT + Wellbeing', cadence:'Daily' },
+  { time:'15:30', activity:'Industry mentor / community window (Wed only)', who:'Senior students', cadence:'Weekly' },
+  { time:'16:00', activity:'Staff PL block (Thu, 90 min)', who:'All teaching staff', cadence:'Weekly' },
+];
+
+const WEEKLY_OPS = [
+  { day:'Monday', items:['SLT planning + risk review','Curriculum Director scope-and-sequence check','Family enquiries follow-up'] },
+  { day:'Tuesday', items:['Community lunch','Industry partner sync (1 partner/week)','Compliance audit slice'] },
+  { day:'Wednesday', items:['Mentor windows for Year 9 students','Wellbeing case conference','Marketing analytics review'] },
+  { day:'Thursday', items:['Staff PL (90 min)','Board sub-committee (rotating)','Stakeholder letter dispatch'] },
+  { day:'Friday', items:['Exhibition prep / project showcases','Weekly board pack generated (PDF)','KPI dashboard review'] },
+];
+
+/* ========== MARKETING / ENROLMENT ========== */
+const ENROLMENT_FUNNEL = [
+  { stage:'Brand awareness reach', n:42000, conv:'—' },
+  { stage:'Website visits',        n:5800, conv:'13.8%' },
+  { stage:'EOI form started',      n:420, conv:'7.2%' },
+  { stage:'EOI form completed',    n:235, conv:'56%' },
+  { stage:'Open Day attendance',   n:128, conv:'54%' },
+  { stage:'1:1 family meeting',    n:74, conv:'58%' },
+  { stage:'Application lodged',    n:41, conv:'55%' },
+  { stage:'Enrolment confirmed',   n:0, conv:'(P3 onwards)' },
+];
+
+/* ========== NAV ========== */
+const NAV = [
+  { id:'dashboard',   icon:'📊', label:'Dashboard' },
+  { id:'roadmap',     icon:'🗺️', label:'Foundation Roadmap' },
+  { id:'compliance',  icon:'⚖️', label:'NSW Compliance & NESA' },
+  { id:'staffing',    icon:'👥', label:'Staffing & Recruitment' },
+  { id:'curriculum',  icon:'📚', label:'PBL Curriculum' },
+  { id:'resources',   icon:'💻', label:'Learning Resources & LMS' },
+  { id:'operations',  icon:'🏫', label:'Daily Operations' },
+  { id:'risks',       icon:'⚠️', label:'Risk Register (RAID)' },
+  { id:'stakeholders',icon:'🤝', label:'Stakeholders' },
+  { id:'budget',      icon:'💰', label:'Budget & Funding' },
+  { id:'marketing',   icon:'📢', label:'Marketing & Enrolment' },
+  { id:'comparators', icon:'🔍', label:'Comparator Schools' },
+  { id:'variables',   icon:'🔗', label:'Variable Interactions' },
+  { id:'reports',     icon:'📑', label:'Reports Studio' },
+];
+
+/* ========== HELPERS ========== */
+const toneColor = (t) => ({
+  green: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  amber: 'bg-amber-100 text-amber-800 border-amber-200',
+  red:   'bg-rose-100 text-rose-800 border-rose-200',
+  blue:  'bg-sky-100 text-sky-800 border-sky-200',
+  slate: 'bg-slate-100 text-slate-800 border-slate-200',
+}[t] || 'bg-slate-100 text-slate-800');
+
+const toneBar = (t) => ({
+  green:'bg-emerald-500', amber:'bg-amber-500', red:'bg-rose-500', blue:'bg-sky-500', slate:'bg-slate-500',
+}[t] || 'bg-slate-500');
+
+const statusBadge = (s) => {
+  const map = {
+    appointed:    ['bg-emerald-100 text-emerald-700','Appointed'],
+    partial:      ['bg-amber-100 text-amber-700','Partially filled'],
+    recruiting:   ['bg-sky-100 text-sky-700','Recruiting'],
+    shortlist:    ['bg-indigo-100 text-indigo-700','Shortlist'],
+    briefed:      ['bg-violet-100 text-violet-700','Briefed'],
+    planned:      ['bg-slate-100 text-slate-700','Planned'],
+    complete:     ['bg-emerald-100 text-emerald-700','Complete'],
+    active:       ['bg-sky-100 text-sky-700','Active'],
+    in_progress:  ['bg-amber-100 text-amber-700','In progress'],
+    monitor:      ['bg-slate-100 text-slate-700','Monitor'],
+  };
+  const [cls,label] = map[s] || ['bg-slate-100 text-slate-700', s];
+  return <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${cls}`}>{label}</span>;
+};
+
+const downloadFile = (filename, content, mime='text/plain') => {
+  const blob = content instanceof Blob ? content : new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
+const exportCSV = (filename, headers, rows) => {
+  const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const body = [headers.map(esc).join(','), ...rows.map(r => r.map(esc).join(','))].join('\n');
+  downloadFile(filename, body, 'text/csv;charset=utf-8;');
+};
+
+/* ========== EXPORTS — PDF (Board Pack) ========== */
+const exportBoardPDF = (state) => {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit:'pt', format:'a4' });
+  const W = doc.internal.pageSize.getWidth();
+  const M = 40;
+  let y = M;
+
+  // Cover
+  doc.setFillColor(15, 23, 42); doc.rect(0,0,W,120,'F');
+  doc.setTextColor(255,255,255); doc.setFontSize(22); doc.text(SCHOOL.name, M, 50);
+  doc.setFontSize(12); doc.text(SCHOOL.subtitle, M, 72);
+  doc.setFontSize(10); doc.text(`Founding Principal: ${SCHOOL.principal}`, M, 92);
+  doc.text(`Board Pack — ${fmtDate(TODAY)}`, M, 108);
+
+  doc.setTextColor(0,0,0); y = 150;
+  doc.setFontSize(14); doc.text('1 · Phase Summary', M, y); y += 16;
+
+  doc.autoTable({
+    startY: y,
+    head: [['Phase', 'Name', 'Window', 'Status', 'Progress']],
+    body: PHASES.map(p => [p.id, p.name, `T${p.startMo}m → T${p.endMo}m`, p.status, p.progress + '%']),
+    styles:{ fontSize:9 }, headStyles:{ fillColor:[31,41,72] },
+  });
+  y = doc.lastAutoTable.finalY + 24;
+
+  doc.setFontSize(14); doc.text('2 · Health Pillars', M, y); y += 8;
+  doc.autoTable({
+    startY: y + 8,
+    head: [['Pillar','Score','Tone','Note']],
+    body: HEALTH_PILLARS.map(h => [h.label, h.score, h.tone, h.note]),
+    styles:{ fontSize:8 }, columnStyles:{ 3:{ cellWidth:280 } },
+    headStyles:{ fillColor:[31,41,72] },
+  });
+  y = doc.lastAutoTable.finalY + 24;
+
+  doc.addPage(); y = M;
+  doc.setFontSize(14); doc.text('3 · Risk Register (Top 12 by L×C)', M, y); y += 8;
+  const topRisks = [...state.risks].sort((a,b)=> (b.L*b.C) - (a.L*a.C)).slice(0,12);
+  doc.autoTable({
+    startY: y + 8,
+    head: [['ID','Risk','Cat','L','C','L×C','Owner','Mitigation']],
+    body: topRisks.map(r => [r.id, r.title, r.cat, r.L, r.C, r.L*r.C, r.owner, r.mitig]),
+    styles:{ fontSize:8 }, columnStyles:{ 1:{ cellWidth:120 }, 7:{ cellWidth:200 } },
+    headStyles:{ fillColor:[31,41,72] },
+  });
+  y = doc.lastAutoTable.finalY + 24;
+
+  if (y > 700) { doc.addPage(); y = M; }
+  doc.setFontSize(14); doc.text('4 · Budget Snapshot', M, y); y += 8;
+  const totalCapex = BUDGET.capex.reduce((s,x)=>s+x.amount,0);
+  const totalOpex = BUDGET.opexYear1.reduce((s,x)=>s+x.amount,0);
+  const totalRev = BUDGET.revenueYear1.reduce((s,x)=>s+x.amount,0);
+  doc.autoTable({
+    startY: y + 8,
+    head: [['Category','Amount (AUD)']],
+    body: [
+      ['Capex (total)', fmtAUD(totalCapex)],
+      ['Opex Year 1 (total)', fmtAUD(totalOpex)],
+      ['Revenue Year 1 (Base)', fmtAUD(totalRev)],
+      ['Year 1 Net (Base)', fmtAUD(totalRev - totalOpex)],
+    ],
+    styles:{ fontSize:10 }, headStyles:{ fillColor:[31,41,72] },
+  });
+
+  doc.addPage(); y = M;
+  doc.setFontSize(14); doc.text('5 · Staffing Plan by Phase', M, y); y += 8;
+  doc.autoTable({
+    startY: y + 8,
+    head: [['Phase','Role','Count','Status','Why now']],
+    body: STAFF_PLAN.map(s => [s.phase, s.role, s.count, s.status, s.whyNow]),
+    styles:{ fontSize:8 }, columnStyles:{ 4:{ cellWidth:260 } }, headStyles:{ fillColor:[31,41,72] },
+  });
+
+  doc.addPage(); y = M;
+  doc.setFontSize(14); doc.text('6 · Stakeholder Engagement', M, y); y += 8;
+  doc.autoTable({
+    startY: y + 8,
+    head: [['Group','Stakeholder','Influence','Interest','Strategy','Cadence']],
+    body: STAKEHOLDERS.map(s => [s.group, s.name, s.influence, s.interest, s.strategy, s.cadence]),
+    styles:{ fontSize:8 }, headStyles:{ fillColor:[31,41,72] },
+  });
+
+  doc.addPage(); y = M;
+  doc.setFontSize(14); doc.text('7 · NSW Compliance Status', M, y); y += 8;
+  doc.autoTable({
+    startY: y + 8,
+    head: [['Category','Item','Status','Owner','Due','Notes']],
+    body: COMPLIANCE.map(c => [c[0], c[1], c[2], c[4], c[5], c[3]]),
+    styles:{ fontSize:7 }, columnStyles:{ 5:{ cellWidth:160 } }, headStyles:{ fillColor:[31,41,72] },
+  });
+
+  doc.save(`SchoolProject_BoardPack_${TODAY.toISOString().slice(0,10)}.pdf`);
+};
+
+/* ========== EXPORTS — PPTX (Pitch Deck) ========== */
+const exportPitchPPTX = (state) => {
+  const pres = new window.PptxGenJS();
+  pres.layout = 'LAYOUT_WIDE';
+  pres.author = SCHOOL.principal;
+  pres.title = `${SCHOOL.name} — Founding Principal Pitch`;
+
+  const dark = { color:'FFFFFF', fill:{color:'0F172A'} };
+  const ink = '0F172A';
+
+  // 1 Cover
+  let s = pres.addSlide(); s.background = { color:'0F172A' };
+  s.addText(SCHOOL.name, { x:0.5, y:1.6, w:12, h:1.2, fontSize:48, color:'FFFFFF', bold:true });
+  s.addText(SCHOOL.subtitle, { x:0.5, y:2.9, w:12, h:0.6, fontSize:20, color:'C98052' });
+  s.addText(`${SCHOOL.principal} · ${SCHOOL.role}`, { x:0.5, y:5.4, w:12, h:0.4, fontSize:14, color:'FFFFFF' });
+  s.addText(`Board Pitch · ${fmtDate(TODAY)}`, { x:0.5, y:5.9, w:12, h:0.4, fontSize:12, color:'94A3B8' });
+
+  // 2 The case
+  s = pres.addSlide();
+  s.addText('The Case', { x:0.5, y:0.4, w:12, h:0.6, fontSize:28, color:ink, bold:true });
+  s.addText(
+    'Parramatta is Sydney\'s second CBD on Burramatta — Darug Country: one of NSW\'s fastest-growing, most culturally diverse LGAs, underserved for genuinely innovative secondary schooling. School Project will be a Years 7–12 Project-Based Learning school that takes Western Sydney teenagers seriously as designers, researchers, and citizens, while delivering the HSC.',
+    { x:0.5, y:1.2, w:12, h:1.6, fontSize:16, color:ink });
+  s.addText('Why now', { x:0.5, y:3.0, w:12, h:0.4, fontSize:18, color:ink, bold:true });
+  s.addText([
+    { text:'• PBL evidence base (PBL Works, Lucas Learning, OECD) is mature and outcomes-proven.', options:{ bullet:false, fontSize:14 } },
+    { text:'• Lindfield Learning Village (NSW DoE) has shown demand for the model in Sydney.', options:{ bullet:false, fontSize:14 } },
+    { text:'• Western Sydney needs 14,000+ new school places by 2032 (NSW DPE projections).', options:{ bullet:false, fontSize:14 } },
+    { text:'• Industry partner appetite (WSU, WSLHD, City of Parramatta) is unusually high.', options:{ bullet:false, fontSize:14 } },
+  ], { x:0.5, y:3.5, w:12, h:2.5, fontSize:14, color:ink });
+
+  // 3 Phase plan
+  s = pres.addSlide();
+  s.addText('Phased Foundation Plan', { x:0.5, y:0.4, fontSize:28, color:ink, bold:true });
+  const phaseRows = [[
+    { text:'Phase', options:{ bold:true, fill:'0F172A', color:'FFFFFF' }},
+    { text:'Name', options:{ bold:true, fill:'0F172A', color:'FFFFFF' }},
+    { text:'Window', options:{ bold:true, fill:'0F172A', color:'FFFFFF' }},
+    { text:'Status', options:{ bold:true, fill:'0F172A', color:'FFFFFF' }},
+    { text:'Progress', options:{ bold:true, fill:'0F172A', color:'FFFFFF' }},
+  ], ...PHASES.map(p => [p.id, p.name, `T${p.startMo}m→T${p.endMo}m`, p.status, p.progress + '%'])];
+  s.addTable(phaseRows, { x:0.5, y:1.2, w:12, fontSize:12, color:ink, border:{type:'solid', pt:0.5, color:'CBD5E1'} });
+
+  // 4 Health
+  s = pres.addSlide();
+  s.addText('Foundation Health — Today', { x:0.5, y:0.4, fontSize:28, color:ink, bold:true });
+  const hRows = [[
+    { text:'Pillar', options:{ bold:true, fill:'0F172A', color:'FFFFFF' }},
+    { text:'Score', options:{ bold:true, fill:'0F172A', color:'FFFFFF' }},
+    { text:'Note', options:{ bold:true, fill:'0F172A', color:'FFFFFF' }},
+  ], ...HEALTH_PILLARS.map(h => [h.label, h.score + '/100', h.note])];
+  s.addTable(hRows, { x:0.5, y:1.1, w:12, fontSize:10, color:ink, border:{type:'solid', pt:0.5, color:'CBD5E1'}, colW:[3,1,8] });
+
+  // 5 Risk
+  s = pres.addSlide();
+  s.addText('Top Risks (L × C)', { x:0.5, y:0.4, fontSize:28, color:ink, bold:true });
+  const topRisks = [...state.risks].sort((a,b)=> (b.L*b.C)-(a.L*a.C)).slice(0,8);
+  const rRows = [[
+    { text:'ID', options:{ bold:true, fill:'0F172A', color:'FFFFFF' }},
+    { text:'Risk', options:{ bold:true, fill:'0F172A', color:'FFFFFF' }},
+    { text:'L×C', options:{ bold:true, fill:'0F172A', color:'FFFFFF' }},
+    { text:'Owner', options:{ bold:true, fill:'0F172A', color:'FFFFFF' }},
+    { text:'Mitigation', options:{ bold:true, fill:'0F172A', color:'FFFFFF' }},
+  ], ...topRisks.map(r => [r.id, r.title, r.L*r.C, r.owner, r.mitig])];
+  s.addTable(rRows, { x:0.4, y:1.1, w:12.4, fontSize:10, color:ink, border:{type:'solid', pt:0.5, color:'CBD5E1'}, colW:[0.6,3,0.6,1.8,6.4] });
+
+  // 6 Finance
+  s = pres.addSlide();
+  s.addText('Finance Snapshot', { x:0.5, y:0.4, fontSize:28, color:ink, bold:true });
+  const totalCapex = BUDGET.capex.reduce((a,b)=>a+b.amount,0);
+  const totalOpex = BUDGET.opexYear1.reduce((a,b)=>a+b.amount,0);
+  const totalRev = BUDGET.revenueYear1.reduce((a,b)=>a+b.amount,0);
+  s.addText([
+    { text:`Capex committed: ${fmtAUD(totalCapex)}\n`, options:{ fontSize:16, color:ink, bold:true } },
+    { text:`Year-1 opex: ${fmtAUD(totalOpex)}\n`, options:{ fontSize:16, color:ink } },
+    { text:`Year-1 revenue (Base, 180 enrol): ${fmtAUD(totalRev)}\n`, options:{ fontSize:16, color:ink } },
+    { text:`Year-1 Net (Base): ${fmtAUD(totalRev-totalOpex)}\n`, options:{ fontSize:16, color:'059669', bold:true } },
+    { text:`Adverse case (108 enrol): ${fmtAUD(BUDGET.enrolmentScenarios[1].fees + 3680000 - totalOpex)} — manage via deferred Year-2 expansion capex.`, options:{ fontSize:14, color:'B91C1C' } },
+  ], { x:0.5, y:1.2, w:12, h:4 });
+
+  // 7 Why me
+  s = pres.addSlide();
+  s.addText('Why I am the right Founding Principal', { x:0.5, y:0.4, fontSize:28, color:ink, bold:true });
+  s.addText([
+    { text:'• Demonstrated experience leading transformation in diverse, multicultural communities.', options:{ fontSize:16 } },
+    { text:'• Deep familiarity with NSW curriculum, NESA registration, and Australian Curriculum v9.', options:{ fontSize:16 } },
+    { text:'• Practitioner of PBL with Gold Standard fidelity; published comparator-school analysis.', options:{ fontSize:16 } },
+    { text:'• Operating model that is risk-aware: this 14-pillar console is my proof.', options:{ fontSize:16 } },
+    { text:'• Authentic, sustained engagement with Dharug community — not tokenism.', options:{ fontSize:16 } },
+    { text:'• Strong financial literacy and capital-partner credibility from prior roles.', options:{ fontSize:16 } },
+  ], { x:0.5, y:1.3, w:12, h:5, color:ink });
+
+  // 8 The ask
+  s = pres.addSlide(); s.background = { color:'0F172A' };
+  s.addText('The ask', { x:0.5, y:1, fontSize:36, color:'FFFFFF', bold:true });
+  s.addText('Appoint me as Founding Principal and adopt this 14-pillar operating console as the working artefact for the founding period.', { x:0.5, y:2.2, w:12, h:1.5, fontSize:22, color:'FFFFFF' });
+  s.addText('School Project will open in Term 1, 2028 with a Year 7–9 cohort, full NESA registration on track for 2030, and an evidence base that any external reviewer can audit on day one.', { x:0.5, y:4, w:12, h:2, fontSize:16, color:'C98052' });
+
+  pres.writeFile({ fileName: `SchoolProject_FoundingPitch_${TODAY.toISOString().slice(0,10)}.pptx` });
+};
+
+/* ========== UI COMPONENTS ========== */
+const StatusDot = ({ tone }) => (
+  <span className="relative inline-block">
+    <span className={`inline-block w-2.5 h-2.5 rounded-full ${toneBar(tone)} relative pulse-dot`}></span>
+  </span>
+);
+
+const KpiCard = ({ label, value, suffix, delta, tone, spark }) => {
+  const ref = useRef();
+  useEffect(() => {
+    if (!ref.current) return;
+    if (ref.current._chart) ref.current._chart.destroy();
+    ref.current._chart = new window.Chart(ref.current, {
+      type:'line',
+      data:{ labels: spark.map((_,i)=>i), datasets:[{ data: spark, borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.12)', fill:true, tension:0.35, pointRadius:0, borderWidth:2 }]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false }, tooltip:{ enabled:false }}, scales:{ x:{ display:false }, y:{ display:false }}, animation:false }
+    });
+  }, [spark]);
+  return (
+    <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow transition relative overflow-hidden">
+      <div className="flex items-start justify-between">
+        <div className="text-xs uppercase tracking-wide text-slate-500 font-medium">{label}</div>
+        <StatusDot tone={tone} />
+      </div>
+      <div className="mt-2 flex items-baseline gap-1">
+        <div className="text-2xl font-semibold text-slate-900">{value}</div>
+        <div className="text-sm text-slate-500">{suffix}</div>
+      </div>
+      <div className="text-xs text-slate-500 mt-1">{delta}</div>
+      <div className="h-10 mt-2"><canvas ref={ref}></canvas></div>
+    </div>
+  );
+};
+
+const Section = ({ title, subtitle, right, children }) => (
+  <section className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm fade-in">
+    <div className="flex items-start justify-between mb-3">
+      <div>
+        <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
+        {subtitle && <div className="text-xs text-slate-500 mt-0.5">{subtitle}</div>}
+      </div>
+      <div className="flex items-center gap-2">{right}</div>
+    </div>
+    {children}
+  </section>
+);
+
+const Pill = ({ children, tone='slate' }) => <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs border ${toneColor(tone)}`}>{children}</span>;
+
+const Btn = ({ children, onClick, tone='primary', size='md', icon, full }) => {
+  const sz = size==='sm' ? 'px-2.5 py-1 text-xs' : 'px-3.5 py-2 text-sm';
+  const map = {
+    primary:'bg-slate-900 text-white hover:bg-slate-800 border-slate-900',
+    ghost:'bg-white text-slate-700 hover:bg-slate-50 border-slate-200',
+    danger:'bg-rose-600 text-white hover:bg-rose-700 border-rose-600',
+    accent:'bg-ochre-500 text-white hover:bg-ochre-400 border-ochre-500',
+    success:'bg-emerald-600 text-white hover:bg-emerald-700 border-emerald-600',
+  };
+  return <button onClick={onClick} className={`${sz} ${map[tone]} ${full?'w-full':''} border rounded-lg font-medium inline-flex items-center gap-1.5 transition`}>{icon} {children}</button>;
+};
+
+const Modal = ({ open, onClose, title, children, wide }) => {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 bg-slate-900/60 flex items-center justify-center p-4" onClick={onClose}>
+      <div className={`bg-white rounded-2xl shadow-2xl w-full ${wide?'max-w-4xl':'max-w-xl'} max-h-[88vh] overflow-y-auto fade-in`} onClick={e => e.stopPropagation()}>
+        <div className="px-5 py-3 border-b border-slate-200 flex items-center justify-between sticky top-0 bg-white z-10">
+          <div className="font-semibold text-slate-900">{title}</div>
+          <button onClick={onClose} className="text-slate-500 hover:text-slate-900">×</button>
+        </div>
+        <div className="p-5">{children}</div>
+      </div>
+    </div>
+  );
+};
+
+const Chart = ({ type, data, options, height=180 }) => {
+  const ref = useRef();
+  useEffect(() => {
+    if (!ref.current) return;
+    if (ref.current._chart) ref.current._chart.destroy();
+    ref.current._chart = new window.Chart(ref.current, { type, data, options });
+    return () => { ref.current && ref.current._chart && ref.current._chart.destroy(); };
+  }, [JSON.stringify(data), JSON.stringify(options), type]);
+  return <div style={{ height }}><canvas ref={ref}></canvas></div>;
+};
+
+/* ========== MODULE: DASHBOARD ========== */
+const Dashboard = ({ state, setView, setHealthOpen, setBoardPackOpen }) => {
+  const totalCapex = BUDGET.capex.reduce((a,b)=>a+b.amount,0);
+  const totalOpex = BUDGET.opexYear1.reduce((a,b)=>a+b.amount,0);
+  const totalRev = BUDGET.revenueYear1.reduce((a,b)=>a+b.amount,0);
+  const topRisks = [...state.risks].sort((a,b)=> (b.L*b.C)-(a.L*a.C)).slice(0,5);
+  const onCriticalPath = STAFF_PLAN.filter(s=>s.criticalPath);
+  return (
+    <div className="space-y-5">
+      <Section
+        title={`Founding Principal Console · ${SCHOOL.shortName}`}
+        subtitle={`${SCHOOL.location} · Today: ${fmtDate(TODAY)} · T${monthsToLaunch >= 0 ? '+' : ''}${monthsToLaunch}m from launch · Phase ${state.phaseId}`}
+        right={<>
+          <Btn tone="ghost" size="sm" onClick={() => setHealthOpen(true)}>🩺 Run Health Check</Btn>
+          <Btn tone="ghost" size="sm" onClick={() => setBoardPackOpen(true)}>📑 Generate Board Pack</Btn>
+        </>}
+      >
+        <div className="grid gridcol-auto gap-3">
+          {KPIS.map((k,i) => <KpiCard key={i} {...k} />)}
+        </div>
+      </Section>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <Section title="Foundation health (12 pillars)" subtitle="Composite score weighted by phase impact">
+          <div className="space-y-2.5">
+            {HEALTH_PILLARS.map(p => (
+              <div key={p.key} className="text-sm">
+                <div className="flex items-center justify-between mb-0.5">
+                  <span className="text-slate-800 flex items-center gap-2"><StatusDot tone={p.tone}/>{p.label}</span>
+                  <span className="text-slate-500 font-medium">{p.score}</span>
+                </div>
+                <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                  <div className={`h-1.5 ${toneBar(p.tone)}`} style={{ width: p.score + '%' }}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <Section title="Critical-path snapshot" subtitle="Tasks gating the next phase">
+          <ul className="text-sm space-y-2">
+            <li className="flex items-start gap-2"><span className="text-amber-600">●</span><div><b>NESA pre-application briefing</b> — booked for {fmtDate('2026-07-12')}. Owner: Khaled.</div></li>
+            <li className="flex items-start gap-2"><span className="text-amber-600">●</span><div><b>Curriculum Director appointment</b> — shortlist of 3, final by {fmtDate('2026-06-28')}.</div></li>
+            <li className="flex items-start gap-2"><span className="text-amber-600">●</span><div><b>Business Manager appointment</b> — 12 applicants screened; interviews wk of {fmtDate('2026-06-09')}.</div></li>
+            <li className="flex items-start gap-2"><span className="text-rose-600">●</span><div><b>EOI pipeline</b> — at 41, target 200 by end P2. Marketing brief deferred.</div></li>
+            <li className="flex items-start gap-2"><span className="text-amber-600">●</span><div><b>Council DA pre-lodgement</b> — meeting {fmtDate('2026-07-22')}; architect briefed.</div></li>
+            <li className="flex items-start gap-2"><span className="text-amber-600">●</span><div><b>Policy library</b> — 4/28 complete; weekly cadence to reach 28/28 by {fmtDate('2027-06-30')}.</div></li>
+          </ul>
+        </Section>
+
+        <Section title="Risk heatmap (top 5)" subtitle="Likelihood × Consequence (L×C)">
+          <ul className="space-y-2 text-sm">
+            {topRisks.map(r => (
+              <li key={r.id} className="border border-slate-200 rounded-lg p-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium text-slate-800">{r.id} · {r.title}</span>
+                  <span className={`text-xs font-semibold px-1.5 py-0.5 rounded ${r.L*r.C >= 16 ? 'bg-rose-100 text-rose-800' : r.L*r.C >= 9 ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}`}>{r.L}×{r.C} = {r.L*r.C}</span>
+                </div>
+                <div className="text-xs text-slate-600 mt-1">{r.mitig.slice(0,140)}…</div>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-3 text-xs text-slate-500">
+            <button className="underline" onClick={() => setView('risks')}>Open full Risk Register →</button>
+          </div>
+        </Section>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <Section title="Year-1 finance (Base case)" subtitle="180 enrolments · SES 95">
+          <div className="text-sm grid grid-cols-2 gap-3">
+            <div className="bg-slate-50 rounded-lg p-3"><div className="text-xs text-slate-500">Capex committed</div><div className="text-lg font-semibold text-slate-900">{fmtAUD(totalCapex)}</div></div>
+            <div className="bg-slate-50 rounded-lg p-3"><div className="text-xs text-slate-500">Year-1 opex</div><div className="text-lg font-semibold text-slate-900">{fmtAUD(totalOpex)}</div></div>
+            <div className="bg-emerald-50 rounded-lg p-3"><div className="text-xs text-emerald-600">Year-1 revenue</div><div className="text-lg font-semibold text-emerald-700">{fmtAUD(totalRev)}</div></div>
+            <div className="bg-emerald-50 rounded-lg p-3"><div className="text-xs text-emerald-600">Year-1 net</div><div className="text-lg font-semibold text-emerald-700">{fmtAUD(totalRev - totalOpex)}</div></div>
+          </div>
+          <div className="mt-3"><Chart type="doughnut" height={140} data={{
+            labels: BUDGET.revenueYear1.map(x=>x.item.split(' (')[0]),
+            datasets: [{ data: BUDGET.revenueYear1.map(x=>x.amount), backgroundColor:['#0ea5e9','#3b82f6','#6366f1','#a855f7','#ec4899'] }]
+          }} options={{ plugins:{ legend:{ position:'bottom', labels:{ font:{ size:10 }, boxWidth:10 }}}, maintainAspectRatio:false }} /></div>
+        </Section>
+
+        <Section title="Enrolment funnel — current state" subtitle="Marketing pipeline (90-day rolling)">
+          <Chart type="bar" height={220} data={{
+            labels: ENROLMENT_FUNNEL.slice(0,-1).map(x=>x.stage),
+            datasets:[{ data: ENROLMENT_FUNNEL.slice(0,-1).map(x=>x.n), backgroundColor:'#0ea5e9' }]
+          }} options={{
+            indexAxis:'y',
+            plugins:{ legend:{ display:false }},
+            scales:{ x:{ type:'logarithmic', ticks:{ callback: v => Number(v).toLocaleString() }}, y:{ ticks:{ font:{ size:10 }}}},
+            maintainAspectRatio:false
+          }} />
+        </Section>
+
+        <Section title="Quick actions" subtitle="One-click founding-team operations">
+          <div className="space-y-2">
+            <Btn full tone="primary" icon="🩺" onClick={() => setHealthOpen(true)}>Run end-to-end health check</Btn>
+            <Btn full tone="accent" icon="📑" onClick={() => exportBoardPDF(state)}>Export full Board Pack (PDF)</Btn>
+            <Btn full tone="accent" icon="🎬" onClick={() => exportPitchPPTX(state)}>Export Founding Pitch (PPTX)</Btn>
+            <Btn full tone="ghost" icon="📊" onClick={() => exportCSV('SchoolProject_RiskRegister.csv',
+              ['ID','Title','Category','L','C','LxC','Owner','Review','Mitigation','Status'],
+              state.risks.map(r=>[r.id,r.title,r.cat,r.L,r.C,r.L*r.C,r.owner,r.review,r.mitig,r.status]))}>Export Risk Register (CSV)</Btn>
+            <Btn full tone="ghost" icon="👥" onClick={() => exportCSV('SchoolProject_StaffingPlan.csv',
+              ['Phase','Role','Count','Name/Status','Status','Salary($k)','Depends','Why now'],
+              STAFF_PLAN.map(s=>[s.phase,s.role,s.count,s.name,s.status,s.salaryK,s.depends,s.whyNow]))}>Export Staffing Plan (CSV)</Btn>
+            <Btn full tone="ghost" icon="⚖️" onClick={() => exportCSV('SchoolProject_ComplianceTracker.csv',
+              ['Category','Item','Status','Notes','Owner','Due'], COMPLIANCE)}>Export Compliance Tracker (CSV)</Btn>
+            <Btn full tone="ghost" icon="✉️" onClick={() => alert('Drafted weekly stakeholder letter — opening composer in v1.1.')}>Send weekly stakeholder letter</Btn>
+          </div>
+        </Section>
+      </div>
+
+      <Section title="Acknowledgement of Country" subtitle="Embedded in every board pack, pitch deck, and parent communication">
+        <div className="text-sm text-slate-700 italic">{SCHOOL.acknowledgement}</div>
+      </Section>
+    </div>
+  );
+};
+
+/* ========== MODULE: ROADMAP ========== */
+const Roadmap = ({ state }) => {
+  // Gantt-like visualisation over a -30..+24 window
+  const min = -30, max = 24;
+  const span = max - min;
+  return (
+    <div className="space-y-5">
+      <Section title="Foundation Roadmap (P0 → P6)" subtitle="Months relative to Year-1 launch (T-0 = 2028 Term 1). Today at T-20m.">
+        <div className="text-xs text-slate-500 mb-2 flex justify-between"><span>T-30m</span><span>T-24m</span><span>T-18m</span><span>T-12m</span><span>T-6m</span><span className="font-semibold text-slate-700">T-0 (Launch)</span><span>T+12m</span><span>T+24m</span></div>
+        <div className="relative">
+          {PHASES.map((p,i) => {
+            const left = ((p.startMo - min)/span)*100;
+            const width = ((p.endMo - p.startMo)/span)*100;
+            const palette = p.status==='complete'?'bg-emerald-500/80':p.status==='active'?'bg-sky-500/80':'bg-slate-400/70';
+            return (
+              <div key={p.id} className="relative h-10 mb-2 group">
+                <div className="absolute inset-y-0 left-0 right-0 bg-slate-100 rounded"></div>
+                <div className={`absolute inset-y-0 ${palette} rounded-md flex items-center px-2 text-white text-xs font-medium shadow`} style={{ left:left+'%', width:width+'%' }}>
+                  {p.id} · {p.name} ({p.progress}%)
+                </div>
+              </div>
+            );
+          })}
+          <div className="absolute top-0 bottom-0" style={{ left: ((-20 - min)/span)*100 + '%' }}>
+            <div className="w-px h-full bg-rose-500"></div>
+            <div className="absolute -top-5 -translate-x-1/2 text-[10px] font-semibold text-rose-600 whitespace-nowrap">TODAY (T-20m)</div>
+          </div>
+          <div className="absolute top-0 bottom-0" style={{ left: ((0 - min)/span)*100 + '%' }}>
+            <div className="w-px h-full bg-slate-900"></div>
+            <div className="absolute -top-5 -translate-x-1/2 text-[10px] font-semibold text-slate-900 whitespace-nowrap">LAUNCH</div>
+          </div>
+        </div>
+      </Section>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        {PHASES.map(p => (
+          <Section key={p.id} title={`${p.id} · ${p.name}`} subtitle={`T${p.startMo}m → T${p.endMo}m · ${p.status} (${p.progress}%)`}
+            right={<Pill tone={p.status==='complete'?'green':p.status==='active'?'blue':'slate'}>{p.status}</Pill>}>
+            <p className="text-sm text-slate-700 mb-3">{p.desc}</p>
+            <div className="text-xs uppercase tracking-wide text-slate-500 font-medium mb-1.5">Deliverables</div>
+            <ul className="text-sm text-slate-700 list-disc pl-5 space-y-0.5">
+              {p.deliverables.map((d,i)=><li key={i}>{d}</li>)}
+            </ul>
+          </Section>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+/* ========== MODULE: COMPLIANCE ========== */
+const Compliance = () => {
+  const [filter, setFilter] = useState('all');
+  const cats = ['all', ...new Set(COMPLIANCE.map(c=>c[0]))];
+  const rows = COMPLIANCE.filter(c => filter==='all' || c[0]===filter);
+  const counts = COMPLIANCE.reduce((acc,c)=>{ acc[c[2]] = (acc[c[2]]||0)+1; return acc; }, {});
+  return (
+    <div className="space-y-5">
+      <Section title="NSW Compliance & NESA Registration Tracker"
+        subtitle="Section 83 (Education Act 1990 NSW) · Child Safe Standards (OCG NSW) · NESA Manual for Registration & Accreditation · DSE 2005 · ACSC Essential Eight · NSW Privacy & PPIP Act"
+        right={
+          <Btn tone="ghost" size="sm" onClick={() => exportCSV('SchoolProject_ComplianceTracker.csv',
+            ['Category','Item','Status','Notes','Owner','Due'], COMPLIANCE)}>Export CSV</Btn>
+        }
+      >
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+          {['complete','in_progress','planned','active'].map(s => (
+            <div key={s} className="bg-slate-50 rounded-lg px-3 py-2">
+              <div className="text-xs text-slate-500 uppercase">{s.replace('_',' ')}</div>
+              <div className="text-2xl font-semibold text-slate-900">{counts[s]||0}</div>
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-1.5 mb-3 text-xs">
+          {cats.map(c => (
+            <button key={c} onClick={()=>setFilter(c)} className={`px-2.5 py-1 rounded-full border ${filter===c?'bg-slate-900 text-white border-slate-900':'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}`}>{c}</button>
+          ))}
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 text-slate-600 text-xs uppercase">
+              <tr>
+                <th className="text-left py-2 px-2">Category</th>
+                <th className="text-left py-2 px-2">Item</th>
+                <th className="text-left py-2 px-2">Status</th>
+                <th className="text-left py-2 px-2">Notes</th>
+                <th className="text-left py-2 px-2">Owner</th>
+                <th className="text-left py-2 px-2">Due</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r,i) => (
+                <tr key={i} className="border-t border-slate-100">
+                  <td className="py-2 px-2 text-slate-700">{r[0]}</td>
+                  <td className="py-2 px-2 font-medium text-slate-900">{r[1]}</td>
+                  <td className="py-2 px-2">{statusBadge(r[2])}</td>
+                  <td className="py-2 px-2 text-slate-600 text-xs">{r[3]}</td>
+                  <td className="py-2 px-2 text-slate-700 text-xs">{r[4]}</td>
+                  <td className="py-2 px-2 text-slate-700 text-xs">{fmtDate(r[5])}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Section>
+
+      <Section title="NESA Section 83 — registration evidence map" subtitle="The minimum bundle to lodge a credible Section 83 application for a non-government school in NSW">
+        <ul className="text-sm space-y-2 list-disc pl-5 text-slate-700">
+          <li><b>Educational program</b> — curriculum that delivers all KLAs of the relevant NSW syllabuses (Stage 4 mandatory; Stage 5 200-hour mandatory + 100-hour optional; Stage 6 HSC pathway plan).</li>
+          <li><b>Premises & facilities</b> — Premises Certificate from NESA, valid BCA Class 9b approval, Council DA, accessibility compliant with DSE 2005.</li>
+          <li><b>Policies</b> — 28-policy library (discipline, attendance, child protection, anti-bullying, complaints, privacy, learning support, assessment & reporting, work health & safety, internet & device use, etc.).</li>
+          <li><b>Staff</b> — all teaching staff registered with NESA; all adults on site WWCC verified; key staff identified (Principal, Curriculum, Wellbeing).</li>
+          <li><b>Financial viability</b> — capex committed, opex 24-month runway, board financial governance demonstrated.</li>
+          <li><b>Governance</b> — incorporated entity, fit-and-proper persons, conflict-of-interest register, audit committee, child-safe-organisation accreditation pathway.</li>
+          <li><b>Child Safe Standards (NSW OCG)</b> — 10 standards adopted and evidenced; Reportable Conduct Scheme protocol; mandatory reporting training.</li>
+        </ul>
+      </Section>
+    </div>
+  );
+};
+
+/* ========== MODULE: STAFFING ========== */
+const Staffing = () => {
+  const totalSalary = STAFF_PLAN.reduce((s,r)=>s + r.count*r.salaryK*1000, 0);
+  const totalCount = STAFF_PLAN.reduce((s,r)=>s + r.count, 0);
+  return (
+    <div className="space-y-5">
+      <Section title="Staffing & Recruitment Plan" subtitle={`Total planned FTE at full operation: ${totalCount} · Annualised salary envelope: ${fmtAUD(totalSalary)}`}
+        right={<Btn tone="ghost" size="sm" onClick={() => exportCSV('SchoolProject_StaffingPlan.csv',
+          ['Phase','Role','Count','Name/Status','Salary($k pp)','Critical path','Depends on','Why now'],
+          STAFF_PLAN.map(s=>[s.phase,s.role,s.count,s.name,s.salaryK,s.criticalPath?'Yes':'No',s.depends,s.whyNow]))}>Export CSV</Btn>}>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 text-slate-600 text-xs uppercase">
+              <tr>
+                <th className="text-left py-2 px-2">Phase</th>
+                <th className="text-left py-2 px-2">Role</th>
+                <th className="text-left py-2 px-2">FTE</th>
+                <th className="text-left py-2 px-2">Status</th>
+                <th className="text-left py-2 px-2">Salary p.p.</th>
+                <th className="text-left py-2 px-2">Depends on</th>
+                <th className="text-left py-2 px-2">Why this hire, now</th>
+              </tr>
+            </thead>
+            <tbody>
+              {STAFF_PLAN.map((s,i) => (
+                <tr key={i} className={`border-t border-slate-100 ${s.criticalPath?'bg-amber-50/50':''}`}>
+                  <td className="py-2 px-2"><Pill tone="slate">{s.phase}</Pill></td>
+                  <td className="py-2 px-2 font-medium text-slate-900">{s.role}{s.criticalPath && <span className="text-amber-700 ml-1 text-xs">★ critical path</span>}</td>
+                  <td className="py-2 px-2 text-slate-700">{s.count}</td>
+                  <td className="py-2 px-2">{statusBadge(s.status)}</td>
+                  <td className="py-2 px-2 text-slate-700">${s.salaryK}k</td>
+                  <td className="py-2 px-2 text-slate-600 text-xs">{s.depends}</td>
+                  <td className="py-2 px-2 text-slate-700 text-xs">{s.whyNow}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Section>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <Section title="Founding-team scaffold (why this order)" subtitle="Sequencing matters more than headcount">
+          <ol className="text-sm space-y-2 list-decimal pl-5 text-slate-700">
+            <li><b>Principal + Board Chair</b> — anchor identity, governance credibility, capital-partner signal.</li>
+            <li><b>Business Manager + Curriculum Director</b> — twin engines: financial credibility (for NESA viability + capital) and pedagogical credibility (for NESA curriculum submission + brand).</li>
+            <li><b>Enrolment & Marketing + NESA Compliance Officer</b> — revenue creation and registration evidence run in parallel.</li>
+            <li><b>Lead Teachers (Stage 4/5) + Wellbeing Coordinator + Facilities Mgr + IT Lead</b> — operational backbone before subject teachers.</li>
+            <li><b>Subject teachers, Learning Support, Counsellor, Reception, Aboriginal Education Liaison</b> — mass recruitment for Day-1 readiness.</li>
+            <li><b>Library/Learning Commons + IT Support</b> — close pre-launch gaps.</li>
+            <li><b>Year 10 expansion teachers</b> — Year-2 growth.</li>
+          </ol>
+        </Section>
+
+        <Section title="Recruitment risk register">
+          <ul className="text-sm space-y-2 text-slate-700">
+            <li><b>Western Sydney teacher shortage</b> — above-award package, WSU pre-service partnership, intl pipeline.</li>
+            <li><b>Curriculum Director — single point of risk</b> — hire deputy by P3 to scaffold succession.</li>
+            <li><b>IEU positioning</b> — engage early, transparent workload model, staff council from Day 1.</li>
+            <li><b>Founders syndrome</b> — explicit decision-rights matrix; board-approved delegation; principal coaching.</li>
+          </ul>
+        </Section>
+
+        <Section title="Selection rubric (board-approved)">
+          <ol className="text-sm space-y-1 list-decimal pl-5 text-slate-700">
+            <li>PBL fluency (lived experience, not theoretical).</li>
+            <li>Cultural humility — Western Sydney + Indigenous engagement.</li>
+            <li>Track record of multi-stakeholder delivery.</li>
+            <li>Comfort with ambiguity and start-up cadence.</li>
+            <li>Strong safeguarding instinct (child-safe organisation alignment).</li>
+            <li>Data fluency — evidence-led decisions.</li>
+            <li>Communication clarity (parents, board, regulator).</li>
+          </ol>
+        </Section>
+      </div>
+    </div>
+  );
+};
+
+/* ========== MODULE: CURRICULUM ========== */
+const Curriculum = () => (
+  <div className="space-y-5">
+    <Section title="PBL Curriculum Architecture" subtitle="Gold Standard PBL · NSW Syllabus + Australian Curriculum v9 · HSC ready by 2030">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        {CURRICULUM.map((c,i) => (
+          <div key={i} className="border border-slate-200 rounded-xl p-3 bg-slate-50/50">
+            <div className="font-semibold text-slate-900">{c.stage}</div>
+            <div className="text-xs text-slate-500 mt-0.5">Subjects</div>
+            <div className="text-sm text-slate-700">{c.subjects}</div>
+            <div className="text-xs text-slate-500 mt-2">PBL design</div>
+            <div className="text-sm text-slate-700">{c.pbl}</div>
+            <div className="text-xs text-slate-500 mt-2">Assessment</div>
+            <div className="text-sm text-slate-700">{c.assessment}</div>
+            <div className="text-xs text-slate-500 mt-2">NESA</div>
+            <div className="text-sm text-slate-700">{c.nesa}</div>
+          </div>
+        ))}
+      </div>
+    </Section>
+
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <Section title="Gold Standard PBL — design criteria" subtitle="PBL Works (Buck Institute) — non-negotiables">
+        <ol className="text-sm space-y-1 list-decimal pl-5 text-slate-700">
+          <li><b>Challenging Problem or Question</b> — meaningful to students, anchored in real Western Sydney context.</li>
+          <li><b>Sustained Inquiry</b> — multi-week, iterative, with explicit research literacy scaffolds.</li>
+          <li><b>Authenticity</b> — real-world tools, audiences, partners (industry mentor matched).</li>
+          <li><b>Student Voice & Choice</b> — over driving question, process, product, or audience.</li>
+          <li><b>Reflection</b> — embedded in advisory crew (1:15) every day.</li>
+          <li><b>Critique & Revision</b> — structured peer + expert feedback cycles.</li>
+          <li><b>Public Product</b> — exhibition every term, not optional.</li>
+        </ol>
+      </Section>
+
+      <Section title="Sample Project — Year 8, Term 2 (illustrative)">
+        <div className="text-sm text-slate-700 space-y-1.5">
+          <div><b>Driving question:</b> “How do we redesign Parramatta River public access so it is safer, culturally honest, and climate-resilient by 2040?”</div>
+          <div><b>Disciplines:</b> Geography, Science (Ecology + Earth & Space), English (Persuasive writing), Visual Design, Mathematics (Statistics + Measurement).</div>
+          <div><b>Industry partners:</b> City of Parramatta (Parks & Open Space), WSU Centre for Western Sydney, Dharug SMG.</div>
+          <div><b>Authentic audience:</b> Council Planning Committee public presentation (Week 9).</div>
+          <div><b>Public product:</b> Architectural concept board + 3-minute pitch + research dossier.</div>
+          <div><b>NESA outcomes:</b> 14 outcomes across Stage 4 Geography, Science, English, VisArts, Mathematics — mapped in Toddle.</div>
+          <div><b>Assessment:</b> Rubric (Disciplinary, Inquiry, Collaboration, Communication, Citizenship) + summative tasks per KLA.</div>
+        </div>
+      </Section>
+    </div>
+  </div>
+);
+
+/* ========== MODULE: RESOURCES / LMS ========== */
+const Resources = () => (
+  <div className="space-y-5">
+    <Section title="Learning resources stack & LMS evaluation"
+      subtitle="Recommended stack: Sentral (SIS) + Toddle (PBL LMS) + Canvas (rich-media LMS layer) + Google Workspace for Education"
+      right={<Btn tone="ghost" size="sm" onClick={() => exportCSV('SchoolProject_LMS_Evaluation.csv',
+        ['Tool','Type','PBL fit','Cost','NSW prevalence','Pros','Cons'],
+        LMS_OPTIONS.map(o=>[o.name,o.type,o.pbl,o.cost,o.nsw,o.pros,o.cons]))}>Export CSV</Btn>}>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50 text-slate-600 text-xs uppercase">
+            <tr>
+              <th className="text-left py-2 px-2">Tool</th>
+              <th className="text-left py-2 px-2">Type</th>
+              <th className="text-left py-2 px-2">PBL fit</th>
+              <th className="text-left py-2 px-2">Cost</th>
+              <th className="text-left py-2 px-2">NSW prevalence</th>
+              <th className="text-left py-2 px-2">Pros</th>
+              <th className="text-left py-2 px-2">Cons</th>
+            </tr>
+          </thead>
+          <tbody>
+            {LMS_OPTIONS.map((o,i) => (
+              <tr key={i} className="border-t border-slate-100">
+                <td className="py-2 px-2 font-medium text-slate-900">{o.name}</td>
+                <td className="py-2 px-2 text-slate-700">{o.type}</td>
+                <td className="py-2 px-2 text-slate-700">{o.pbl}</td>
+                <td className="py-2 px-2 text-slate-700 text-xs">{o.cost}</td>
+                <td className="py-2 px-2 text-slate-700 text-xs">{o.nsw}</td>
+                <td className="py-2 px-2 text-slate-700 text-xs">{o.pros}</td>
+                <td className="py-2 px-2 text-slate-700 text-xs">{o.cons}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Section>
+
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <Section title="Decision rationale">
+        <div className="text-sm space-y-2 text-slate-700">
+          <p><b>Sentral</b> as SIS because NESA reporting, attendance, NCCD evidence, parent portal, wellbeing module are pre-integrated for NSW context.</p>
+          <p><b>Toddle</b> as PBL LMS — it is the only purpose-built tool for project planning, rubric assessment, portfolios, and exhibitions; it carries IB MYP/PYP heritage which maps cleanly to PBL Works Gold Standard criteria.</p>
+          <p><b>Canvas</b> as rich-media LMS layer for content-heavy subject seminars (English Extension, Science theory blocks) and for HSC senior years from 2030.</p>
+          <p><b>Google Workspace</b> as collaboration substrate for Docs, Sheets, Slides, Drive, Meet — leveraging free Education Fundamentals.</p>
+        </div>
+      </Section>
+
+      <Section title="Resource curation principles">
+        <ul className="text-sm list-disc pl-5 space-y-1 text-slate-700">
+          <li>Open educational resources (OERs) preferred where pedagogically equivalent — reduces per-student licence cost.</li>
+          <li>All resources reviewed for Western Sydney cultural representation before adoption.</li>
+          <li>Senior school subject text selection delegated to Curriculum Director + subject leads with parent visibility.</li>
+          <li>Specialist software (CAD, GIS, statistical packages) chosen for industry transferability.</li>
+          <li>Accessibility audited (DSE) — captions, alt-text, screen-reader.</li>
+        </ul>
+      </Section>
+
+      <Section title="Tech budget (Year 1)">
+        <ul className="text-sm space-y-1 text-slate-700">
+          <li>Sentral SIS · 180 × $22 = <b>{fmtAUD(180*22)}</b></li>
+          <li>Toddle LMS · 180 × $20 = <b>{fmtAUD(180*20)}</b></li>
+          <li>Canvas LMS · 180 × $18 = <b>{fmtAUD(180*18)}</b></li>
+          <li>Google Workspace Education · <b>$0</b></li>
+          <li>Microsoft 365 Education A3 · 180 × $30 = <b>{fmtAUD(180*30)}</b></li>
+          <li>Specialist software pool · <b>{fmtAUD(38000)}</b></li>
+          <li>Devices 1:1 (Yr 7–9 leased) · <b>{fmtAUD(126000)}</b></li>
+          <li className="font-semibold pt-1 border-t border-slate-200 mt-1">Total ~ {fmtAUD(180*22 + 180*20 + 180*18 + 180*30 + 38000 + 126000)}</li>
+        </ul>
+      </Section>
+    </div>
+  </div>
+);
+
+/* ========== MODULE: OPERATIONS ========== */
+const Operations = () => (
+  <div className="space-y-5">
+    <Section title="A day in the life — School Project" subtitle="Designed for Gold Standard PBL fidelity, not lifted from a traditional school timetable">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50 text-slate-600 text-xs uppercase">
+            <tr>
+              <th className="text-left py-2 px-2">Time</th>
+              <th className="text-left py-2 px-2">Activity</th>
+              <th className="text-left py-2 px-2">Who</th>
+              <th className="text-left py-2 px-2">Cadence</th>
+            </tr>
+          </thead>
+          <tbody>
+            {DAILY_OPS.map((d,i) => (
+              <tr key={i} className="border-t border-slate-100">
+                <td className="py-2 px-2 font-medium text-slate-900">{d.time}</td>
+                <td className="py-2 px-2 text-slate-700">{d.activity}</td>
+                <td className="py-2 px-2 text-slate-700 text-xs">{d.who}</td>
+                <td className="py-2 px-2 text-slate-700 text-xs">{d.cadence}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Section>
+
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <Section title="Weekly Principal operating rhythm">
+        <div className="text-sm">
+          {WEEKLY_OPS.map(w => (
+            <div key={w.day} className="py-2 border-b border-slate-100 last:border-0">
+              <div className="font-medium text-slate-900">{w.day}</div>
+              <ul className="list-disc pl-5 mt-1 text-slate-700">
+                {w.items.map((it,i)=><li key={i}>{it}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section title="Automation flow — daily health pulse" subtitle="What the console runs every morning without me touching it">
+        <ol className="text-sm space-y-2 list-decimal pl-5 text-slate-700">
+          <li><b>07:00</b> · Pull attendance, wellbeing flags, safeguarding records from Sentral → score Health Pillars.</li>
+          <li><b>07:05</b> · Pull project status from Toddle → score Pedagogical Fidelity pillar.</li>
+          <li><b>07:10</b> · Pull EOI / enrolment data from CRM → score Enrolment pillar.</li>
+          <li><b>07:15</b> · Refresh KPI cards + critical-path tasks.</li>
+          <li><b>07:20</b> · Generate Daily Principal Brief PDF (single page) and email to SLT.</li>
+          <li><b>07:25</b> · Flag any new red status — push notification to Principal.</li>
+          <li><b>15:30</b> · End-of-day rollup → board pack updated; risk register reviewed; next-day briefing prepped.</li>
+        </ol>
+      </Section>
+    </div>
+
+    <Section title="Status checks — pillars currently amber/red" subtitle="What I am personally driving this fortnight">
+      <ul className="text-sm space-y-2">
+        {HEALTH_PILLARS.filter(p => p.tone!=='green').map(p => (
+          <li key={p.key} className="border border-slate-200 rounded-lg p-3 flex items-start gap-3">
+            <StatusDot tone={p.tone} />
+            <div>
+              <div className="font-medium text-slate-900">{p.label} <span className="text-slate-500 font-normal">· {p.score}/100</span></div>
+              <div className="text-slate-700 text-xs">{p.note}</div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </Section>
+  </div>
+);
+
+/* ========== MODULE: RISKS ========== */
+const Risks = ({ state, setState }) => {
+  const [showAdd, setShowAdd] = useState(false);
+  const [form, setForm] = useState({ title:'', cat:'Regulatory', L:3, C:3, owner:'Principal', review:'Monthly', mitig:'', status:'active' });
+  const addRisk = () => {
+    if (!form.title) return;
+    const id = 'R-' + String(state.risks.length+1).padStart(3,'0');
+    setState({ ...state, risks:[...state.risks, { id, ...form, L:+form.L, C:+form.C }] });
+    setShowAdd(false);
+    setForm({ title:'', cat:'Regulatory', L:3, C:3, owner:'Principal', review:'Monthly', mitig:'', status:'active' });
+  };
+
+  // 5x5 heatmap
+  const cells = [];
+  for (let c=5; c>=1; c--) for (let l=1; l<=5; l++) {
+    const here = state.risks.filter(r => r.L===l && r.C===c);
+    const tone = (l*c) >= 16 ? 'bg-rose-500' : (l*c) >= 9 ? 'bg-amber-500' : (l*c) >= 4 ? 'bg-yellow-300' : 'bg-emerald-400';
+    cells.push({ l, c, here, tone });
+  }
+
+  return (
+    <div className="space-y-5">
+      <Section title="Risk Register · RAID" subtitle={`${state.risks.length} active risks · review cadence per row`}
+        right={<>
+          <Btn tone="ghost" size="sm" onClick={() => exportCSV('SchoolProject_RiskRegister.csv',
+            ['ID','Title','Category','L','C','LxC','Owner','Review','Mitigation','Status'],
+            state.risks.map(r=>[r.id,r.title,r.cat,r.L,r.C,r.L*r.C,r.owner,r.review,r.mitig,r.status]))}>Export CSV</Btn>
+          <Btn tone="primary" size="sm" onClick={() => setShowAdd(true)}>+ Add risk</Btn>
+        </>}>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 text-slate-600 text-xs uppercase">
+              <tr><th className="text-left py-2 px-2">ID</th><th className="text-left py-2 px-2">Risk</th><th className="text-left py-2 px-2">Cat</th><th className="text-left py-2 px-2">L</th><th className="text-left py-2 px-2">C</th><th className="text-left py-2 px-2">L×C</th><th className="text-left py-2 px-2">Owner</th><th className="text-left py-2 px-2">Review</th><th className="text-left py-2 px-2">Mitigation</th><th className="text-left py-2 px-2">Status</th></tr>
+            </thead>
+            <tbody>
+              {[...state.risks].sort((a,b)=>(b.L*b.C)-(a.L*a.C)).map(r => (
+                <tr key={r.id} className="border-t border-slate-100">
+                  <td className="py-2 px-2 text-xs text-slate-600">{r.id}</td>
+                  <td className="py-2 px-2 font-medium text-slate-900">{r.title}</td>
+                  <td className="py-2 px-2 text-xs text-slate-700">{r.cat}</td>
+                  <td className="py-2 px-2 text-slate-700">{r.L}</td>
+                  <td className="py-2 px-2 text-slate-700">{r.C}</td>
+                  <td className="py-2 px-2">
+                    <span className={`text-xs font-semibold px-1.5 py-0.5 rounded ${r.L*r.C >= 16 ? 'bg-rose-100 text-rose-800' : r.L*r.C >= 9 ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}`}>{r.L*r.C}</span>
+                  </td>
+                  <td className="py-2 px-2 text-xs text-slate-700">{r.owner}</td>
+                  <td className="py-2 px-2 text-xs text-slate-700">{r.review}</td>
+                  <td className="py-2 px-2 text-xs text-slate-700">{r.mitig}</td>
+                  <td className="py-2 px-2">{statusBadge(r.status)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Section>
+
+      <Section title="Risk heatmap (5×5) — likelihood × consequence">
+        <div className="grid grid-cols-[auto_repeat(5,1fr)] gap-1 max-w-2xl text-xs">
+          <div></div>
+          {[1,2,3,4,5].map(l => <div key={l} className="text-center font-medium text-slate-600 py-1">L={l}</div>)}
+          {[5,4,3,2,1].map(c => (
+            <Fragment key={c}>
+              <div className="text-right pr-2 font-medium text-slate-600 self-center">C={c}</div>
+              {[1,2,3,4,5].map(l => {
+                const here = state.risks.filter(r => r.L===l && r.C===c);
+                const tone = (l*c) >= 16 ? 'bg-rose-500' : (l*c) >= 9 ? 'bg-amber-400' : (l*c) >= 4 ? 'bg-yellow-200' : 'bg-emerald-300';
+                return (
+                  <div key={l+'-'+c} className={`${tone} rounded p-1.5 min-h-[60px] text-[10px] text-slate-900`}>
+                    {here.map(r => <div key={r.id} className="truncate" title={r.title}>{r.id}</div>)}
+                  </div>
+                );
+              })}
+            </Fragment>
+          ))}
+        </div>
+        <div className="text-xs text-slate-500 mt-2">Treatment: Critical (L×C ≥ 16) → escalate to Board this cycle. High (9–15) → Principal weekly. Medium (4–8) → monthly. Low (1–3) → quarterly.</div>
+      </Section>
+
+      <Modal open={showAdd} onClose={() => setShowAdd(false)} title="Add a new risk">
+        <div className="space-y-3 text-sm">
+          <div><label className="text-xs text-slate-600">Title</label><input value={form.title} onChange={e=>setForm({...form, title:e.target.value})} className="w-full border border-slate-200 rounded-lg px-2 py-1.5"/></div>
+          <div className="grid grid-cols-2 gap-3">
+            <div><label className="text-xs text-slate-600">Category</label><select value={form.cat} onChange={e=>setForm({...form, cat:e.target.value})} className="w-full border border-slate-200 rounded-lg px-2 py-1.5">{['Regulatory','Commercial','Financial','People','Safety','Brand','Facilities','IT/Privacy','Cultural','Equity','External'].map(o=><option key={o}>{o}</option>)}</select></div>
+            <div><label className="text-xs text-slate-600">Owner</label><input value={form.owner} onChange={e=>setForm({...form, owner:e.target.value})} className="w-full border border-slate-200 rounded-lg px-2 py-1.5"/></div>
+            <div><label className="text-xs text-slate-600">Likelihood (1–5)</label><input type="number" min="1" max="5" value={form.L} onChange={e=>setForm({...form, L:e.target.value})} className="w-full border border-slate-200 rounded-lg px-2 py-1.5"/></div>
+            <div><label className="text-xs text-slate-600">Consequence (1–5)</label><input type="number" min="1" max="5" value={form.C} onChange={e=>setForm({...form, C:e.target.value})} className="w-full border border-slate-200 rounded-lg px-2 py-1.5"/></div>
+          </div>
+          <div><label className="text-xs text-slate-600">Mitigation</label><textarea value={form.mitig} onChange={e=>setForm({...form, mitig:e.target.value})} className="w-full border border-slate-200 rounded-lg px-2 py-1.5" rows="3"/></div>
+          <div className="flex justify-end gap-2 pt-2"><Btn tone="ghost" onClick={()=>setShowAdd(false)}>Cancel</Btn><Btn tone="primary" onClick={addRisk}>Add to register</Btn></div>
+        </div>
+      </Modal>
+    </div>
+  );
+};
+
+/* ========== MODULE: STAKEHOLDERS ========== */
+const Stakeholders = () => (
+  <div className="space-y-5">
+    <Section title="Stakeholder map (power–interest)" subtitle={`${STAKEHOLDERS.length} stakeholders across regulators, community, school, education partners, commercial, industry partners, media`}
+      right={<Btn tone="ghost" size="sm" onClick={() => exportCSV('SchoolProject_Stakeholders.csv',
+        ['Group','Stakeholder','Interest','Influence','Strategy','Cadence','Owner'],
+        STAKEHOLDERS.map(s=>[s.group,s.name,s.interest,s.influence,s.strategy,s.cadence,s.owner]))}>Export CSV</Btn>}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div className="bg-slate-50 rounded-xl p-3">
+          <div className="text-xs uppercase text-slate-500 font-medium mb-2">Power-interest grid (5×5)</div>
+          <div className="relative h-72 border-l-2 border-b-2 border-slate-300">
+            <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-xs text-slate-500">Interest →</div>
+            <div className="absolute -left-7 top-1/2 -translate-y-1/2 -rotate-90 origin-left text-xs text-slate-500">Influence →</div>
+            <div className="absolute inset-0">
+              {STAKEHOLDERS.map((s,i) => (
+                <div key={i} className="absolute group"
+                  style={{ left: (s.interest/5)*100 + '%', bottom: (s.influence/5)*100 + '%', transform:'translate(-50%, 50%)' }}>
+                  <div className={`w-2.5 h-2.5 rounded-full ${s.strategy==='Manage Closely'?'bg-rose-500':s.strategy==='Keep Satisfied'?'bg-amber-500':s.strategy==='Keep Informed'?'bg-sky-500':'bg-slate-400'}`}></div>
+                  <div className="absolute hidden group-hover:block left-3 -top-2 bg-slate-900 text-white text-[10px] rounded px-2 py-1 whitespace-nowrap z-10">{s.name}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="text-xs text-slate-500 mt-6 flex gap-3 flex-wrap">
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-rose-500 inline-block"></span> Manage closely</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-500 inline-block"></span> Keep satisfied</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-sky-500 inline-block"></span> Keep informed</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-slate-400 inline-block"></span> Monitor</span>
+          </div>
+        </div>
+        <div>
+          <div className="overflow-x-auto max-h-[420px] overflow-y-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 text-slate-600 text-xs uppercase sticky top-0">
+                <tr><th className="text-left py-2 px-2">Group</th><th className="text-left py-2 px-2">Stakeholder</th><th className="text-left py-2 px-2">Strategy</th><th className="text-left py-2 px-2">Cadence</th><th className="text-left py-2 px-2">Owner</th></tr>
+              </thead>
+              <tbody>
+                {STAKEHOLDERS.map((s,i) => (
+                  <tr key={i} className="border-t border-slate-100">
+                    <td className="py-1.5 px-2 text-xs text-slate-700">{s.group}</td>
+                    <td className="py-1.5 px-2 text-sm font-medium text-slate-900">{s.name}</td>
+                    <td className="py-1.5 px-2 text-xs">{s.strategy}</td>
+                    <td className="py-1.5 px-2 text-xs text-slate-700">{s.cadence}</td>
+                    <td className="py-1.5 px-2 text-xs text-slate-700">{s.owner}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </Section>
+  </div>
+);
+
+/* ========== MODULE: BUDGET ========== */
+const Budget = () => {
+  const totalCapex = BUDGET.capex.reduce((s,x)=>s+x.amount, 0);
+  const totalOpex = BUDGET.opexYear1.reduce((s,x)=>s+x.amount, 0);
+  const totalRev = BUDGET.revenueYear1.reduce((s,x)=>s+x.amount, 0);
+  return (
+    <div className="space-y-5">
+      <Section title="Foundation budget — capex, opex, revenue, scenarios">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+          <div>
+            <div className="text-xs text-slate-500 uppercase mb-1">Capex (pre-launch)</div>
+            <Chart type="bar" height={220} data={{
+              labels: BUDGET.capex.map(x=>x.item),
+              datasets:[{ data: BUDGET.capex.map(x=>x.amount), backgroundColor:'#0ea5e9' }]
+            }} options={{ indexAxis:'y', plugins:{ legend:{ display:false }}, scales:{ x:{ ticks:{ callback:v=>'$'+(v/1e6).toFixed(1)+'M' }}, y:{ ticks:{ font:{ size:9 }}}}, maintainAspectRatio:false }}/>
+            <div className="text-right text-sm font-semibold text-slate-900">Total {fmtAUD(totalCapex)}</div>
+          </div>
+          <div>
+            <div className="text-xs text-slate-500 uppercase mb-1">Opex (Year 1)</div>
+            <Chart type="bar" height={220} data={{
+              labels: BUDGET.opexYear1.map(x=>x.item),
+              datasets:[{ data: BUDGET.opexYear1.map(x=>x.amount), backgroundColor:'#6366f1' }]
+            }} options={{ indexAxis:'y', plugins:{ legend:{ display:false }}, scales:{ x:{ ticks:{ callback:v=>'$'+(v/1e6).toFixed(1)+'M' }}, y:{ ticks:{ font:{ size:9 }}}}, maintainAspectRatio:false }}/>
+            <div className="text-right text-sm font-semibold text-slate-900">Total {fmtAUD(totalOpex)}</div>
+          </div>
+          <div>
+            <div className="text-xs text-slate-500 uppercase mb-1">Revenue (Year 1, base 180)</div>
+            <Chart type="bar" height={220} data={{
+              labels: BUDGET.revenueYear1.map(x=>x.item),
+              datasets:[{ data: BUDGET.revenueYear1.map(x=>x.amount), backgroundColor:'#10b981' }]
+            }} options={{ indexAxis:'y', plugins:{ legend:{ display:false }}, scales:{ x:{ ticks:{ callback:v=>'$'+(v/1e6).toFixed(1)+'M' }}, y:{ ticks:{ font:{ size:9 }}}}, maintainAspectRatio:false }}/>
+            <div className="text-right text-sm font-semibold text-slate-900">Total {fmtAUD(totalRev)}</div>
+          </div>
+        </div>
+      </Section>
+
+      <Section title="Enrolment scenarios — Year 1 stress test">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 text-slate-600 text-xs uppercase">
+              <tr><th className="text-left py-2 px-2">Scenario</th><th className="text-left py-2 px-2">Enrolment</th><th className="text-left py-2 px-2">Tuition revenue</th><th className="text-left py-2 px-2">Recurrent funding</th><th className="text-left py-2 px-2">Net (Year 1)</th><th className="text-left py-2 px-2">Cash runway</th></tr>
+            </thead>
+            <tbody>
+              {BUDGET.enrolmentScenarios.map((s,i) => {
+                const recurrent = 2700000 + 980000;
+                const net = s.fees + recurrent + 570000 - totalOpex;
+                const tone = net > 0 ? 'green' : 'red';
+                return (
+                  <tr key={i} className="border-t border-slate-100">
+                    <td className="py-2 px-2 font-medium">{s.scenario}</td>
+                    <td className="py-2 px-2">{s.enrol}</td>
+                    <td className="py-2 px-2">{fmtAUD(s.fees)}</td>
+                    <td className="py-2 px-2">{fmtAUD(recurrent + 570000)}</td>
+                    <td className={`py-2 px-2 font-semibold ${net>0?'text-emerald-700':'text-rose-700'}`}>{fmtAUD(net)}</td>
+                    <td className="py-2 px-2">{s.runwayMonths} months</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div className="text-xs text-slate-500 mt-2">Recurrent funding modelled at SES 95 (Commonwealth) + NSW recurrent. Adverse case (108 enrolments) requires deferral of Year-2 capex ($1.6M) and pause on Year-2 staff growth.</div>
+      </Section>
+    </div>
+  );
+};
+
+/* ========== MODULE: MARKETING ========== */
+const Marketing = () => (
+  <div className="space-y-5">
+    <Section title="Enrolment funnel & catchment intelligence — Parramatta"
+      subtitle="Western Sydney LGA · 270k+ population · 76% LOTE backgrounds · Sydney's second CBD · growth corridor">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <Chart type="bar" height={260} data={{
+          labels: ENROLMENT_FUNNEL.slice(0,-1).map(x=>x.stage),
+          datasets:[{ data: ENROLMENT_FUNNEL.slice(0,-1).map(x=>x.n), backgroundColor:'#3b82f6' }]
+        }} options={{ indexAxis:'y', plugins:{ legend:{ display:false }}, scales:{ x:{ type:'logarithmic' }, y:{ ticks:{ font:{ size:10 }}}}, maintainAspectRatio:false }}/>
+        <div className="text-sm space-y-2">
+          <div className="text-xs uppercase text-slate-500 font-medium">Current conversion</div>
+          <ul className="space-y-1 text-slate-700">
+            {ENROLMENT_FUNNEL.map((f,i) => (
+              <li key={i} className="flex justify-between border-b border-slate-100 pb-1">
+                <span>{f.stage}</span>
+                <span className="text-slate-900 font-medium">{f.n.toLocaleString()} <span className="text-slate-500 text-xs">({f.conv})</span></span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </Section>
+
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <Section title="Marketing channels — Western Sydney calibrated">
+        <ul className="text-sm space-y-1 list-disc pl-5 text-slate-700">
+          <li>Multilingual collateral (Arabic, Mandarin, Hindi, Tagalog, Korean, Tamil — top 6 Parramatta LOTE).</li>
+          <li>Community ambassadors (one per major faith / cultural community).</li>
+          <li>Open Days quarterly + on-demand 1:1 family meetings.</li>
+          <li>Parramatta Advertiser editorial coverage; LinkedIn ecosystem for industry partners.</li>
+          <li>Local realty / relocation partnerships (Westmead, Parramatta CBD apartment growth).</li>
+          <li>School expos (Sydney Independent Schools, Catholic Schools alternatives).</li>
+          <li>Pre-launch project showcase — bring prospective Year-7 students into a 1-day PBL workshop.</li>
+        </ul>
+      </Section>
+
+      <Section title="Brand positioning">
+        <div className="text-sm text-slate-700 space-y-2">
+          <p><b>Tagline:</b> A Project-Based Learning school on Darug Country, where Western Sydney teenagers design their world.</p>
+          <p><b>Promise:</b> The HSC, with real-world projects that count.</p>
+          <p><b>Differentiation:</b> Place-based PBL + industry mentor matched per student + advisory crew (1:15) — only PBL school in Greater Parramatta; only school in NSW built from Day 1 with Toddle + Sentral integrated for PBL evidence.</p>
+          <p><b>Proof points:</b> Lindfield Learning Village outcomes; PBL Works/OECD research; comparator-school evidence (open).</p>
+        </div>
+      </Section>
+    </div>
+  </div>
+);
+
+/* ========== MODULE: COMPARATORS ========== */
+const Comparators = () => (
+  <div className="space-y-5">
+    <Section title="Comparator schools — what they teach us"
+      subtitle="Continuously benchmarked. Click site links for primary sources.">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        {COMPARATORS.map((c,i) => (
+          <div key={i} className="border border-slate-200 rounded-xl p-3 bg-slate-50/40">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="font-semibold text-slate-900">{c.name}</div>
+                <div className="text-xs text-slate-500">{c.location} · founded {c.founded}</div>
+              </div>
+              <a className="text-xs text-sky-700 underline" href={c.site} target="_blank" rel="noopener">website ↗</a>
+            </div>
+            <div className="text-sm text-slate-700 mt-2"><b>Model:</b> {c.model}</div>
+            <div className="text-xs text-slate-500 mt-1">Scale: {c.scale}</div>
+            <div className="text-xs uppercase text-slate-500 mt-2 font-medium">Lessons for the School Project</div>
+            <ul className="text-sm text-slate-700 list-disc pl-5 mt-1">
+              {c.lessons.map((l,j)=><li key={j}>{l}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </Section>
+    <Section title="How the School Project differs from a traditional Parramatta independent school">
+      <ul className="text-sm space-y-1 list-disc pl-5 text-slate-700">
+        <li><b>Pedagogy</b> — PBL-first with Gold Standard fidelity; not a traditional discipline-then-project structure.</li>
+        <li><b>Timetable</b> — extended studio blocks (2 hours), advisory crew, no bells, exhibition every term.</li>
+        <li><b>Assessment</b> — rubric-led with public exhibitions; quantitative evidence reported alongside.</li>
+        <li><b>Staffing</b> — Lead Teacher per stage, advisory crew leaders, industry mentors matched 1:1 in senior years.</li>
+        <li><b>Facilities</b> — studios, maker space, exhibition hall instead of rows of classrooms.</li>
+        <li><b>Community</b> — Western Sydney multicultural strategy and Dharug engagement designed in, not bolted on.</li>
+        <li><b>Brand</b> — Country-acknowledged, place-anchored in Parramatta, evidence-led.</li>
+        <li><b>Marketing</b> — open Saturdays, community lunches, 1:1 family meetings, multilingual.</li>
+      </ul>
+    </Section>
+  </div>
+);
+
+/* ========== MODULE: VARIABLES ========== */
+const Variables = () => {
+  // Interaction strength matrix (symmetric)
+  const grid = useMemo(() => {
+    const m = {};
+    VARIABLES.forEach(v => { m[v.id] = {}; VARIABLES.forEach(w => { m[v.id][w.id] = 0; }); });
+    INTERACTIONS.forEach(([a,b,s]) => { m[a][b]=s; m[b][a]=s; });
+    return m;
+  }, []);
+  const cellTone = (s) => s===0 ? 'bg-slate-50' : s<=2 ? 'bg-amber-100' : s<=3 ? 'bg-amber-200' : s<=4 ? 'bg-rose-200' : 'bg-rose-400 text-white';
+  return (
+    <div className="space-y-5">
+      <Section title="Variable interaction matrix" subtitle="Decisions never move only one variable. Strength 0–5; darker = stronger second-order effect.">
+        <div className="overflow-x-auto">
+          <table className="text-[10px] border-collapse">
+            <thead>
+              <tr>
+                <th></th>
+                {VARIABLES.map(v => <th key={v.id} className="px-1 py-1 font-medium text-slate-700 vertical">{v.id}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {VARIABLES.map(r => (
+                <tr key={r.id}>
+                  <th className="text-right pr-2 font-medium text-slate-700 whitespace-nowrap" title={r.label}>{r.id} · {r.label.slice(0,28)}</th>
+                  {VARIABLES.map(c => {
+                    const s = grid[r.id][c.id];
+                    return (
+                      <td key={c.id} className={`border border-white ${cellTone(s)} text-center w-7 h-7`} title={`${r.label} ↔ ${c.label}: ${s}`}>{s||''}</td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Section>
+
+      <Section title="Strongest interactions (with implications)" subtitle="The dominant tensions every decision must address">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 text-slate-600 text-xs uppercase">
+              <tr><th className="text-left py-2 px-2">A</th><th className="text-left py-2 px-2">B</th><th className="text-left py-2 px-2">Strength</th><th className="text-left py-2 px-2">Implication</th></tr>
+            </thead>
+            <tbody>
+              {INTERACTIONS.sort((a,b)=>b[2]-a[2]).map(([a,b,s,note],i) => {
+                const A = VARIABLES.find(v=>v.id===a).label;
+                const B = VARIABLES.find(v=>v.id===b).label;
+                return (
+                  <tr key={i} className="border-t border-slate-100">
+                    <td className="py-2 px-2 text-slate-700">{A}</td>
+                    <td className="py-2 px-2 text-slate-700">{B}</td>
+                    <td className="py-2 px-2">
+                      <span className={`text-xs font-semibold px-1.5 py-0.5 rounded ${s===5?'bg-rose-100 text-rose-700':s===4?'bg-amber-100 text-amber-700':'bg-emerald-100 text-emerald-700'}`}>{s}</span>
+                    </td>
+                    <td className="py-2 px-2 text-slate-700">{note}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </Section>
+
+      <Section title="Stress tests — Base / Adverse / Stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 text-sm">
+          <div className="border border-slate-200 rounded-xl p-3 bg-emerald-50/30">
+            <div className="font-semibold text-emerald-800">Base case</div>
+            <ul className="list-disc pl-5 mt-2 space-y-1 text-slate-700">
+              <li>NESA provisional registration granted by T-6m.</li>
+              <li>Year-1 enrolment 180.</li>
+              <li>Capex on budget; opex within plan.</li>
+              <li>Full team in place by T-3m.</li>
+            </ul>
+          </div>
+          <div className="border border-slate-200 rounded-xl p-3 bg-amber-50/40">
+            <div className="font-semibold text-amber-800">Adverse case</div>
+            <ul className="list-disc pl-5 mt-2 space-y-1 text-slate-700">
+              <li>NESA conditional registration with 4 conditions; 3-month delay.</li>
+              <li>Year-1 enrolment 108 (60% of target).</li>
+              <li>Capex +12%; opex +6%.</li>
+              <li>Key hire failure × 2.</li>
+              <li><b>Response:</b> defer Year-2 capex $1.6M, soft-launch with Years 7–8 only, accelerate marketing, bring in Acting Curriculum Director.</li>
+            </ul>
+          </div>
+          <div className="border border-slate-200 rounded-xl p-3 bg-sky-50/40">
+            <div className="font-semibold text-sky-800">Stretch case</div>
+            <ul className="list-disc pl-5 mt-2 space-y-1 text-slate-700">
+              <li>NESA registration with commendation.</li>
+              <li>Year-1 enrolment 220 (over-subscribed).</li>
+              <li>Capital partner offers expansion line.</li>
+              <li><b>Response:</b> open Year 10 in Year-2, expand industry partner consortium, formalise WSU pre-service teacher placement.</li>
+            </ul>
+          </div>
+        </div>
+      </Section>
+
+      <style>{`.vertical{writing-mode:vertical-rl;transform:rotate(180deg);height:80px;}`}</style>
+    </div>
+  );
+};
+
+/* ========== MODULE: REPORTS ========== */
+const Reports = ({ state }) => (
+  <div className="space-y-5">
+    <Section title="Reports Studio — generate PDF, PPTX, CSV"
+      subtitle="Single-click exports built from live console state. All exports include Acknowledgement of Country and date stamp.">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="border border-slate-200 rounded-xl p-4">
+          <div className="text-2xl">📑</div>
+          <div className="font-semibold mt-1">Founding Board Pack (PDF)</div>
+          <div className="text-xs text-slate-500 mt-1">7 sections · Phases · Health · Risks · Budget · Staffing · Stakeholders · Compliance</div>
+          <Btn full tone="accent" onClick={() => exportBoardPDF(state)}>Generate now</Btn>
+        </div>
+        <div className="border border-slate-200 rounded-xl p-4">
+          <div className="text-2xl">🎬</div>
+          <div className="font-semibold mt-1">Founding Principal Pitch (PPTX)</div>
+          <div className="text-xs text-slate-500 mt-1">8 slides · The case · Phases · Health · Risks · Finance · Why me · The ask</div>
+          <Btn full tone="accent" onClick={() => exportPitchPPTX(state)}>Generate now</Btn>
+        </div>
+        <div className="border border-slate-200 rounded-xl p-4">
+          <div className="text-2xl">📊</div>
+          <div className="font-semibold mt-1">Operating CSVs (×6)</div>
+          <div className="text-xs text-slate-500 mt-1">Risks · Staffing · Compliance · Stakeholders · LMS eval · Enrolment funnel</div>
+          <div className="space-y-1 mt-2">
+            <Btn full size="sm" tone="ghost" onClick={() => exportCSV('SchoolProject_RiskRegister.csv',
+              ['ID','Title','Category','L','C','LxC','Owner','Review','Mitigation','Status'],
+              state.risks.map(r=>[r.id,r.title,r.cat,r.L,r.C,r.L*r.C,r.owner,r.review,r.mitig,r.status]))}>Risk Register</Btn>
+            <Btn full size="sm" tone="ghost" onClick={() => exportCSV('SchoolProject_StaffingPlan.csv',
+              ['Phase','Role','Count','Status','Salary($k)','Depends','Why now'],
+              STAFF_PLAN.map(s=>[s.phase,s.role,s.count,s.status,s.salaryK,s.depends,s.whyNow]))}>Staffing Plan</Btn>
+            <Btn full size="sm" tone="ghost" onClick={() => exportCSV('SchoolProject_Compliance.csv',
+              ['Category','Item','Status','Notes','Owner','Due'], COMPLIANCE)}>Compliance Tracker</Btn>
+            <Btn full size="sm" tone="ghost" onClick={() => exportCSV('SchoolProject_Stakeholders.csv',
+              ['Group','Stakeholder','Interest','Influence','Strategy','Cadence','Owner'],
+              STAKEHOLDERS.map(s=>[s.group,s.name,s.interest,s.influence,s.strategy,s.cadence,s.owner]))}>Stakeholder Map</Btn>
+            <Btn full size="sm" tone="ghost" onClick={() => exportCSV('SchoolProject_LMS.csv',
+              ['Tool','Type','PBL fit','Cost','NSW','Pros','Cons'], LMS_OPTIONS.map(o=>[o.name,o.type,o.pbl,o.cost,o.nsw,o.pros,o.cons]))}>LMS Evaluation</Btn>
+            <Btn full size="sm" tone="ghost" onClick={() => exportCSV('SchoolProject_EnrolmentFunnel.csv',
+              ['Stage','N','Conversion'], ENROLMENT_FUNNEL.map(f=>[f.stage,f.n,f.conv]))}>Enrolment Funnel</Btn>
+          </div>
+        </div>
+      </div>
+    </Section>
+
+    <Section title="What each report shows the Board (and how it answers a likely interview question)">
+      <ul className="text-sm space-y-2 list-disc pl-5 text-slate-700">
+        <li><b>Board Pack (PDF)</b> — when asked “What will your first 6 board meetings look like?”, this <em>is</em> the artefact for meeting one.</li>
+        <li><b>Pitch Deck (PPTX)</b> — when asked “Sell us the school in 5 minutes”, slides 1–4 do that.</li>
+        <li><b>Risk Register (CSV)</b> — when asked “What keeps you up at night?”, this proves I sleep with the answer next to me.</li>
+        <li><b>Staffing Plan (CSV)</b> — when asked “Who do you hire first and why?”, the dependencies and reasoning are explicit.</li>
+        <li><b>Compliance Tracker (CSV)</b> — when asked “How do you make NESA registration risk-free?”, this is the auditable trail.</li>
+        <li><b>Stakeholder Map (CSV)</b> — when asked “How will you build community?”, this is who and at what cadence.</li>
+      </ul>
+    </Section>
+  </div>
+);
+
+/* ========== MODULE: HEALTH CHECK MODAL ========== */
+const HealthCheckBody = () => {
+  const overall = Math.round(HEALTH_PILLARS.reduce((s,p)=>s+p.score,0)/HEALTH_PILLARS.length);
+  return (
+    <div>
+      <div className="text-center">
+        <div className="text-5xl font-bold text-slate-900">{overall}<span className="text-2xl text-slate-500">/100</span></div>
+        <div className="text-sm text-slate-500 mt-1">Composite Foundation Health Score</div>
+      </div>
+      <div className="space-y-2 mt-4">
+        {HEALTH_PILLARS.map(p => (
+          <div key={p.key} className="border border-slate-200 rounded-lg p-2.5">
+            <div className="flex items-center justify-between">
+              <span className="font-medium text-slate-900 flex items-center gap-2"><StatusDot tone={p.tone}/>{p.label}</span>
+              <span className="text-sm font-semibold text-slate-700">{p.score}/100</span>
+            </div>
+            <div className="text-xs text-slate-600 mt-1">{p.note}</div>
+          </div>
+        ))}
+      </div>
+      <div className="text-xs text-slate-500 mt-4">Run cadence: daily automated + monthly board-attested.</div>
+    </div>
+  );
+};
+
+/* ========== TOPBAR & SIDEBAR ========== */
+const TopBar = ({ view, setHealthOpen }) => (
+  <header className="sticky top-0 z-20 bg-white border-b border-slate-200 px-5 py-3 flex items-center justify-between">
+    <div>
+      <div className="text-xs uppercase tracking-wider text-slate-500 font-medium">School Project · Founding Principal Console</div>
+      <div className="text-lg font-semibold text-slate-900">{NAV.find(n => n.id === view)?.label}</div>
+    </div>
+    <div className="flex items-center gap-3">
+      <div className="hidden lg:block text-right">
+        <div className="text-sm font-medium text-slate-900">{SCHOOL.principal}</div>
+        <div className="text-xs text-slate-500">{SCHOOL.role}</div>
+      </div>
+      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-ochre-500 to-gum-600 text-white flex items-center justify-center font-semibold text-sm">KA</div>
+    </div>
+  </header>
+);
+
+const Sidebar = ({ view, setView }) => (
+  <aside className="w-64 shrink-0 bg-ink-950 text-slate-100 h-screen sticky top-0 flex flex-col">
+    <div className="px-5 py-4 border-b border-slate-800">
+      <div className="text-sm font-semibold leading-tight">School<br/>Project</div>
+      <div className="text-[10px] uppercase tracking-wider text-ochre-400 mt-1">{SCHOOL.location}</div>
+    </div>
+    <nav className="flex-1 overflow-y-auto py-2">
+      {NAV.map(n => (
+        <button key={n.id} onClick={() => setView(n.id)}
+          className={`w-full text-left px-5 py-2 text-sm flex items-center gap-2 hover:bg-slate-800/60 ${view===n.id?'bg-slate-800/80 border-l-4 border-ochre-500 pl-4 font-medium':''}`}>
+          <span className="text-base">{n.icon}</span>{n.label}
+        </button>
+      ))}
+    </nav>
+    <div className="px-5 py-4 text-[11px] text-slate-400 border-t border-slate-800">
+      v1.0 · {fmtDate(TODAY)} · Founding Principal artefact
+    </div>
+  </aside>
+);
+
+/* ========== APP ========== */
+const App = () => {
+  const [view, setView] = useState('dashboard');
+  const [healthOpen, setHealthOpen] = useState(false);
+  const [boardPackOpen, setBoardPackOpen] = useState(false);
+  const [state, setState] = useState({
+    phaseId: 'P1',
+    risks: RISKS,
+  });
+
+  const M = (() => {
+    switch(view){
+      case 'dashboard':   return <Dashboard state={state} setView={setView} setHealthOpen={setHealthOpen} setBoardPackOpen={setBoardPackOpen} />;
+      case 'roadmap':     return <Roadmap state={state} />;
+      case 'compliance':  return <Compliance />;
+      case 'staffing':    return <Staffing />;
+      case 'curriculum':  return <Curriculum />;
+      case 'resources':   return <Resources />;
+      case 'operations':  return <Operations />;
+      case 'risks':       return <Risks state={state} setState={setState} />;
+      case 'stakeholders':return <Stakeholders />;
+      case 'budget':      return <Budget />;
+      case 'marketing':   return <Marketing />;
+      case 'comparators': return <Comparators />;
+      case 'variables':   return <Variables />;
+      case 'reports':     return <Reports state={state} />;
+      default: return null;
+    }
+  })();
+
+  return (
+    <div className="min-h-screen flex bg-slate-50">
+      <Sidebar view={view} setView={setView} />
+      <div className="flex-1 min-w-0">
+        <TopBar view={view} setHealthOpen={setHealthOpen} />
+        <main className="p-5 max-w-[1600px] mx-auto">{M}</main>
+      </div>
+      <Modal open={healthOpen} onClose={() => setHealthOpen(false)} title="Foundation Health Check — 12 pillars">
+        <HealthCheckBody />
+      </Modal>
+      <Modal open={boardPackOpen} onClose={() => setBoardPackOpen(false)} title="Generate Founding Board Pack">
+        <div className="text-sm text-slate-700 space-y-3">
+          <p>The board pack assembles live console data into a 7-section PDF: Phases · Health · Risks · Budget · Staffing · Stakeholders · NSW Compliance.</p>
+          <p>Use it as the artefact for board meeting #1, as evidence to the capital partner, and as a starting point for NESA narrative documents.</p>
+          <Btn tone="primary" full onClick={() => { exportBoardPDF(state); setBoardPackOpen(false); }}>Download Board Pack (PDF)</Btn>
+        </div>
+      </Modal>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
