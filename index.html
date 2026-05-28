@@ -36,10 +36,36 @@
 </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
-<div id="root"></div>
+<div id="root">
+  <div style="padding:40px;font-family:system-ui;color:#475569;">
+    <div style="font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8;">School Project · Founding Principal Console</div>
+    <div style="font-size:18px;margin-top:6px;">Loading platform…</div>
+    <div id="boot-msg" style="margin-top:12px;font-size:12px;color:#64748b;">Compiling React + Tailwind + Chart.js…</div>
+  </div>
+</div>
 <noscript>This console requires JavaScript.</noscript>
 
-<script type="text/babel" data-presets="env,react">
+<script>
+  // Surface any error visibly so a blank page never happens silently.
+  window.addEventListener('error', function(e){
+    var r = document.getElementById('root');
+    if (r) r.innerHTML = '<div style="padding:40px;font-family:ui-monospace,monospace;color:#b91c1c;background:#fef2f2;border-left:4px solid #b91c1c;margin:24px;border-radius:8px;"><div style="font-weight:600;font-size:16px;margin-bottom:8px;">JavaScript error</div><div style="white-space:pre-wrap;font-size:12px;">'+ (e.message || e.error || 'unknown') +'\n\n'+ (e.filename || '') +':'+ (e.lineno || '') +':'+ (e.colno || '') +'</div></div>';
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    var r = document.getElementById('root');
+    if (r) r.innerHTML = '<div style="padding:40px;font-family:ui-monospace,monospace;color:#b91c1c;">Promise rejection: '+ (e.reason && e.reason.message || e.reason) +'</div>';
+  });
+  // Belt-and-braces: if React hasn't mounted in 6s, show diagnostics.
+  setTimeout(function(){
+    var r = document.getElementById('root');
+    if (!r || !r.querySelector('aside')) {
+      var m = document.getElementById('boot-msg');
+      if (m) m.innerHTML = 'React=' + (typeof React) + ' · ReactDOM=' + (typeof ReactDOM) + ' · Babel=' + (typeof Babel) + ' · Chart=' + (typeof Chart) + ' · jspdf=' + (typeof window.jspdf) + ' · PptxGenJS=' + (typeof window.PptxGenJS) + '<br/>If this row stays here, the most likely cause is a CDN being blocked.';
+    }
+  }, 6000);
+</script>
+
+<script type="text/babel">
 const { useState, useEffect, useMemo, useRef, Fragment } = React;
 
 /* ========== ANCHOR DATES & CONSTANTS ========== */
@@ -350,7 +376,7 @@ const COMPARATORS = [
       'PBL → HSC/QCE pathway must be communicated as “and” not “or”.',
       'Parents want quantitative signals; rubric portfolios alone do not satisfy.',
     ]},
-  { name:'Templestowe College', location:'Templestowe, VIC · VIC DET', founded:1965 (transformed 2009), model:'Personalised learning, student agency, fluid timetable',
+  { name:'Templestowe College', location:'Templestowe, VIC · VIC DET', founded:'1965 (transformed 2009)', model:'Personalised learning, student agency, fluid timetable',
     scale:'~1,200 students', site:'https://www.tc.vic.edu.au', lessons:[
       'Student agency requires explicit scaffolding — not absence of structure.',
       'Subject choice flexibility is a recruitment magnet; needs operational discipline.',
