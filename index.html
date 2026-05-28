@@ -67,7 +67,7 @@
 
 const { useState, useEffect, useMemo, useRef, Fragment } = React;
 
-const TODAY = new Date('2026-05-28');
+const TODAY = new Date('2026-05-29');
 const TARGET_OPEN = new Date('2029-01-29');   // realistic earliest opening (Term 1 2029)
 const NESA_LODGE_BY = new Date('2028-03-31'); // NESA Section 83 application due 31 March of year before opening
 const monthsBetween = (a, b) => Math.round((b - a) / (1000*60*60*24*30.44));
@@ -78,17 +78,363 @@ const fmtDate = (d) => new Date(d).toLocaleDateString('en-AU', { day:'2-digit', 
 const SCHOOL = {
   name: 'School Project',
   shortName: 'SP',
-  subtitle: 'Project-Based Learning · Parramatta Region · Pre-Appointment State',
-  location: 'Parramatta region, NSW · Dharug Country',
-  acknowledgement: 'We acknowledge the Dharug people, traditional custodians of the land on which the School Project will stand in the Parramatta region, and pay respects to Elders past, present, and emerging.',
-  role: 'Founding Principal — UNDER RECRUITMENT (panel convened May 2026)',
-  status: 'PRE-APPOINTMENT',
-  pedagogy: 'Project-Based Learning · Gold Standard PBL (PBL Works) · NSW Syllabus + Australian Curriculum v9 · HSC pathway from 2032',
-  targetCohort: 'Years 7–9 (Year 1) · scaling to 7–12 by Year 4',
+  subtitle: 'Faith-Informed Project-Based Learning · Years 7–12 · Sydney / Parramatta region',
+  location: 'Sydney / Parramatta region, NSW · Dharug Country',
+  acknowledgement: 'We acknowledge the Dharug people, traditional custodians of the land on which the School Project will stand, and pay respects to Elders past, present, and emerging.',
+  role: 'Founding Principal designate — Dr Khaled Altarawneh (application lodged via Radical Recruitment Australia, 8 May 2026)',
+  status: 'CANDIDATE — application under review',
+  candidate: 'Dr Khaled Altarawneh',
+  candidatePhone: '+61 403 485 924',
+  candidateEmail: 'khaled.altarawneh48@gmail.com',
+  candidateOrcid: '0000-0001-9726-0332',
+  advertisedSalary: 250000,
+  recruiter: 'Radical Recruitment Australia · info@radicalrecruitment.com.au',
+  pedagogy: 'Faith-informed Project-Based Learning · Discovery → Mastery → Impact · NSW Syllabus + Australian Curriculum v9 · HSC pathway',
+  faithPrinciples: 'Ihsan · Tarbiyah · Adab · Ilm (ilm naafi\')',
+  targetCohort: 'Years 7–12 secondary · launch Years 7–9 (Year 1), scaling to full 7–12 by Year 4',
+  delivery: 'Face-to-face with strong embedded (community / industry) and online async layers',
   targetOpening: TARGET_OPEN,
   nesaLodgeBy: NESA_LODGE_BY,
-  capacity: '~480 students at maturity (illustrative; depends on site and DA)',
+  capacity: '~480 students at maturity (illustrative)',
 };
+
+/* ========== PRINCIPAL DESIGNATE PROFILE (Dr Khaled Altarawneh) ========== */
+const KHALED_PROFILE = {
+  name: 'Dr Khaled Altarawneh',
+  tagline: 'PhD · Educational Leader · Curriculum Innovator · Scholar of Teaching and Learning',
+  citizenship: 'Australian citizen · full unrestricted work rights',
+  wwcc: 'NSW Working with Children Check — CURRENT',
+  nesaRegistration: 'NSW Teacher Registration with NESA — IN PROGRESS',
+  qualifications: [
+    { qual:'PhD (Civil Engineering)',                                              inst:'University of Newcastle, Australia',     yr:'2011', note:'Thesis: Experimental and Numerical Studies of Diffusion in Geomaterials' },
+    { qual:'Graduate Certificate in Learning and Teaching in Higher Education',    inst:'Charles Sturt University',               yr:'2023', note:'Blended learning design; evidence-based assessment; contemporary teaching practice; student engagement' },
+    { qual:'Postgraduate coursework, M.Eng. Sci (Construction Project Management)',inst:'UNSW Sydney',                            yr:'2023', note:'PM theory and practice' },
+    { qual:'Mental Health First Aid Accreditation',                                inst:'Lifeline / University of South Australia',yr:'2022', note:'Pastoral readiness' },
+    { qual:'Bachelor of Mining Engineering (Honours)',                             inst:'Al-Balqa\' Applied University, Jordan',   yr:'2004', note:'Top Engineering Graduate of the Year' },
+  ],
+  capabilities: [
+    'Educational innovation and reform leadership — 20+ years across multiple institutions',
+    'Project-based, inquiry-based, authentic learning practice — sustained, lived pedagogy',
+    'Curriculum architecture and unit design from first principles',
+    'LMS architecture across Moodle, Canvas, Blackboard, Brightspace D2L — learning analytics, dynamic delivery, H5P, multi-mode',
+    'Faith-informed educational philosophy — Ihsan, Tarbiyah, Adab, Ilm',
+    'Accreditation and quality assurance — chaired international ABET accreditation through to successful outcome',
+    'Active scholarship of teaching and learning — five manuscripts under peer review (Q1 journals)',
+    'Strategic partnerships — Transport for NSW, Omya Mining, 15+ regional councils',
+    'Bilingual capability — English (full professional) · Arabic (native)',
+  ],
+  fitToRole: [
+    { commitment:'Integrated learning architecture (Discovery → Mastery → Impact)', evidence:'UTS College pathway redevelopment (500+ students, 40+ countries, 95% satisfaction); 17 online modules transformed at Charles Sturt; current academic critical review and unit architecture work for new specialisations' },
+    { commitment:'Founding team grounded in excellence and faith',                  evidence:'Led culturally and disciplinarily diverse academic teams at Yarmouk, UniSA, ASA Institute, Western Sydney, Charles Sturt — including ABET chairing through to successful outcome' },
+    { commitment:'Infrastructure for excellence (LMS + evidence integrity + governance)', evidence:'Operational expertise in Moodle, Canvas, Blackboard, Brightspace — learning analytics dashboards, dynamic delivery, risk-aware course governance' },
+    { commitment:'Strategic partnerships (universities · industry · civic · creative)', evidence:'Transport for NSW, Omya Mining, 15+ regional councils, Elegancy Centre for International Scholarships (5 destination countries)' },
+    { commitment:'Thought leadership in educational transformation', evidence:'Five Q1 manuscripts under review (Journal of Learning Analytics, Journal of Educational Data Mining, IJETHE, International Journal of STEM Education, Mathematical Geosciences)' },
+  ],
+  gapToManage: [
+    { gap:'NSW teacher registration with NESA — in progress (not yet completed)', mitigation:'Submission filed; ETA Q3 2026; Curriculum Director hire prioritised to add NESA-registered teacher to leadership team from Day 1' },
+    { gap:'Bulk of leadership experience is HE / pathway, not NSW secondary',     mitigation:'NESA-experienced Compliance Officer + Curriculum Director hired in S2; AISNSW mentor enlisted; AHISA induction; secondary-school deputy hire in S5 (early)' },
+  ],
+};
+
+/* ========== ISLAMIC PEDAGOGICAL PRINCIPLES ========== */
+const ISLAMIC_PRINCIPLES = [
+  { id:'IH', name:'Ihsan (إحسان)',     transl:'Excellence in service, as if seeing the divine',
+    pedagogical:'Every curriculum decision, assessment design, staff appointment, and learner interaction is held to a standard of conscious excellence. No "good enough".',
+    operational:'Quality gates on every artefact. Peer review of unit plans. Student work re-presented until it meets exhibition standard. Adult conduct visibly models the standard.' },
+  { id:'TA', name:'Tarbiyah (تربية)',  transl:'Whole-person nurturing — intellect, character, faith, creative capacity',
+    pedagogical:'Assessment that fragments these dimensions ultimately fragments the learner. Integrated assessment design.',
+    operational:'Pastoral structure (Crew Advisory 1:15) carries character + faith dimensions. Portfolio (Toddle / Moodle) captures whole-person growth. Annual student-led learning conferences.' },
+  { id:'AD', name:'Adab (أدب)',         transl:'Character refinement — ethical formation through conduct',
+    pedagogical:'The teacher models the standard the student grows into. Excellence in conduct is curriculum.',
+    operational:'Adult code of conduct adopted at Board level. Staff professional learning includes Adab modelling. Restorative practice is the discipline default.' },
+  { id:'IL', name:'Ilm naafi\' (علم نافع)', transl:'Purposeful, beneficial knowledge — held in trust',
+    pedagogical:'Knowledge in service of learner, ummah, and humanity. Pedagogy foregrounds purpose, application, contribution.',
+    operational:'PBL drives all major learning. Projects connect to community / industry / civic benefit. Capstone (Year 12) must demonstrate Ilm naafi\' explicitly.' },
+];
+
+/* ========== DISCOVERY → MASTERY → IMPACT PROGRESSION ========== */
+const DMI_PROGRESSION = [
+  { stage:'Discovery', years:'Year 7–8 (Stage 4)',
+    intent:'Open the world: ignite curiosity, build foundational literacies, scaffold inquiry habits, broaden disciplinary exposure.',
+    pedagogy:'Heavy scaffolding · short-cycle projects (4–6 wk) · disciplinary seminars supporting projects · crew advisory daily · public exhibition at end of each cycle',
+    assessment:'Rubric-based formative + summative · portfolio in Toddle · PAT-R/M baseline + NAPLAN Yr 7 · process-evidence weighted 50%',
+    voiceChoice:'Light: students choose driving question variant, audience, product format',
+    faith:'Ilm + Adab dominant — formation of habits of mind and conduct',
+    samplePartners:'WSU pre-service teachers · local Imams · Council libraries · STEM ambassadors' },
+  { stage:'Mastery',   years:'Year 9–10 (Stage 5)',
+    intent:'Deepen disciplinary mastery, lengthen inquiry cycles, sustain real-world projects, scaffold senior-school readiness.',
+    pedagogy:'Longer projects (8–10 wk) · 200-hr mandatory + 100-hr optional electives · industry mentor matched · individual learning plan begun',
+    assessment:'RoSA-aligned A-E grading · PBL rubrics + summative tasks · HSC readiness checks · authentic audiences',
+    voiceChoice:'Moderate: students co-design project scope and audience within frame',
+    faith:'Tarbiyah dominant — integration of intellectual, character, faith, creative dimensions',
+    samplePartners:'WSLHD · City of Parramatta civic projects · WSU undergrad teams · TAFE NSW · Islamic Sciences and Research Academy · creative practitioners' },
+  { stage:'Impact',    years:'Year 11–12 (Stage 6)',
+    intent:'Deliver consequence: HSC pathway + capstone project of community / industry value + transition to university or work.',
+    pedagogy:'Capstone over 18 months · school-based traineeship pathway · industry-embedded · faculty-mentored research',
+    assessment:'HSC (NESA) · capstone exhibition · SBATs · ATAR + non-ATAR pathway equally celebrated',
+    voiceChoice:'High: students lead capstone design and direction',
+    faith:'Ihsan dominant — public excellence; contribution to ummah and society',
+    samplePartners:'Universities (WSU, UTS, USyd) for research mentorship · industry sponsors for capstone hosting · Council for civic projects · imamate for faith-based capstones' },
+];
+
+/* ========== SAMPLE PBL UNITS (concrete, named) ========== */
+const SAMPLE_UNITS = [
+  { stage:'Discovery (Yr 7, T2)', title:'"Reading the City" — How Parramatta speaks',
+    drivingQ:'How do we read a city as a learning text — its geography, peoples, faiths, and futures?',
+    disciplines:'HSIE (Geography) · English · Visual Arts · Mathematics (data + measurement)',
+    duration:'8 weeks · F2F core + 2× embedded community walks + ~5h/wk online research',
+    audience:'Public exhibition at City of Parramatta Library; family + invited community',
+    product:'Multi-format city guide (printed booklet + digital map + 3-min audio essay)',
+    nesa:'14 NSW outcomes across Stage 4 Geography, English, VisArts, Mathematics',
+    faith:'Ilm naafi\' — knowledge that serves community. Adab — respectful representation of diverse communities. Kitab maftuh — world as open book.',
+    partners:'City of Parramatta Library · WSU Geography Dept (pre-service mentors) · local heritage officers',
+    wilType:'Community-embedded · 2 site visits + 1 public exhibition' },
+  { stage:'Discovery (Yr 8, T3)', title:'"Water in Western Sydney"',
+    drivingQ:'How do we design water infrastructure that is safer, climate-resilient, and culturally honest by 2040?',
+    disciplines:'Science (Earth & Space + Ecology) · Mathematics (statistics) · Technology (Design) · English (persuasive)',
+    duration:'10 weeks · F2F core + 3× fieldwork at Parramatta River + Sydney Water site visit',
+    audience:'Council planning officers + Sydney Water engineers',
+    product:'Concept design board + 5-min pitch + research dossier',
+    nesa:'12 Stage 4 outcomes',
+    faith:'Tarbiyah + Ilm — care of creation (khalifah); knowledge that serves community future',
+    partners:'Sydney Water · City of Parramatta · WSU Engineering (peer mentors)',
+    wilType:'Industry-embedded · 1 sponsor + Council audience' },
+  { stage:'Mastery (Yr 9, T1)', title:'"Halal Food Systems and Public Health"',
+    drivingQ:'How can a halal food system in Western Sydney support better community health outcomes?',
+    disciplines:'Food Technology · Science (Biology) · PDHPE · Commerce · Islamic Studies',
+    duration:'10 weeks',
+    audience:'WSLHD public health officers + local halal certifier + community ambassadors',
+    product:'Policy brief + community-health intervention prototype + presentation',
+    nesa:'Stage 5 200-hr elective hours; Yr 9 Science + PDHPE outcomes',
+    faith:'Ilm naafi\' (beneficial knowledge) + Adab (conduct in food + community) + Ihsan (excellence in service)',
+    partners:'WSLHD · Halal Certification Authority · ISRA · local restaurants',
+    wilType:'Embedded · 1 mentor + public-health placement' },
+  { stage:'Mastery (Yr 10, T2)', title:'"Built Environment & Mosque Architecture"',
+    drivingQ:'How does the built environment of a mosque shape the spiritual and social life of its community?',
+    disciplines:'Design & Technology · Visual Arts · HSIE · Islamic Studies · Mathematics (geometry)',
+    duration:'10 weeks',
+    audience:'Architects · imamate · community elders · WSU architecture school',
+    product:'Architectural concept + scale model + spatial argument essay',
+    nesa:'Stage 5 outcomes; 100-hr optional elective hours',
+    faith:'Tarbiyah (integration of faith + creative) + Adab (sacred space design); Ihsan (craft)',
+    partners:'WSU Architecture · Islamic Sciences Research Academy (ISRA) · Parramatta Mosque · local architects',
+    wilType:'Embedded + industry-mentored' },
+  { stage:'Impact (Yr 11, T1)', title:'Capstone — Year 11 Discovery Phase',
+    drivingQ:'What is a question that matters to my community, my faith, and my future — and how do I prepare to answer it?',
+    disciplines:'Capstone — student-led; aligned to HSC subject choices and individual learning plan',
+    duration:'Full Year 11 (4 terms) · capstone design + research + planning',
+    audience:'Capstone supervisor + industry/research mentor + parent + imamate (optional)',
+    product:'Capstone proposal + literature scan + provisional methodology + ethical-formation reflection',
+    nesa:'Stage 6 preliminary; HSC support program',
+    faith:'Ilm naafi\' is the test — does this contribute? Ihsan in process.',
+    partners:'University departments (WSU, UTS, USyd) · industry hosts · ISRA · community organisations',
+    wilType:'Year-long mentor relationship begins' },
+  { stage:'Impact (Yr 12, T2)', title:'Capstone — Public Exhibition + Hand-off',
+    drivingQ:'What did I make, learn, and contribute — and to whom?',
+    disciplines:'HSC subjects + Capstone',
+    duration:'Full HSC year culminating in Public Capstone Night',
+    audience:'Public · industry partners · university researchers · community',
+    product:'HSC outcomes + Capstone exhibition (artefact + 12-min presentation + Q&A) + ethical-formation portfolio',
+    nesa:'HSC (NESA) · ATAR pathway · non-ATAR Industry Curriculum pathway',
+    faith:'Ihsan as public excellence; contribution to ummah and society',
+    partners:'Full partner consortium · public attendees',
+    wilType:'Capstone hosted by industry / community partner' },
+];
+
+/* ========== WORK-INTEGRATED LEARNING (WIL) FRAMEWORK ========== */
+const WIL_FRAMEWORK = [
+  { stage:'Discovery (Yr 7–8)', typicalWIL:'2× community walks per term + 1× partner-hosted exhibition per term',
+    structure:'Curriculum-embedded; supervised by classroom teacher + Crew Advisor; partner provides authentic audience and 1–2 guest sessions',
+    partners:'Council libraries · STEM ambassadors · local imamate · ISRA scholars · creative practitioners',
+    establishedIn:'Stage S5 (formal MoUs with 6+ Discovery partners)',
+    riskOwner:'Curriculum Director + Wellbeing Coordinator' },
+  { stage:'Mastery (Yr 9–10)', typicalWIL:'1 industry mentor per project + 1 site visit + 1 partner audience per term',
+    structure:'Mentor relationship for the project arc (8–10 wk); student safety briefed; visit risk-assessed; mentor-teacher liaison weekly',
+    partners:'WSLHD · City of Parramatta · WSU undergrad teams · TAFE NSW · halal certification bodies · creative studios',
+    establishedIn:'Stage S5 (Yr 9 mentor consortium) + S6 (Yr 10 expansion)',
+    riskOwner:'Curriculum Director + Lead Teacher Stage 5' },
+  { stage:'Impact (Yr 11–12)', typicalWIL:'Capstone industry mentor for 18 months · SBAT (School-Based Apprenticeship/Traineeship) optional · industry placement (40–80 hrs/yr Year 11–12)',
+    structure:'Formal mentorship MoU; capstone supervisor (school) + capstone mentor (industry/university); SBAT meets NESA rules',
+    partners:'Universities (WSU + UTS + USyd) for research-track capstones · industry hosts for design/build · imamate for community-faith capstones',
+    establishedIn:'Phased: WSU MoU in S3; consortium formalised in S5; SBAT contracts year-by-year',
+    riskOwner:'Principal + Curriculum Director' },
+];
+
+/* ========== PARTNERSHIPS BY STAGE ========== */
+const PARTNERSHIPS = [
+  { partner:'Western Sydney University', type:'Academic', role:'Pre-service teacher placement · undergrad mentors for Mastery + Impact projects · capstone research supervision · curriculum endorsement', estStage:'S3 (MoU drafted, signed in S4)', riskOwner:'Principal' },
+  { partner:'UTS / University of Sydney', type:'Academic', role:'Capstone research mentorship · STEM partnership · ATAR transition support', estStage:'S5 (informal); S7 (formal MoU)', riskOwner:'Principal' },
+  { partner:'Islamic Sciences and Research Academy (ISRA)', type:'Faith / academic', role:'Islamic Studies advisory · faith-informed curriculum vetting · community legitimacy', estStage:'S2 (informal); S3 (advisory contract)', riskOwner:'Principal' },
+  { partner:'TAFE NSW Western Sydney', type:'Vocational', role:'Industry curriculum pathway · SBAT host coordination · technical content support', estStage:'S5 (informal); S6 (formal)', riskOwner:'Curriculum Director' },
+  { partner:'City of Parramatta Council', type:'Civic', role:'DA pathway · civic project hosting · community engagement · libraries as PBL audience venues', estStage:'S2 (planning consultation); S3 (DA pre-lodgement)', riskOwner:'Facilities PM + Principal' },
+  { partner:'Western Sydney Local Health District (WSLHD)', type:'Industry', role:'Public health PBL projects · health-careers exposure · mental health partnership · placements (Impact)', estStage:'S5 (LoI); S6 (project MoU)', riskOwner:'Curriculum Director' },
+  { partner:'Sydney Water', type:'Industry', role:'Environmental PBL projects · STEM ambassadors · site visits', estStage:'S5 (LoI)', riskOwner:'Curriculum Director' },
+  { partner:'Halal Certification Authority Australia', type:'Industry / Faith', role:'Halal food systems PBL projects · industry mentors', estStage:'S5 (LoI)', riskOwner:'Curriculum Director' },
+  { partner:'Dharug Strategic Management Group', type:'Community', role:'Country acknowledgement · Indigenous education advisory · Narragunnawali pathway', estStage:'S2 (formal engagement)', riskOwner:'Principal' },
+  { partner:'Deerubbin Local Aboriginal Land Council', type:'Community', role:'Heritage assessment for site · ongoing Aboriginal education input', estStage:'S2–S3 (engagement + site assessment)', riskOwner:'Principal' },
+  { partner:'AISNSW (Independent Schools NSW)', type:'Sector', role:'Capital grants · IEU navigation · mentoring · sector intelligence', estStage:'S2 (member admission); ongoing', riskOwner:'Principal + Business Mgr' },
+  { partner:'PBL Works / Big Picture Learning Australia', type:'Pedagogy', role:'PBL professional learning at network rate · external moderation', estStage:'S3 (memberships)', riskOwner:'Curriculum Director' },
+  { partner:'Parramatta Mosque + local imamate', type:'Faith / community', role:'Faith advisory · pastoral support · community legitimacy', estStage:'S1 (Principal-led informal); S2 (formal advisory)', riskOwner:'Principal' },
+  { partner:'Radical Recruitment Australia', type:'HR / Recruitment', role:'Founding Principal placement; ongoing executive recruitment partner', estStage:'S0 (current — Principal placement)', riskOwner:'Board Chair' },
+];
+
+/* ========== HR POSITIONS — FULL JD / SELECTION CRITERIA / SALARY ========== */
+const HR_POSITIONS = [
+  { id:'HR-01', stage:'S0', role:'Founding Principal', salary:250000, salaryNote:'Advertised remuneration (Radical Recruitment Australia)', yearsExp:'15+ years educational leadership',
+    designate:'Dr Khaled Altarawneh — application lodged 8 May 2026',
+    pd:'Founding leader for a new faith-informed PBL secondary school. Builds curriculum architecture, founding team, governance, NESA Section 83 evidence, capital partner relationships, and partnership ecosystem. Reports to Founding Board.',
+    selection:[
+      'Doctorally qualified educational leader OR equivalent senior leadership in innovative secondary / pathway settings',
+      'Demonstrated practitioner of project-based, work-integrated, inquiry-led pedagogy',
+      'Faith-informed (Islamic worldview alignment)',
+      'Track record building integrated learning architecture from first principles',
+      'Strategic partnership experience — universities + industry + civic + creative',
+      'LMS architecture expertise and learning-analytics literacy',
+      'NSW teacher registration with NESA (or in progress with credible timeline)',
+      'Current NSW Working with Children Check',
+      'Comfort with ambiguity and start-up cadence',
+    ],
+    artefactsExpected:['Vision statement','5-yr strategic plan','Governance charter sign-off','NESA pre-application briefing log','Capital partner term-sheet sign-off','Founding team appointment letters','Weekly board pack PDF','Quarterly stakeholder communication'] },
+  { id:'HR-02', stage:'S2', role:'Business Manager / CFO', salary:185000, salaryNote:'AISNSW PAOS benchmark + start-up loading', yearsExp:'10+ years in independent-school finance OR equivalent non-profit/SME CFO',
+    designate:'Recruit S2 (Oct 2026 start target)',
+    pd:'Owns finance, HR administration, facilities procurement, payroll, IEU MEA compliance, ACNC reporting, NESA financial-viability evidence, capital partner reporting. Reports to Principal.',
+    selection:[
+      'CA / CPA qualified',
+      'Independent school OR comparable charity/non-profit CFO experience',
+      'IEU MEA fluency',
+      'ACNC / ATO reporting experience',
+      'Comfort with start-up financial discipline (zero-based budgeting, scenario analysis)',
+      'NSW WWCC',
+      'Faith-aligned conduct (Adab)',
+    ],
+    artefactsExpected:['Capex commitment register','Year-1 opex budget','Monthly cash-flow forecast','NESA financial-viability submission','ACNC annual return','Audit-ready records'] },
+  { id:'HR-03', stage:'S2', role:'Curriculum Director (PBL Specialist)', salary:175000, salaryNote:'IEU MEA executive band + PBL loading', yearsExp:'10+ years secondary curriculum leadership; NESA registered',
+    designate:'Recruit S2 (Oct 2026 start target)',
+    pd:'Owns Discovery → Mastery → Impact curriculum architecture, NSW Syllabus + AC v9 mapping, scope and sequence, PBL fidelity, assessment design, HSC pathway plan, NESA curriculum submission, teacher professional learning.',
+    selection:[
+      'NSW NESA-registered teacher',
+      'Master\'s in Education or equivalent',
+      'Demonstrated PBL practice in a recognised PBL school (LLV, Prahran HS, NTNAU, Big Picture, similar)',
+      'NSW Syllabus + Australian Curriculum v9 fluency',
+      'NESA registration process experience',
+      'Faith-aligned (Ilm naafi\' as pedagogical lens)',
+      'NSW WWCC',
+    ],
+    artefactsExpected:['Discovery / Mastery / Impact framework document','Stage 4 + 5 scope and sequence','Sample unit plans (12+)','HSC Stage 6 pathway plan','Assessment & reporting policy','NESA curriculum submission'] },
+  { id:'HR-04', stage:'S2', role:'NESA Compliance & Quality Officer', salary:135000, salaryNote:'NESA regulation specialist band', yearsExp:'8+ years NESA regulation / quality assurance',
+    designate:'Recruit S2 (Nov 2026 start target)',
+    pd:'Owns the 28-policy library, Section 83 application package, ongoing NESA evidence, Child Safe Standards implementation, Reportable Conduct Scheme protocol, audit readiness.',
+    selection:[
+      'NSW NESA regulation experience (school registration or compliance)',
+      'Policy authoring experience',
+      'OCG / Child Safe Standards expertise',
+      'NSW WWCC',
+      'Adab in audit-facing conduct',
+    ],
+    artefactsExpected:['28-policy library','Section 83 application pack','Child Safe Standards implementation evidence','Annual NESA inspection readiness pack'] },
+  { id:'HR-05', stage:'S3', role:'Enrolment & Marketing Manager', salary:145000, salaryNote:'AISNSW PAOS band', yearsExp:'7+ years independent school marketing / enrolment OR community engagement',
+    designate:'Recruit S3 (Apr 2027 start target)',
+    pd:'Owns EOI funnel, multi-lingual marketing, open days, family meetings, brand stewardship, community partnerships. Reports to Principal.',
+    selection:[
+      'Independent / faith school enrolment experience preferred',
+      'Multilingual marketing capability (Arabic + 1 additional LOTE highly desirable)',
+      'CRM fluency (HubSpot, Sentral admissions)',
+      'Faith-aligned conduct (community-facing)',
+      'NSW WWCC',
+    ],
+    artefactsExpected:['Brand guidelines','Enrolment funnel dashboard','Open Day plan','Family ambassador program','Quarterly enrolment report'] },
+  { id:'HR-06', stage:'S3', role:'Facilities & Project Manager (contract)', salary:160000, salaryNote:'External PM market rate (S3–S6)', yearsExp:'15+ years construction PM; education sector experience',
+    designate:'Recruit S3 (Apr 2027 contract start)',
+    pd:'Owns site, DA, fit-out delivery, BCA Class 9b compliance, premises certificate. 6–9 month contract for S3–S6.',
+    selection:[
+      'Senior construction PM credential',
+      'BCA Class 9b experience',
+      'Council DA experience (Western Sydney advantageous)',
+      'NSW WWCC',
+    ],
+    artefactsExpected:['DA submission pack','Builder contract','Risk-managed fit-out program','BCA compliance certificate','Premises certificate'] },
+  { id:'HR-07', stage:'S5', role:'Lead Teacher — Stage 4 (Yr 7–8)', count:2, salary:132000, salaryNote:'IEU MEA 2026 Level 2.5 + Accomplished Teacher allowance ($5,203)', yearsExp:'8+ years secondary teaching; PBL practice',
+    designate:'Recruit S5 (May 2028 start)',
+    pd:'Anchors PBL fidelity for Stage 4. Teaches across 2 KLAs + leads Discovery-phase project design + Crew Advisor 1:15.',
+    selection:[
+      'NESA-registered, NSW',
+      'PBL practice (any recognised PBL school)',
+      'Faith-aligned (Tarbiyah pedagogy)',
+      'NSW WWCC',
+    ],
+    artefactsExpected:['Crew advisory model','Stage 4 project plans (per term)','Toddle portfolios setup','Exhibition curation'] },
+  { id:'HR-08', stage:'S5', role:'Lead Teacher — Stage 5 (Yr 9–10)', count:1, salary:132000, salaryNote:'IEU MEA 2026', yearsExp:'8+ years secondary; HSC readiness preparation', designate:'Recruit S5',
+    pd:'Anchors PBL + Mastery phase + HSC bridge. Curriculum design for Stage 5 200/100-hour electives.',
+    selection:['NESA-registered, NSW','HSC subject teaching experience (1+ HSC subject)','PBL practice','Faith-aligned','WWCC'],
+    artefactsExpected:['Stage 5 200-hr elective design','HSC bridge plan','Industry mentor coordination'] },
+  { id:'HR-09', stage:'S5', role:'Wellbeing & Inclusion Coordinator', salary:140000, salaryNote:'AISNSW wellbeing band', yearsExp:'10+ years pastoral / inclusion leadership', designate:'Recruit S5',
+    pd:'Owns Crew Advisory model, DSE / NCCD process, Learning Support model, mental-health support, family liaison.',
+    selection:['NESA-registered (preferred)','DSE / NCCD process expertise','Mental Health First Aid','Faith-aligned (Adab + Tarbiyah)','WWCC'],
+    artefactsExpected:['Wellbeing program','Crew Advisory training','NCCD records process','Family liaison cadence'] },
+  { id:'HR-10', stage:'S5', role:'IT & Systems Lead', salary:130000, salaryNote:'NSW indep IT band', yearsExp:'7+ years school IT / EdTech', designate:'Recruit S5',
+    pd:'Owns Sentral + Toddle + Moodle + Google Workspace + ACSC Essential Eight Maturity 1. Cybersecurity baseline.',
+    selection:['School IT experience','ACSC E8 ML1 implementation','LMS administration (Moodle preferred)','WWCC'],
+    artefactsExpected:['IT stack rollout','E8 ML1 attestation','Cyber incident response plan','LMS / SIS user training'] },
+  { id:'HR-11', stage:'S6', role:'Subject Teachers (English/Maths/Science/HSIE/PDHPE/Technologies/CAPA/LOTE incl. Arabic)', count:10, salary:108000, salaryNote:'IEU MEA 2026 Levels 1–4 weighted ave', yearsExp:'3–8 years secondary teaching', designate:'Recruit S6',
+    pd:'Subject discipline anchor + project co-teaching + crew advisor.',
+    selection:['NESA-registered','Faith-aligned','PBL openness','WWCC','Arabic language teaching credential for LOTE role'],
+    artefactsExpected:['Subject scope and sequence','Project co-teaching plan','Term assessment'] },
+  { id:'HR-12', stage:'S6', role:'Learning Support Teachers', count:2, salary:108000, salaryNote:'IEU MEA 2026', yearsExp:'5+ years inclusion teaching', designate:'Recruit S6',
+    pd:'Tiered support delivery; NCCD documentation; reasonable adjustments; partnership with classroom teachers.',
+    selection:['NESA-registered','Inclusion / special education qualification','NCCD experience','WWCC'],
+    artefactsExpected:['Tiered support model','NCCD records'] },
+  { id:'HR-13', stage:'S6', role:'School Counsellor / Psychologist', salary:135000, salaryNote:'AISNSW counsellor band; NSW Psych Board registration', yearsExp:'5+ years secondary-school counselling', designate:'Recruit S6',
+    pd:'Pastoral safety net; mental health; referral protocols; family liaison.',
+    selection:['NSW Psychology Board registration','Secondary-school experience','Faith-sensitive practice','WWCC'],
+    artefactsExpected:['Counselling protocol','Referral pathways','Wellbeing data dashboard'] },
+  { id:'HR-14', stage:'S6', role:'Aboriginal Education Liaison', salary:120000, salaryNote:'AISNSW + Narragunnawali alignment', yearsExp:'Community-nominated', designate:'Recruit S6 (Dharug SMG co-nomination)',
+    pd:'Cultural integrity; Aboriginal Education Policy implementation; Narragunnawali RAP coordination; student support.',
+    selection:['Community-nominated','Cultural authority','Education or community-development experience','WWCC'],
+    artefactsExpected:['Aboriginal Education Policy plan','Narragunnawali RAP','Annual cultural calendar'] },
+  { id:'HR-15', stage:'S6', role:'Reception / Admin Officers', count:2, salary:72000, salaryNote:'IEU PAOS MEA 2026', yearsExp:'5+ years admin', designate:'Recruit S6',
+    pd:'Front of school; family welcome; Sentral admin; scheduling; payroll support.',
+    selection:['Independent school admin experience','Sentral fluency','Faith-aligned conduct','WWCC'],
+    artefactsExpected:['Front office SOPs'] },
+  { id:'HR-16', stage:'S6', role:'Library / Learning Commons Lead', salary:110000, salaryNote:'IEU Teacher-Librarian band', yearsExp:'7+ years teacher-librarian', designate:'Recruit S6',
+    pd:'Resource curation; research literacy; PBL information-literacy scaffolds; Toddle / Moodle resource integration.',
+    selection:['Teacher-Librarian qualification (NESA)','PBL information-literacy practice','WWCC'],
+    artefactsExpected:['Library catalogue','PBL research scaffolds','Resource policy'] },
+];
+
+/* ========== ARTEFACTS REGISTER (what evidence must exist, and when) ========== */
+const ARTEFACTS = [
+  { id:'AR-001', name:'School concept paper',                                category:'Governance',     owner:'Board',                stage:'S0', evidence:'Board-signed concept; vision; mission; pedagogy framework', status:'complete' },
+  { id:'AR-002', name:'Founding Principal appointment letter',               category:'Governance',     owner:'Board Chair',          stage:'S1', evidence:'Signed appointment + WWCC + NESA reg evidence', status:'in_decision' },
+  { id:'AR-003', name:'Discovery → Mastery → Impact framework document',    category:'Curriculum',     owner:'Principal',            stage:'S2', evidence:'Framework v1.0', status:'planned' },
+  { id:'AR-004', name:'NSW Syllabus + AC v9 mapping (Stage 4 + 5)',          category:'Curriculum',     owner:'Curriculum Director',  stage:'S3', evidence:'KLA-by-KLA outcome mapping', status:'planned' },
+  { id:'AR-005', name:'Sample unit plans (12+ Discovery + Mastery)',         category:'Curriculum',     owner:'Curriculum Director',  stage:'S3', evidence:'Toddle planner exports + rubrics', status:'planned' },
+  { id:'AR-006', name:'HSC Stage 6 pathway plan',                            category:'Curriculum',     owner:'Curriculum Director',  stage:'S5', evidence:'Subject pathway map + HSC delivery year', status:'planned' },
+  { id:'AR-007', name:'Assessment & Reporting policy (PBL + NESA)',          category:'Curriculum',     owner:'Curriculum Director',  stage:'S3', evidence:'Policy + rubric library', status:'planned' },
+  { id:'AR-008', name:'28-policy library (NESA-compliant)',                  category:'Compliance',     owner:'NESA Compliance Officer',stage:'S3', evidence:'All 28 policies signed', status:'planned' },
+  { id:'AR-009', name:'NESA Section 83 application pack (RANGS Online)',     category:'Compliance',     owner:'Principal',            stage:'S4', evidence:'Lodged pack + receipt', status:'planned' },
+  { id:'AR-010', name:'Child Safe Standards implementation evidence',         category:'Compliance',     owner:'Principal',            stage:'S2', evidence:'10 standards; training records; review log', status:'planned' },
+  { id:'AR-011', name:'Reportable Conduct Scheme protocol',                  category:'Compliance',     owner:'Principal',            stage:'S2', evidence:'Protocol + OCG notification log', status:'planned' },
+  { id:'AR-012', name:'Council DA submission + approval',                    category:'Facilities',     owner:'Facilities PM',        stage:'S3', evidence:'DA pack + approval', status:'planned' },
+  { id:'AR-013', name:'Premises Certificate (NESA)',                          category:'Facilities',     owner:'Facilities PM',        stage:'S5', evidence:'NESA inspection + certificate', status:'planned' },
+  { id:'AR-014', name:'BCA Class 9b compliance certificate',                 category:'Facilities',     owner:'Builder',              stage:'S5', evidence:'Certifier sign-off', status:'planned' },
+  { id:'AR-015', name:'DSE 2005 accessibility audit',                         category:'Inclusion',      owner:'Architect',            stage:'S3', evidence:'Audit + sign-off', status:'planned' },
+  { id:'AR-016', name:'NCCD process documentation',                          category:'Inclusion',      owner:'Wellbeing Coord.',     stage:'S5', evidence:'Process + Sentral configuration', status:'planned' },
+  { id:'AR-017', name:'WHS management system',                               category:'WHS',            owner:'Business Mgr',         stage:'S3', evidence:'System + Safe Work statement', status:'planned' },
+  { id:'AR-018', name:'Privacy policy (APP + PPIP + HRIP)',                  category:'Privacy / Data', owner:'Legal Counsel',        stage:'S3', evidence:'Policy + impact assessment', status:'planned' },
+  { id:'AR-019', name:'ACSC Essential Eight Maturity 1 attestation',         category:'Privacy / Data', owner:'IT Lead',              stage:'S6', evidence:'Attestation + MSP report', status:'planned' },
+  { id:'AR-020', name:'Commonwealth SES funding eligibility',                category:'Funding',        owner:'Business Mgr',         stage:'S5', evidence:'DEEWR submission + acknowledgement', status:'planned' },
+  { id:'AR-021', name:'ACNC charity registration (PBI / DGR)',               category:'Funding',        owner:'Legal Counsel',        stage:'S2', evidence:'ACNC certificate', status:'planned' },
+  { id:'AR-022', name:'NSW BGAS application (annual, by 30 April)',          category:'Funding',        owner:'Business Mgr',         stage:'S3', evidence:'Application + outcome', status:'planned' },
+  { id:'AR-023', name:'Insurance pack (indemnity, public liability, cyber, property)', category:'Insurance', owner:'Business Mgr',  stage:'S6', evidence:'Policy schedules', status:'planned' },
+  { id:'AR-024', name:'Capital partner term sheet + drawdown',               category:'Finance',        owner:'Board Chair',          stage:'S3', evidence:'Signed term sheet + drawdown schedule', status:'in_decision' },
+  { id:'AR-025', name:'IEU MEA-aligned staff handbook + contracts',          category:'HR',             owner:'Business Mgr',         stage:'S5', evidence:'Handbook + contract templates', status:'planned' },
+  { id:'AR-026', name:'Aboriginal Education Policy plan',                    category:'Aboriginal Ed.', owner:'Principal',            stage:'S3', evidence:'Plan co-designed with Dharug SMG', status:'planned' },
+  { id:'AR-027', name:'Narragunnawali Reconciliation Action Plan',           category:'Aboriginal Ed.', owner:'Principal',            stage:'S5', evidence:'RAP reflect / innovate', status:'planned' },
+  { id:'AR-028', name:'Partnership MoU register',                             category:'Partnerships',   owner:'Principal',            stage:'S3', evidence:'14+ MoUs signed', status:'planned' },
+  { id:'AR-029', name:'Brand identity + style guide + trademark',            category:'Brand',          owner:'Enrolment Mgr',        stage:'S3', evidence:'Trademark filed; style guide v1', status:'planned' },
+  { id:'AR-030', name:'Year-1 enrolment pack + EOI funnel',                   category:'Enrolment',      owner:'Enrolment Mgr',        stage:'S5', evidence:'EOI 200+; family meeting log', status:'planned' },
+];
+
 
 /* ========== PMBOK 8 (Nov 2025) ========== */
 const PMBOK8_PRINCIPLES = [
@@ -150,22 +496,22 @@ const STAGES = [
     constraints:'Initial registration = 1 year only. NESA inspection within that year is mandatory. Year-2 enrolment must hit target or cash runway shortens.' },
 ];
 
-/* ========== KPI DATA (PRE-APPOINTMENT — MOSTLY ZERO) ========== */
+/* ========== KPI DATA (Principal designate state) ========== */
 const KPIS = [
-  { label:'Founding Principal in seat',     value:'No',  suffix:'',           delta:'panel convened',   tone:'amber', spark:[0,0,0,0,0,0,0] },
-  { label:'NESA application readiness',     value:0,     suffix:'%',          delta:'no work possible pre-Principal', tone:'red',   spark:[0,0,0,0,0,0,0] },
-  { label:'Founding team filled',           value:'0/12',suffix:'',           delta:'recruitment locked',tone:'red',   spark:[0,0,0,0,0,0,0] },
+  { label:'Principal application',          value:'Lodged',suffix:'',         delta:'8 May 2026 · under review', tone:'blue',  spark:[0,0,0,0,1,1,1] },
+  { label:'NESA application readiness',     value:0,     suffix:'%',          delta:'starts S2 (post-appointment)', tone:'red',   spark:[0,0,0,0,0,0,0] },
+  { label:'Founding team filled',           value:'1/12',suffix:'',           delta:'Principal designate',tone:'amber', spark:[0,0,0,0,0,1,1] },
+  { label:'Artefacts complete',             value:'1/30',suffix:'',           delta:'concept paper only', tone:'red',   spark:[0,0,0,0,1,1,1] },
+  { label:'Partnership MoUs',               value:'0/14',suffix:'',           delta:'engagement S2',     tone:'red',   spark:[0,0,0,0,0,0,0] },
   { label:'Capex committed',                value:0,     suffix:'M AUD',      delta:'indicative TS only',tone:'amber', spark:[0,0,0,0,0,0,0] },
-  { label:'Policy library complete',        value:'0/28',suffix:'',           delta:'awaiting Principal', tone:'red',   spark:[0,0,0,0,0,0,0] },
-  { label:'EOI pipeline (families)',        value:0,     suffix:'',           delta:'brand not launched', tone:'red',   spark:[0,0,0,0,0,0,0] },
-  { label:'Risk register entries',          value:18,    suffix:' (13T + 5O)',delta:'PMBOK 8: threats+opps',tone:'blue', spark:[12,14,15,16,17,18,18] },
+  { label:'Risk register entries',          value:18,    suffix:' (13T+5O)',  delta:'PMBOK 8',           tone:'blue',  spark:[12,14,15,16,17,18,18] },
   { label:'Months to Term 1 2029',          value:32,    suffix:' months',    delta:'on plan',           tone:'green', spark:[36,35,34,33,32,32,32] },
 ];
 
 /* ========== HEALTH PILLARS (RESET) ========== */
 const HEALTH_PILLARS = [
-  { key:'principal',    label:'Founding Principal',            score:25, tone:'red',
-    note:'Recruitment panel formed (May 2026). Search firm briefed. Shortlist target end-July. Offer target Aug. Start target Oct 2026.' },
+  { key:'principal',    label:'Founding Principal',            score:50, tone:'amber',
+    note:'Dr Khaled Altarawneh — application lodged with Radical Recruitment Australia, 8 May 2026. Under panel review. NSW NESA teacher registration in progress; WWCC current.' },
   { key:'governance',   label:'Governance & Board',            score:55, tone:'amber',
     note:'Concept board formed. Constitution filed. Audit + People & Culture sub-committees pending. Indigenous, Legal, Community director seats vacant.' },
   { key:'pedagogy',     label:'Pedagogical Model (PBL)',       score:30, tone:'red',
@@ -192,7 +538,7 @@ const HEALTH_PILLARS = [
 
 /* ========== STAFFING — REAL IEU NSW 2026 RATES ========== */
 const STAFF_PLAN = [
-  { stage:'S1', role:'Founding Principal',                       count:1, status:'recruiting', salaryK:230, critical:true, depends:'—', basis:'AISNSW principal benchmarks 2025/26; AHISA Essentials framework' },
+  { stage:'S1', role:'Founding Principal — Dr Khaled Altarawneh', count:1, status:'designate', salaryK:250, critical:true, depends:'—', basis:'Advertised remuneration via Radical Recruitment Australia ($250,000)' },
   { stage:'S2', role:'Business Manager / CFO',                   count:1, status:'planned',    salaryK:185, critical:true, depends:'Principal', basis:'AISNSW PAOS benchmark band' },
   { stage:'S2', role:'Curriculum Director (PBL specialist)',     count:1, status:'planned',    salaryK:175, critical:true, depends:'Principal', basis:'IEU NSW Independent Teachers MEA 2025 + executive loading' },
   { stage:'S2', role:'NESA Compliance & Quality Officer',        count:1, status:'planned',    salaryK:135, critical:true, depends:'Curriculum Dir.', basis:'NESA regulation specialist band' },
@@ -213,7 +559,7 @@ const STAFF_PLAN = [
 /* ========== RISK REGISTER — PMBOK 8 (threats + opportunities) ========== */
 const RISKS = [
   // THREATS
-  { id:'T-01', kind:'threat', title:'Founding Principal recruitment fails / drags past Q3 2026', cat:'People',    L:3, C:5, owner:'Board Chair', review:'Fortnightly', mitig:'Two search firms in parallel; AHISA advertised role; international pipeline (NZ + AU diaspora); interim Acting Principal contingency from AISNSW network.', status:'active' },
+  { id:'T-01', kind:'threat', title:'NSW NESA teacher registration delay for Principal designate', cat:'Regulatory', L:3, C:4, owner:'Principal', review:'Monthly', mitig:'Submission in progress; ETA Q3 2026; Curriculum Director hire (NESA-registered) prioritised in S2 to provide redundancy; AISNSW NESA-experienced mentor enlisted.', status:'active' },
   { id:'T-02', kind:'threat', title:'NESA Section 83 returned with conditions or rejected',     cat:'Regulatory',L:3, C:5, owner:'Principal (post)', review:'Monthly',     mitig:'Pre-application briefing with NESA inspectors; external NESA-experienced reviewer; over-evidence policies; 10-week slack in S4.', status:'monitor' },
   { id:'T-03', kind:'threat', title:'Capex shortfall — capital partner withdraws',              cat:'Financial', L:3, C:5, owner:'Board Chair', review:'Monthly',     mitig:'Twin capital partner tracks; charity (DGR) pathway for philanthropy; Building Grants Assistance Scheme (NSW) + Capital Grants Program (Cwlth) — applications close 30 April annually.', status:'monitor' },
   { id:'T-04', kind:'threat', title:'Council DA delay or refusal',                              cat:'Facilities',L:3, C:4, owner:'Facilities PM', review:'Fortnightly', mitig:'Pre-lodgement meeting in S3; planning consultant from S2; alternate site retained; brownfield reuse pattern (per LLV).', status:'monitor' },
@@ -225,7 +571,7 @@ const RISKS = [
   { id:'T-10', kind:'threat', title:'Indigenous engagement perceived as tokenistic',            cat:'Cultural',  L:2, C:5, owner:'Principal (post)', review:'Quarterly',  mitig:'Paid Aboriginal Education Liaison; long-term Dharug SMG MoU; Narragunnawali RAP; protocols co-designed.', status:'monitor' },
   { id:'T-11', kind:'threat', title:'IEU MEA renegotiation 2028 — cost pressure',               cat:'People',    L:4, C:3, owner:'Business Mgr (post)', review:'Annual',     mitig:'Above-MEA position from Day 1; transparent workload model; staff council; budget sensitivity ±5% wage.', status:'monitor' },
   { id:'T-12', kind:'threat', title:'Pandemic / extended closure',                              cat:'External',  L:2, C:4, owner:'Principal (post)', review:'Annual',     mitig:'1:1 device program; Toddle/Moodle remote-first design; family connectivity plan.', status:'monitor' },
-  { id:'T-13', kind:'threat', title:'Key person dependency on Founding Principal',              cat:'People',    L:3, C:5, owner:'Board Chair', review:'Quarterly',  mitig:'Deputy Principal hire in S5 (not S6); written operating manual; documented decision-rights; KMI insurance.', status:'monitor' },
+  { id:'T-13', kind:'threat', title:'Key person dependency on Founding Principal', cat:'People', L:3, C:5, owner:'Board Chair', review:'Quarterly', mitig:'Deputy Principal hire brought forward to S5 (not S6); written operating manual from S2; documented decision-rights matrix; KMI insurance; second-in-line succession.', status:'monitor' },
   // OPPORTUNITIES (positive risks)
   { id:'O-01', kind:'opportunity', title:'WSU formal partnership (pre-service teacher placement + research)', cat:'Partnership', L:4, C:4, owner:'Principal (post)', review:'Quarterly',  mitig:'EXPLOIT — formalise MoU in S3. Mutual research outputs; pipeline of PBL-fluent graduates; brand co-mention.', status:'pursue' },
   { id:'O-02', kind:'opportunity', title:'Industry consortium (WSLHD + City of Parramatta + tech)',           cat:'Partnership', L:3, C:4, owner:'Curriculum Dir. (post)', review:'Quarterly',  mitig:'ENHANCE — letters of intent in S3; 1 paid project per term in S6; industry mentor per Yr 11–12 student in S8+.', status:'pursue' },
@@ -328,13 +674,16 @@ const SHELL_MODEL = [
 const LMS_OPTIONS = [
   { name:'Sentral',         type:'SIS (dominant NSW)',   pbl:2, cost:'AUD ~18–24 / student / yr',  nsw:'Very high (NSW majority)',  pros:'NESA-aware reporting · attendance · wellbeing · parent portal · NCCD-ready · Toddle integration',  cons:'Not PBL-native; needs complementary LMS' },
   { name:'Compass',         type:'SIS',                   pbl:2, cost:'AUD ~20–28 / student / yr',  nsw:'Growing',                    pros:'Strong UX · parent app · scheduling · finance · Toddle integration',                              cons:'Less mature reporting than Sentral; higher cost' },
+  { name:'School Bytes',    type:'SIS (NSW DoE marketplace)', pbl:1, cost:'Modular SaaS · contact for quote (typically AUD ~14–22 / student / yr)', nsw:'NSW public school heritage; entering independent sector',  pros:'NSW DoE Administration Marketplace approved · AWS hosting · ISO 27001 certified · strong finance module · SAP integration · Compass company (2024 acquisition)',  cons:'Public-school heritage; module by module cost; less PBL-aligned' },
   { name:'TASS',            type:'SIS',                   pbl:1, cost:'AUD ~25–30 / student / yr',  nsw:'Common in indep sector',     pros:'Mature finance / HR / SIS integration · Toddle integration',                                        cons:'Heavyweight; long implementation; senior-school focus' },
   { name:'Synergetic',      type:'SIS',                   pbl:1, cost:'AUD ~22–28 / student / yr',  nsw:'Common (indep + Catholic)',  pros:'Strong reporting; Australian heritage',                                                              cons:'Aging UI; integration heavier' },
   { name:'Edumate',         type:'SIS',                   pbl:1, cost:'AUD ~18–24 / student / yr',  nsw:'Some uptake',                pros:'Cost-effective; Catholic systems heritage',                                                          cons:'Smaller ecosystem; fewer integrations' },
   { name:'Toddle',          type:'LMS (PBL-native)',      pbl:5, cost:'AUD ~18–22 / student / yr',  nsw:'Boutique but growing',       pros:'PBL planner · rubric-first · portfolio · exhibitions · IB MYP/PYP heritage · integrates with Sentral/Compass/TASS', cons:'Smaller AU support team; new HSC tooling' },
   { name:'Canvas',          type:'LMS',                   pbl:4, cost:'AUD ~5–30 / student / yr (custom)', nsw:'Used in some indep + universities', pros:'Rich-media · modules · mobile · deep LTI ecosystem · strong for HSC Stage 6 content',           cons:'Not PBL-native — needs design discipline; custom pricing' },
   { name:'Schoology',       type:'LMS',                   pbl:3, cost:'AUD ~12–18 / student / yr',  nsw:'Limited AU footprint',       pros:'Solid LMS; easy UX',                                                                                cons:'Smaller AU support; not PBL-native' },
-  { name:'Moodle',          type:'LMS (open source)',     pbl:3, cost:'Free licence; ~AUD 60–110/student/yr hosted+supported (MoodleCloud Standard or partner host)', nsw:'Mature; universities widely', pros:'Open source · no vendor lock-in · highly customisable · strong assessment · cost-effective at scale', cons:'Heavy admin lift; UX dated; needs in-house or partner support' },
+  { name:'Moodle',          type:'LMS (open source)',     pbl:3, cost:'Free licence; ~AUD 60–110/student/yr hosted+supported (MoodleCloud Standard or partner host)', nsw:'Mature; universities widely', pros:'Open source · no vendor lock-in · highly customisable · strong assessment · cost-effective at scale · Khaled has architect-level expertise', cons:'Heavy admin lift; UX dated; needs in-house or partner support' },
+  { name:'D2L Brightspace', type:'LMS (cloud)',           pbl:3, cost:'AUD ~10–20 / student / yr',  nsw:'Tertiary heritage; some K-12', pros:'Strong analytics; accessibility; multi-mode delivery; Khaled has direct experience (Charles Sturt)', cons:'Higher cost; less PBL-native' },
+  { name:'Blackboard',      type:'LMS (legacy)',           pbl:2, cost:'AUD ~12–20 / student / yr',  nsw:'Limited K-12 footprint',     pros:'Mature; Khaled has experience (Yarmouk, WSU, CSU)', cons:'Legacy UX; not PBL-aligned; reducing market share' },
   { name:'Google Workspace + Classroom', type:'LMS / productivity', pbl:3, cost:'AUD $0 (Education Fundamentals) — $5/u/m (Plus)', nsw:'Ubiquitous', pros:'Cost · collaboration · accessibility · Docs/Sheets/Slides core',  cons:'Light on assessment + rubrics; needs add-ons' },
 ];
 
@@ -508,19 +857,23 @@ const ENROLMENT_FUNNEL_FORECAST = [
 
 /* ========== NAV ========== */
 const NAV = [
-  { id:'dashboard',   icon:'📊', label:'Dashboard (Pre-Appointment)' },
-  { id:'pmbok',       icon:'🧭', label:'PMBOK 8 Framework' },
-  { id:'roadmap',     icon:'🗺️', label:'Foundation Stages (S0–S8)' },
-  { id:'compliance',  icon:'⚖️', label:'NSW Regulatory Mapping' },
-  { id:'staffing',    icon:'👥', label:'Staffing & Recruitment Plan' },
-  { id:'pbl',         icon:'📚', label:'PBL Framework & Weekly Model' },
-  { id:'lms',         icon:'💻', label:'LMS / SIS Market Scan' },
-  { id:'risks',       icon:'⚠️', label:'Risk Register (Threats + Opps)' },
-  { id:'stakeholders',icon:'🤝', label:'Stakeholders' },
-  { id:'budget',      icon:'💰', label:'Budget & Funding' },
-  { id:'comparators', icon:'🔍', label:'Comparator Schools' },
-  { id:'variables',   icon:'🔗', label:'Variable Interactions' },
-  { id:'reports',     icon:'📑', label:'Reports Studio (Live)' },
+  { id:'dashboard',    icon:'📊', label:'Dashboard' },
+  { id:'principal',    icon:'🪪', label:'Principal Profile (Designate)' },
+  { id:'pmbok',        icon:'🧭', label:'PMBOK 8 Framework' },
+  { id:'roadmap',      icon:'🗺️', label:'Foundation Stages (S0–S8)' },
+  { id:'model',        icon:'📚', label:'Educational Model (D→M→I)' },
+  { id:'units',        icon:'🧩', label:'Sample PBL Units' },
+  { id:'wil',          icon:'🤝', label:'WIL & Partnerships' },
+  { id:'pbl',          icon:'⏰', label:'Weekly Hybrid Model' },
+  { id:'lms',          icon:'💻', label:'LMS / SIS Market Scan' },
+  { id:'compliance',   icon:'⚖️', label:'Regulatory + Artefacts' },
+  { id:'staffing',     icon:'👥', label:'Staffing & HR Suite' },
+  { id:'risks',        icon:'⚠️', label:'Risk Register (T + O)' },
+  { id:'stakeholders', icon:'🌐', label:'Stakeholders' },
+  { id:'budget',       icon:'💰', label:'Budget & Funding' },
+  { id:'comparators',  icon:'🔍', label:'Comparator Schools' },
+  { id:'variables',    icon:'🔗', label:'Variable Interactions' },
+  { id:'reports',      icon:'📑', label:'Reports Studio' },
 ];
 
 /* ========== UTILS ========== */
@@ -543,14 +896,14 @@ const exportCSV = (filename, headers, rows) => {
   downloadFile(filename, body, 'text/csv;charset=utf-8;');
 };
 
-window.__SP_DATA__ = { SCHOOL, PMBOK8_PRINCIPLES, PMBOK8_DOMAINS, STAGES, KPIS, HEALTH_PILLARS, STAFF_PLAN, RISKS, STAKEHOLDERS, COMPLIANCE, PBL_DESIGN_ELEMENTS, WEEKLY_PBL_TIMETABLE, SHELL_MODEL, LMS_OPTIONS, PROPOSED_STACK, COMPARATORS, VARIABLES, INTERACTIONS, BUDGET, ENROLMENT_FUNNEL_FORECAST, NAV };
+window.__SP_DATA__ = { SCHOOL, KHALED_PROFILE, ISLAMIC_PRINCIPLES, DMI_PROGRESSION, SAMPLE_UNITS, WIL_FRAMEWORK, PARTNERSHIPS, HR_POSITIONS, ARTEFACTS, PMBOK8_PRINCIPLES, PMBOK8_DOMAINS, STAGES, KPIS, HEALTH_PILLARS, STAFF_PLAN, RISKS, STAKEHOLDERS, COMPLIANCE, PBL_DESIGN_ELEMENTS, WEEKLY_PBL_TIMETABLE, SHELL_MODEL, LMS_OPTIONS, PROPOSED_STACK, COMPARATORS, VARIABLES, INTERACTIONS, BUDGET, ENROLMENT_FUNNEL_FORECAST, NAV };
 window.__SP_UTILS__ = { toneColor, toneBar, statusBadge, downloadFile, exportCSV, fmtAUD, fmtDate, TODAY, TARGET_OPEN, NESA_LODGE_BY, monthsToOpen };
 window.__SP_HOOKS__ = { useState, useEffect, useMemo, useRef, Fragment };
 </script>
 
 <script type="text/babel" id="ui-script">
 /* ========== UI components, modules, exports, app — registered next from a sibling script tag. ========== */
-const { SCHOOL, PMBOK8_PRINCIPLES, PMBOK8_DOMAINS, STAGES, KPIS, HEALTH_PILLARS, STAFF_PLAN, RISKS, STAKEHOLDERS, COMPLIANCE, PBL_DESIGN_ELEMENTS, WEEKLY_PBL_TIMETABLE, SHELL_MODEL, LMS_OPTIONS, PROPOSED_STACK, COMPARATORS, VARIABLES, INTERACTIONS, BUDGET, ENROLMENT_FUNNEL_FORECAST, NAV } = window.__SP_DATA__;
+const { SCHOOL, KHALED_PROFILE, ISLAMIC_PRINCIPLES, DMI_PROGRESSION, SAMPLE_UNITS, WIL_FRAMEWORK, PARTNERSHIPS, HR_POSITIONS, ARTEFACTS, PMBOK8_PRINCIPLES, PMBOK8_DOMAINS, STAGES, KPIS, HEALTH_PILLARS, STAFF_PLAN, RISKS, STAKEHOLDERS, COMPLIANCE, PBL_DESIGN_ELEMENTS, WEEKLY_PBL_TIMETABLE, SHELL_MODEL, LMS_OPTIONS, PROPOSED_STACK, COMPARATORS, VARIABLES, INTERACTIONS, BUDGET, ENROLMENT_FUNNEL_FORECAST, NAV } = window.__SP_DATA__;
 const { toneColor, toneBar, statusBadge, downloadFile, exportCSV, fmtAUD, fmtDate, TODAY, TARGET_OPEN, NESA_LODGE_BY, monthsToOpen } = window.__SP_UTILS__;
 const { useState, useEffect, useMemo, useRef, Fragment } = window.__SP_HOOKS__;
 
@@ -638,7 +991,7 @@ window.__SP_UI__ = { StatusDot, KpiCard, Section, Pill, Btn, Modal, Plot };
 </script>
 
 <script type="text/babel" id="modules-script">
-const { SCHOOL, PMBOK8_PRINCIPLES, PMBOK8_DOMAINS, STAGES, KPIS, HEALTH_PILLARS, STAFF_PLAN, RISKS, STAKEHOLDERS, COMPLIANCE, PBL_DESIGN_ELEMENTS, WEEKLY_PBL_TIMETABLE, SHELL_MODEL, LMS_OPTIONS, PROPOSED_STACK, COMPARATORS, VARIABLES, INTERACTIONS, BUDGET, ENROLMENT_FUNNEL_FORECAST, NAV } = window.__SP_DATA__;
+const { SCHOOL, KHALED_PROFILE, ISLAMIC_PRINCIPLES, DMI_PROGRESSION, SAMPLE_UNITS, WIL_FRAMEWORK, PARTNERSHIPS, HR_POSITIONS, ARTEFACTS, PMBOK8_PRINCIPLES, PMBOK8_DOMAINS, STAGES, KPIS, HEALTH_PILLARS, STAFF_PLAN, RISKS, STAKEHOLDERS, COMPLIANCE, PBL_DESIGN_ELEMENTS, WEEKLY_PBL_TIMETABLE, SHELL_MODEL, LMS_OPTIONS, PROPOSED_STACK, COMPARATORS, VARIABLES, INTERACTIONS, BUDGET, ENROLMENT_FUNNEL_FORECAST, NAV } = window.__SP_DATA__;
 const { toneColor, toneBar, statusBadge, exportCSV, fmtAUD, fmtDate, TODAY, TARGET_OPEN, NESA_LODGE_BY, monthsToOpen } = window.__SP_UTILS__;
 const { useState, useEffect, useMemo, useRef, Fragment } = window.__SP_HOOKS__;
 const { StatusDot, KpiCard, Section, Pill, Btn, Modal, Plot } = window.__SP_UI__;
@@ -724,10 +1077,8 @@ const Dashboard = ({ state, setView, setHealthOpen }) => {
   const topOpps = [...state.risks].filter(r=>r.kind==='opportunity').sort((a,b)=>(b.L*b.C)-(a.L*a.C)).slice(0,3);
   return (
     <div className="space-y-5">
-      <div className="bg-amber-50 border border-amber-300 rounded-2xl px-5 py-3 text-sm text-amber-900 fade-in">
-        <b>PRE-APPOINTMENT STATE.</b> Only the Board concept and recruitment authority exist.
-        The Founding Principal is currently being recruited (Stage S1 active).
-        All values below reflect this reality — most operational pillars are 0 / planned until the Principal is in seat.
+      <div className="bg-sky-50 border border-sky-300 rounded-2xl px-5 py-3 text-sm text-sky-900 fade-in">
+        <b>CANDIDATE STATE.</b> Dr Khaled Altarawneh's application is lodged with the Selection Committee (via Radical Recruitment Australia, 8 May 2026). This console is the artefact accompanying the application — it demonstrates how the founding work would be run from day one of appointment.
       </div>
       <Section
         title={'Founding Principal Console · ' + SCHOOL.shortName}
@@ -798,14 +1149,14 @@ const Dashboard = ({ state, setView, setHealthOpen }) => {
           <div className="mt-3"><Plot type="doughnut" height={140} data={{ labels: BUDGET.revenueYear1.map(x=>x.item.split(' (')[0].slice(0,28)), datasets:[{ data: BUDGET.revenueYear1.map(x=>x.amount), backgroundColor:['#0ea5e9','#3b82f6','#6366f1','#a855f7','#ec4899','#f97316'] }]}} options={{ plugins:{ legend:{ position:'bottom', labels:{ font:{ size:9 }, boxWidth:10 }}}, maintainAspectRatio:false }}/></div>
         </Section>
 
-        <Section title="Stage S1 — current focus" subtitle="Active now: Founding Principal recruitment">
+        <Section title="Founding Principal designate" subtitle={KHALED_PROFILE.tagline}>
           <div className="text-sm space-y-2 text-slate-700">
-            <div><b>Window:</b> May–Sept 2026 (4 months)</div>
-            <div><b>Decisions awaiting:</b> Principal candidate ranking · Offer authority · Onboarding plan</div>
-            <div><b>Constraint:</b> Cannot progress NESA, site, or staffing without Principal in seat. AHISA "Essentials" benchmark used.</div>
-            <div><b>Key risk:</b> T-01 — recruitment fails/drags past Q3 2026 (L 3 × C 5 = 15)</div>
-            <div><b>Mitigation:</b> Two search firms in parallel · AHISA advertised · NZ + AU diaspora · Interim Acting Principal contingency from AISNSW network</div>
-            <div><b>Opportunity:</b> O-01 — formal WSU partnership opens if Principal has strong research credentials</div>
+            <div><b>{KHALED_PROFILE.name}</b></div>
+            <div><b>Status:</b> Application lodged via Radical Recruitment Australia, 8 May 2026 · {fmtAUD(SCHOOL.advertisedSalary)} advertised remuneration</div>
+            <div><b>NSW NESA registration:</b> In progress (Q3 2026 ETA)</div>
+            <div><b>WWCC NSW:</b> Current</div>
+            <div><b>From appointment:</b> S2 (Onboarding + initial team) begins immediately. NESA pre-application briefing booked first 30 days. Curriculum Director + Business Manager + Compliance Officer hiring opens.</div>
+            <div><b>Five founding commitments:</b> integrated learning architecture (D→M→I) · founding team grounded in excellence + faith · infrastructure for excellence (LMS + governance) · partnerships at scale · thought leadership</div>
           </div>
         </Section>
 
@@ -832,7 +1183,7 @@ window.__SP_MODULES_PART_A__ = { Dashboard, exportBoardPDF, exportPitchPPTX };
 </script>
 
 <script type="text/babel" id="modules-script-b">
-const { SCHOOL, PMBOK8_PRINCIPLES, PMBOK8_DOMAINS, STAGES, KPIS, HEALTH_PILLARS, STAFF_PLAN, RISKS, STAKEHOLDERS, COMPLIANCE, PBL_DESIGN_ELEMENTS, WEEKLY_PBL_TIMETABLE, SHELL_MODEL, LMS_OPTIONS, PROPOSED_STACK, COMPARATORS, VARIABLES, INTERACTIONS, BUDGET, ENROLMENT_FUNNEL_FORECAST, NAV } = window.__SP_DATA__;
+const { SCHOOL, KHALED_PROFILE, ISLAMIC_PRINCIPLES, DMI_PROGRESSION, SAMPLE_UNITS, WIL_FRAMEWORK, PARTNERSHIPS, HR_POSITIONS, ARTEFACTS, PMBOK8_PRINCIPLES, PMBOK8_DOMAINS, STAGES, KPIS, HEALTH_PILLARS, STAFF_PLAN, RISKS, STAKEHOLDERS, COMPLIANCE, PBL_DESIGN_ELEMENTS, WEEKLY_PBL_TIMETABLE, SHELL_MODEL, LMS_OPTIONS, PROPOSED_STACK, COMPARATORS, VARIABLES, INTERACTIONS, BUDGET, ENROLMENT_FUNNEL_FORECAST, NAV } = window.__SP_DATA__;
 const { toneColor, toneBar, statusBadge, exportCSV, fmtAUD, fmtDate, TODAY, TARGET_OPEN, NESA_LODGE_BY, monthsToOpen } = window.__SP_UTILS__;
 const { useState, useEffect, useMemo, useRef, Fragment } = window.__SP_HOOKS__;
 const { StatusDot, KpiCard, Section, Pill, Btn, Modal, Plot } = window.__SP_UI__;
@@ -1107,8 +1458,314 @@ const LMS = () => (
 window.__SP_MODULES_PART_B__ = { PMBOKView, Roadmap, Compliance, Staffing, PBL, LMS };
 </script>
 
+<script type="text/babel" id="modules-script-d">
+const { SCHOOL, KHALED_PROFILE, ISLAMIC_PRINCIPLES, DMI_PROGRESSION, SAMPLE_UNITS, WIL_FRAMEWORK, PARTNERSHIPS, HR_POSITIONS, ARTEFACTS, STAGES, STAFF_PLAN, COMPLIANCE } = window.__SP_DATA__;
+const { exportCSV, fmtAUD, fmtDate, TODAY, TARGET_OPEN } = window.__SP_UTILS__;
+const { useState, useEffect, useMemo, useRef, Fragment } = window.__SP_HOOKS__;
+const { StatusDot, KpiCard, Section, Pill, Btn, Modal } = window.__SP_UI__;
+
+/* ============ PRINCIPAL PROFILE ============ */
+const PrincipalProfile = () => (
+  <div className="space-y-5">
+    <Section title={KHALED_PROFILE.name + ' — Founding Principal designate'} subtitle={KHALED_PROFILE.tagline}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 text-sm">
+        <div className="bg-slate-50 rounded-xl p-3">
+          <div className="text-xs uppercase text-slate-500 font-medium mb-1">Status</div>
+          <div className="font-semibold text-slate-900">Application lodged · 8 May 2026</div>
+          <div className="text-xs text-slate-600 mt-1">Via Radical Recruitment Australia · advertised remuneration {fmtAUD(SCHOOL.advertisedSalary)}</div>
+          <div className="mt-2 text-xs"><b>WWCC (NSW):</b> Current</div>
+          <div className="text-xs"><b>NESA teacher registration:</b> In progress</div>
+          <div className="text-xs"><b>Citizenship:</b> Australian · full work rights</div>
+        </div>
+        <div className="bg-slate-50 rounded-xl p-3 lg:col-span-2">
+          <div className="text-xs uppercase text-slate-500 font-medium mb-2">Qualifications</div>
+          <ul className="space-y-1">
+            {KHALED_PROFILE.qualifications.map((q,i)=>(<li key={i} className="border-b border-slate-100 py-1">
+              <div className="font-medium text-slate-900">{q.qual} <span className="text-xs text-slate-500 font-normal">· {q.yr}</span></div>
+              <div className="text-xs text-slate-600">{q.inst}{q.note ? ' · ' + q.note : ''}</div>
+            </li>))}
+          </ul>
+        </div>
+      </div>
+    </Section>
+
+    <Section title="Capabilities mapped to the Head of School role">
+      <ul className="text-sm space-y-1 list-disc pl-5 text-slate-700">{KHALED_PROFILE.capabilities.map((c,i)=><li key={i}>{c}</li>)}</ul>
+    </Section>
+
+    <Section title="Fit to the five founding commitments (from the position brief)">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50 text-slate-600 text-xs uppercase"><tr><th className="text-left py-2 px-2">Commitment</th><th className="text-left py-2 px-2">My evidence base</th></tr></thead>
+          <tbody>
+            {KHALED_PROFILE.fitToRole.map((f,i)=>(<tr key={i} className="border-t border-slate-100"><td className="py-2 px-2 font-medium text-slate-900 align-top">{f.commitment}</td><td className="py-2 px-2 text-slate-700">{f.evidence}</td></tr>))}
+          </tbody>
+        </table>
+      </div>
+    </Section>
+
+    <Section title="Honest gap analysis + mitigations" subtitle="What the panel will probe — and the answer">
+      <div className="space-y-2">
+        {KHALED_PROFILE.gapToManage.map((g,i)=>(
+          <div key={i} className="border border-amber-200 bg-amber-50/40 rounded-xl p-3">
+            <div className="text-xs uppercase font-medium text-amber-700">Gap</div>
+            <div className="font-medium text-slate-900">{g.gap}</div>
+            <div className="text-xs uppercase font-medium text-amber-700 mt-2">Mitigation</div>
+            <div className="text-sm text-slate-700">{g.mitigation}</div>
+          </div>
+        ))}
+      </div>
+    </Section>
+  </div>
+);
+
+/* ============ EDUCATIONAL MODEL — Discovery / Mastery / Impact + Islamic principles ============ */
+const EducationalModel = () => (
+  <div className="space-y-5">
+    <Section title="Educational Model — Discovery → Mastery → Impact" subtitle="Faith-informed PBL progression mapped to NSW Stages 4–6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        {DMI_PROGRESSION.map((d,i)=>(
+          <div key={i} className={'rounded-xl p-4 border ' + (i===0?'bg-sky-50/40 border-sky-200':i===1?'bg-amber-50/40 border-amber-200':'bg-emerald-50/40 border-emerald-200')}>
+            <div className="text-xs uppercase font-medium text-slate-500">{d.years}</div>
+            <div className="text-xl font-bold text-slate-900 mt-1">{d.stage}</div>
+            <div className="text-sm text-slate-700 mt-2"><b>Intent:</b> {d.intent}</div>
+            <div className="text-xs text-slate-600 mt-2"><b>Pedagogy:</b> {d.pedagogy}</div>
+            <div className="text-xs text-slate-600 mt-2"><b>Assessment:</b> {d.assessment}</div>
+            <div className="text-xs text-slate-600 mt-2"><b>Voice & choice:</b> {d.voiceChoice}</div>
+            <div className="text-xs text-slate-600 mt-2"><b>Faith dimension:</b> {d.faith}</div>
+            <div className="text-xs text-slate-600 mt-2"><b>Sample partners:</b> {d.samplePartners}</div>
+          </div>
+        ))}
+      </div>
+    </Section>
+
+    <Section title="Islamic pedagogical principles — operational" subtitle="Ihsan · Tarbiyah · Adab · Ilm naafi' — embedded in pedagogy AND operations">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        {ISLAMIC_PRINCIPLES.map(p => (
+          <div key={p.id} className="border border-slate-200 rounded-xl p-3">
+            <div className="flex items-baseline gap-2"><Pill tone="amber">{p.id}</Pill><div className="font-semibold text-slate-900">{p.name}</div></div>
+            <div className="text-xs text-slate-500 italic mt-1">{p.transl}</div>
+            <div className="text-sm text-slate-700 mt-2"><b>Pedagogical:</b> {p.pedagogical}</div>
+            <div className="text-sm text-slate-700 mt-1"><b>Operational:</b> {p.operational}</div>
+          </div>
+        ))}
+      </div>
+    </Section>
+
+    <Section title="Best-practice anchors — Australian + worldwide" subtitle="Where each design choice is benchmarked">
+      <ul className="text-sm list-disc pl-5 text-slate-700 space-y-1">
+        <li><b>Gold Standard PBL (PBL Works)</b> — seven essential project design elements + seven teaching practices.</li>
+        <li><b>Lindfield Learning Village (NSW DoE)</b> — multi-age "stage not age" model · 6 "Schools within a School" of ~330 · advisory crew.</li>
+        <li><b>Prahran High School (VIC)</b> — project sprints with exhibition every 6–8 weeks · industry partner consortium.</li>
+        <li><b>Australian Science & Mathematics School (SA)</b> — long-block integrated inquiry · Flinders University partnership.</li>
+        <li><b>Big Picture Learning Australia</b> — Individual Learning Plan as anchor artefact · "Leaving to Learn" internships.</li>
+        <li><b>New Tech Network Australia (NTNAU)</b> — PBL model now operational across NSW, VIC, TAS, QLD.</li>
+        <li><b>High Tech High (San Diego)</b> — public exhibition IS the assessment · teacher PD time non-negotiable.</li>
+        <li><b>EL Education (Expeditionary Learning)</b> — Crew advisory model · tuning protocol for critique cycles.</li>
+        <li><b>WSU Work-Integrated Learning framework</b> — authentic activities · assessed in partnership with employer/community.</li>
+        <li><b>AISNSW School-Industry Partnerships</b> — Loreto Normanhurst × eHealth NSW; Trinity Anglican × Albury City Council are NSW exemplars.</li>
+      </ul>
+    </Section>
+  </div>
+);
+
+/* ============ SAMPLE PBL UNITS ============ */
+const SampleUnits = () => (
+  <div className="space-y-5">
+    <Section title="Sample PBL Units — concrete examples across Discovery / Mastery / Impact" subtitle="Each anchored in real Sydney / Parramatta context, faith dimension named, partners identified">
+      <div className="space-y-3">
+        {SAMPLE_UNITS.map((u,i) => (
+          <div key={i} className="border border-slate-200 rounded-xl p-4 bg-slate-50/30">
+            <div className="flex flex-wrap items-baseline gap-2">
+              <Pill tone={u.stage.startsWith('Discovery')?'blue':u.stage.startsWith('Mastery')?'amber':'green'}>{u.stage}</Pill>
+              <div className="font-semibold text-slate-900 text-base">{u.title}</div>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-3 text-xs">
+              <div>
+                <div className="font-medium text-slate-800 mb-1">Driving question</div>
+                <div className="text-slate-700">{u.drivingQ}</div>
+                <div className="font-medium text-slate-800 mt-2 mb-1">Disciplines</div>
+                <div className="text-slate-700">{u.disciplines}</div>
+                <div className="font-medium text-slate-800 mt-2 mb-1">Duration & mode</div>
+                <div className="text-slate-700">{u.duration}</div>
+                <div className="font-medium text-slate-800 mt-2 mb-1">Authentic audience</div>
+                <div className="text-slate-700">{u.audience}</div>
+              </div>
+              <div>
+                <div className="font-medium text-slate-800 mb-1">Public product</div>
+                <div className="text-slate-700">{u.product}</div>
+                <div className="font-medium text-slate-800 mt-2 mb-1">NESA outcomes</div>
+                <div className="text-slate-700">{u.nesa}</div>
+                <div className="font-medium text-slate-800 mt-2 mb-1">Faith dimension</div>
+                <div className="text-slate-700">{u.faith}</div>
+                <div className="font-medium text-slate-800 mt-2 mb-1">Partners + WIL type</div>
+                <div className="text-slate-700"><b>{u.wilType}</b> · {u.partners}</div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Section>
+  </div>
+);
+
+/* ============ WIL + PARTNERSHIPS ============ */
+const WilPartnerships = () => (
+  <div className="space-y-5">
+    <Section title="Work-Integrated Learning framework — by stage" subtitle="Authentic, partner-assessed, mentor-supported per WSU WIL framework + AISNSW school-industry partnership model">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50 text-slate-600 text-xs uppercase"><tr><th className="text-left py-2 px-2">Stage</th><th className="text-left py-2 px-2">Typical WIL load</th><th className="text-left py-2 px-2">Structure</th><th className="text-left py-2 px-2">Sample partners</th><th className="text-left py-2 px-2">Established in</th><th className="text-left py-2 px-2">Owner</th></tr></thead>
+          <tbody>
+            {WIL_FRAMEWORK.map((w,i)=>(
+              <tr key={i} className="border-t border-slate-100">
+                <td className="py-2 px-2 font-medium text-slate-900">{w.stage}</td>
+                <td className="py-2 px-2 text-slate-700 text-xs">{w.typicalWIL}</td>
+                <td className="py-2 px-2 text-slate-700 text-xs">{w.structure}</td>
+                <td className="py-2 px-2 text-slate-700 text-xs">{w.partners}</td>
+                <td className="py-2 px-2 text-slate-700 text-xs">{w.establishedIn}</td>
+                <td className="py-2 px-2 text-slate-700 text-xs">{w.riskOwner}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Section>
+
+    <Section title="Partnership register — 14 partners across academic, industry, civic, community, faith" subtitle="Each with stage of engagement and risk owner"
+      right={<Btn tone="ghost" size="sm" onClick={()=>exportCSV('SchoolProject_Partnerships.csv', ['Partner','Type','Role','Established in stage','Risk owner'], PARTNERSHIPS.map(p=>[p.partner,p.type,p.role,p.estStage,p.riskOwner]))}>Export CSV</Btn>}>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50 text-slate-600 text-xs uppercase"><tr><th className="text-left py-2 px-2">Partner</th><th className="text-left py-2 px-2">Type</th><th className="text-left py-2 px-2">Role</th><th className="text-left py-2 px-2">Established in stage</th><th className="text-left py-2 px-2">Owner</th></tr></thead>
+          <tbody>
+            {PARTNERSHIPS.map((p,i)=>(
+              <tr key={i} className="border-t border-slate-100">
+                <td className="py-2 px-2 font-medium text-slate-900">{p.partner}</td>
+                <td className="py-2 px-2"><Pill tone="blue">{p.type}</Pill></td>
+                <td className="py-2 px-2 text-slate-700 text-xs">{p.role}</td>
+                <td className="py-2 px-2 text-slate-700 text-xs">{p.estStage}</td>
+                <td className="py-2 px-2 text-slate-700 text-xs">{p.riskOwner}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Section>
+  </div>
+);
+
+/* ============ ARTEFACTS REGISTER (with add capability) ============ */
+const ArtefactsRegister = () => {
+  const [items, setItems] = useState(ARTEFACTS);
+  const [filter, setFilter] = useState('all');
+  const [showAdd, setShowAdd] = useState(false);
+  const [form, setForm] = useState({ name:'', category:'Curriculum', owner:'Principal', stage:'S2', evidence:'', status:'planned' });
+  const cats = ['all', ...new Set(items.map(a=>a.category))];
+  const filtered = items.filter(a => filter==='all' || a.category===filter);
+  const add = () => {
+    if (!form.name) return;
+    const id = 'AR-' + String(items.length+1).padStart(3,'0');
+    setItems([...items, { id, ...form }]);
+    setShowAdd(false);
+    setForm({ name:'', category:'Curriculum', owner:'Principal', stage:'S2', evidence:'', status:'planned' });
+  };
+  const remove = (id) => setItems(items.filter(a => a.id !== id));
+  const cycleStatus = (id) => {
+    const order = ['planned','in_decision','in_progress','complete'];
+    setItems(items.map(a => a.id===id ? { ...a, status: order[(order.indexOf(a.status)+1) % order.length] } : a));
+  };
+  return (
+    <div className="space-y-5">
+      <Section title="Artefacts Register — what evidence must exist, and when" subtitle={items.length + ' artefacts across ' + (cats.length-1) + ' categories · click status to cycle · add to record new artefacts as they appear'}
+        right={<>
+          <Btn tone="ghost" size="sm" onClick={()=>exportCSV('SchoolProject_Artefacts.csv', ['ID','Name','Category','Owner','Stage','Evidence','Status'], items.map(a=>[a.id,a.name,a.category,a.owner,a.stage,a.evidence,a.status]))}>Export CSV</Btn>
+          <Btn tone="primary" size="sm" onClick={()=>setShowAdd(true)}>+ Add artefact</Btn>
+        </>}>
+        <div className="flex flex-wrap gap-1.5 mb-3 text-xs">
+          {cats.map(c => <button key={c} onClick={()=>setFilter(c)} className={'px-2.5 py-1 rounded-full border ' + (filter===c?'bg-slate-900 text-white border-slate-900':'bg-white text-slate-700 border-slate-200 hover:bg-slate-50')}>{c}</button>)}
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 text-slate-600 text-xs uppercase"><tr><th className="text-left py-2 px-2">ID</th><th className="text-left py-2 px-2">Artefact</th><th className="text-left py-2 px-2">Category</th><th className="text-left py-2 px-2">Owner</th><th className="text-left py-2 px-2">Stage</th><th className="text-left py-2 px-2">Evidence required</th><th className="text-left py-2 px-2">Status</th><th></th></tr></thead>
+            <tbody>
+              {filtered.map(a=>(
+                <tr key={a.id} className="border-t border-slate-100">
+                  <td className="py-2 px-2 text-xs text-slate-500">{a.id}</td>
+                  <td className="py-2 px-2 font-medium text-slate-900">{a.name}</td>
+                  <td className="py-2 px-2 text-xs text-slate-700">{a.category}</td>
+                  <td className="py-2 px-2 text-xs text-slate-700">{a.owner}</td>
+                  <td className="py-2 px-2"><Pill tone="slate">{a.stage}</Pill></td>
+                  <td className="py-2 px-2 text-xs text-slate-600">{a.evidence}</td>
+                  <td className="py-2 px-2">
+                    <button onClick={()=>cycleStatus(a.id)} className={'px-2 py-0.5 rounded-full text-xs font-medium ' + (a.status==='complete'?'bg-emerald-100 text-emerald-700':a.status==='in_progress'?'bg-amber-100 text-amber-700':a.status==='in_decision'?'bg-sky-100 text-sky-700':'bg-slate-100 text-slate-700')}>{a.status.replace('_',' ')}</button>
+                  </td>
+                  <td className="py-2 px-2"><button onClick={()=>remove(a.id)} className="text-rose-500 text-xs hover:underline">remove</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Section>
+      <Modal open={showAdd} onClose={()=>setShowAdd(false)} title="Add artefact to register">
+        <div className="space-y-3 text-sm">
+          <div><label className="text-xs text-slate-600">Name</label><input value={form.name} onChange={e=>setForm({...form, name:e.target.value})} className="w-full border border-slate-200 rounded-lg px-2 py-1.5"/></div>
+          <div className="grid grid-cols-2 gap-3">
+            <div><label className="text-xs text-slate-600">Category</label><select value={form.category} onChange={e=>setForm({...form, category:e.target.value})} className="w-full border border-slate-200 rounded-lg px-2 py-1.5">{['Governance','Curriculum','Compliance','Facilities','Inclusion','WHS','Privacy / Data','Funding','Insurance','Finance','HR','Aboriginal Ed.','Partnerships','Brand','Enrolment'].map(o=><option key={o}>{o}</option>)}</select></div>
+            <div><label className="text-xs text-slate-600">Stage</label><select value={form.stage} onChange={e=>setForm({...form, stage:e.target.value})} className="w-full border border-slate-200 rounded-lg px-2 py-1.5">{['S0','S1','S2','S3','S4','S5','S6','S7','S8'].map(o=><option key={o}>{o}</option>)}</select></div>
+            <div><label className="text-xs text-slate-600">Owner</label><input value={form.owner} onChange={e=>setForm({...form, owner:e.target.value})} className="w-full border border-slate-200 rounded-lg px-2 py-1.5"/></div>
+            <div><label className="text-xs text-slate-600">Status</label><select value={form.status} onChange={e=>setForm({...form, status:e.target.value})} className="w-full border border-slate-200 rounded-lg px-2 py-1.5">{['planned','in_decision','in_progress','complete'].map(o=><option key={o}>{o}</option>)}</select></div>
+          </div>
+          <div><label className="text-xs text-slate-600">Evidence required</label><textarea value={form.evidence} onChange={e=>setForm({...form, evidence:e.target.value})} rows="2" className="w-full border border-slate-200 rounded-lg px-2 py-1.5"/></div>
+          <div className="flex justify-end gap-2 pt-2"><Btn tone="ghost" onClick={()=>setShowAdd(false)}>Cancel</Btn><Btn tone="primary" onClick={add}>Add</Btn></div>
+        </div>
+      </Modal>
+    </div>
+  );
+};
+
+/* ============ HR SUITE — Full Position Descriptions ============ */
+const HRSuite = () => {
+  const [openId, setOpenId] = useState(null);
+  return (
+    <div className="space-y-5">
+      <Section title="Staffing & HR Suite — full position descriptions" subtitle={HR_POSITIONS.length + ' positions · click any row to expand · IEU NSW/ACT MEA 2025–2028 unless noted'}
+        right={<Btn tone="ghost" size="sm" onClick={()=>exportCSV('SchoolProject_HR_Positions.csv', ['ID','Stage','Role','Salary','Salary basis','Years exp','Designate','PD summary'], HR_POSITIONS.map(p=>[p.id,p.stage,p.role,p.salary,p.salaryNote,p.yearsExp,p.designate,p.pd]))}>Export CSV</Btn>}>
+        <div className="space-y-2">
+          {HR_POSITIONS.map(p => (
+            <div key={p.id} className={'border rounded-xl ' + (openId===p.id?'border-sky-300 bg-sky-50/30':'border-slate-200')}>
+              <button onClick={()=>setOpenId(openId===p.id?null:p.id)} className="w-full text-left p-3 flex items-start justify-between gap-3">
+                <div className="flex-1">
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <Pill tone="slate">{p.stage}</Pill>
+                    <span className="font-semibold text-slate-900">{p.role}</span>
+                    {p.count && p.count > 1 && <span className="text-xs text-slate-500">× {p.count}</span>}
+                    <span className="text-xs text-slate-500">· {fmtAUD(p.salary)} · {p.yearsExp}</span>
+                  </div>
+                  <div className="text-xs text-slate-600 mt-1">{p.designate}</div>
+                </div>
+                <div className="text-slate-400">{openId===p.id?'▾':'▸'}</div>
+              </button>
+              {openId===p.id && (
+                <div className="px-4 pb-4 text-sm border-t border-slate-100 pt-3 space-y-3">
+                  <div><div className="text-xs uppercase text-slate-500 font-medium mb-1">Position description</div><div className="text-slate-700">{p.pd}</div></div>
+                  <div><div className="text-xs uppercase text-slate-500 font-medium mb-1">Selection criteria</div><ul className="list-disc pl-5 text-slate-700 text-xs space-y-0.5">{p.selection.map((s,i)=><li key={i}>{s}</li>)}</ul></div>
+                  <div><div className="text-xs uppercase text-slate-500 font-medium mb-1">Salary basis</div><div className="text-slate-700 text-xs">{p.salaryNote}</div></div>
+                  <div><div className="text-xs uppercase text-slate-500 font-medium mb-1">Artefacts expected from this role</div><ul className="list-disc pl-5 text-slate-700 text-xs space-y-0.5">{p.artefactsExpected.map((a,i)=><li key={i}>{a}</li>)}</ul></div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </Section>
+    </div>
+  );
+};
+
+window.__SP_MODULES_PART_D__ = { PrincipalProfile, EducationalModel, SampleUnits, WilPartnerships, ArtefactsRegister, HRSuite };
+</script>
+
 <script type="text/babel" id="modules-script-c">
-const { SCHOOL, PMBOK8_PRINCIPLES, PMBOK8_DOMAINS, STAGES, KPIS, HEALTH_PILLARS, STAFF_PLAN, RISKS, STAKEHOLDERS, COMPLIANCE, PBL_DESIGN_ELEMENTS, WEEKLY_PBL_TIMETABLE, SHELL_MODEL, LMS_OPTIONS, PROPOSED_STACK, COMPARATORS, VARIABLES, INTERACTIONS, BUDGET, ENROLMENT_FUNNEL_FORECAST, NAV } = window.__SP_DATA__;
+const { SCHOOL, KHALED_PROFILE, ISLAMIC_PRINCIPLES, DMI_PROGRESSION, SAMPLE_UNITS, WIL_FRAMEWORK, PARTNERSHIPS, HR_POSITIONS, ARTEFACTS, PMBOK8_PRINCIPLES, PMBOK8_DOMAINS, STAGES, KPIS, HEALTH_PILLARS, STAFF_PLAN, RISKS, STAKEHOLDERS, COMPLIANCE, PBL_DESIGN_ELEMENTS, WEEKLY_PBL_TIMETABLE, SHELL_MODEL, LMS_OPTIONS, PROPOSED_STACK, COMPARATORS, VARIABLES, INTERACTIONS, BUDGET, ENROLMENT_FUNNEL_FORECAST, NAV } = window.__SP_DATA__;
 const { toneColor, toneBar, statusBadge, exportCSV, fmtAUD, fmtDate, TODAY, TARGET_OPEN, NESA_LODGE_BY, monthsToOpen } = window.__SP_UTILS__;
 const { useState, useEffect, useMemo, useRef, Fragment } = window.__SP_HOOKS__;
 const { StatusDot, KpiCard, Section, Pill, Btn, Modal, Plot } = window.__SP_UI__;
@@ -1459,8 +2116,8 @@ const TopBar = ({ view }) => (
     </div>
     <div className="flex items-center gap-3">
       <div className="hidden lg:block text-right">
-        <div className="text-sm font-medium text-slate-900">PRE-APPOINTMENT</div>
-        <div className="text-xs text-slate-500">{SCHOOL.role}</div>
+        <div className="text-sm font-medium text-slate-900">Dr Khaled Altarawneh</div>
+        <div className="text-xs text-slate-500">Founding Principal designate</div>
       </div>
       <div className="w-9 h-9 rounded-full bg-gradient-to-br from-ochre-500 to-gum-600 text-white flex items-center justify-center font-semibold text-sm">SP</div>
     </div>
@@ -1472,7 +2129,7 @@ const Sidebar = ({ view, setView }) => (
     <div className="px-5 py-4 border-b border-slate-800">
       <div className="text-sm font-semibold leading-tight">School<br/>Project</div>
       <div className="text-[10px] uppercase tracking-wider text-ochre-400 mt-1">{SCHOOL.location}</div>
-      <div className="text-[10px] text-amber-300 mt-1">PRE-APPOINTMENT</div>
+      <div className="text-[10px] text-sky-300 mt-1">CANDIDATE · Dr Khaled Altarawneh</div>
     </div>
     <nav className="flex-1 overflow-y-auto py-2">
       {NAV.map(n => (
@@ -1488,6 +2145,7 @@ const Sidebar = ({ view, setView }) => (
 const App = () => {
   const { Dashboard } = window.__SP_MODULES_PART_A__;
   const { PMBOKView, Roadmap, Compliance, Staffing, PBL, LMS } = window.__SP_MODULES_PART_B__;
+  const { PrincipalProfile, EducationalModel, SampleUnits, WilPartnerships, ArtefactsRegister, HRSuite } = window.__SP_MODULES_PART_D__;
   const [view, setView] = useState('dashboard');
   const [healthOpen, setHealthOpen] = useState(false);
   const [state, setState] = useState({ risks: RISKS });
@@ -1495,12 +2153,16 @@ const App = () => {
   const M = (() => {
     switch(view){
       case 'dashboard':   return <Dashboard state={state} setView={setView} setHealthOpen={setHealthOpen} />;
+      case 'principal':   return <PrincipalProfile />;
       case 'pmbok':       return <PMBOKView />;
       case 'roadmap':     return <Roadmap />;
-      case 'compliance':  return <Compliance />;
-      case 'staffing':    return <Staffing />;
+      case 'model':       return <EducationalModel />;
+      case 'units':       return <SampleUnits />;
+      case 'wil':         return <WilPartnerships />;
       case 'pbl':         return <PBL />;
       case 'lms':         return <LMS />;
+      case 'compliance':  return <div className="space-y-5"><Compliance /><ArtefactsRegister /></div>;
+      case 'staffing':    return <HRSuite />;
       case 'risks':       return <Risks state={state} setState={setState} />;
       case 'stakeholders':return <Stakeholders />;
       case 'budget':      return <Budget />;
