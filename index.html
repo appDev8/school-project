@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>The Ihsan Way — From Vision to a Working School</title>
+<title>Vantage by Unity — Founding Head of School (Candidate Vision)</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = { theme: { extend: {
@@ -40,8 +40,8 @@
 <body class="bg-cream text-ink">
 <div id="root">
   <div style="padding:40px;font-family:Georgia,serif;color:#3a5a49;">
-    <div style="font-size:13px;text-transform:uppercase;letter-spacing:.14em;color:#9A7B4F;">The Ihsan Way</div>
-    <div style="font-size:20px;margin-top:6px;">From Vision to a Working School…</div>
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:.14em;color:#9A7B4F;">Vantage by Unity</div>
+    <div style="font-size:20px;margin-top:6px;">Founding Head of School — a candidate vision…</div>
     <div id="boot-msg" style="margin-top:12px;font-size:12px;color:#6f5736;font-family:system-ui;">Compiling React + Tailwind + Chart.js…</div>
   </div>
 </div>
@@ -65,21 +65,26 @@
 
 <script type="text/babel" id="data-script">
 /* ============================================================
-   THE IHSAN WAY — Founding Head of School platform
-   Authoritative source: The_Ihsan_Way (Master Prompt · Blueprint · Identity).
-   Islamic secondary school, Stages 4–6 (Years 7–12), Western/SW Sydney, Dharug Country.
-   Candidate: Dr Khaled Altarawneh · Head of School (Founding Appointment).
+   VANTAGE BY UNITY — Founding Head of School platform (candidate vision)
+   REAL SPINE: Vantage by Unity (a Unity Grammar school), Parramatta / Western Sydney.
+   Independent Islamic secondary, Years 7–12. Opens 2027 with Years 7 & 8.
+   Model: project / inquiry learning via Industry-Led Challenges across three
+   specialisation streams; HSC + ATAR retained; educators are Mentor & Coach.
+   CANDIDATE OVERLAY ([proposed]): "The Ihsan Way" — Dr Khaled Altarawneh's proposed
+   faith-pedagogy infrastructure (Manhal map · Manara platform · Usrah/Murabbi coaching ·
+   ’Amal Challenges · Athar portfolio). Arabic names are proposals for scholar review.
    Fact flags: [NESA] regulatory · [NSW$] real salary scale · [practice] proven in named schools
-   · [plan] planning assumption · [verify] confirm against a live source. Never invent figures.
+   · [plan] planning assumption · [verify] confirm against a live source · [proposed] candidate's
+   own idea, not yet school policy. Real school facts are the spine; never invent figures.
    ============================================================ */
 const { useState, useEffect, useMemo, useRef, Fragment } = React;
 
 const TODAY = new Date('2026-05-29');
-const TARGET_OPEN = new Date('2029-01-29');   // single-stage Year 7 launch, Term 1 2029
-const NESA_LODGE_BY = new Date('2028-03-31'); // [NESA] applications due 31 March of year before opening
+const TARGET_OPEN = new Date('2027-01-28');   // Vantage by Unity opens Term 1 2027 with Years 7 & 8
+const NESA_LODGE_BY = new Date('2026-03-31'); // [NESA] Section 83 due 31 Mar of year before opening — now lodged/in assessment
 const monthsBetween = (a,b) => Math.round((b-a)/(1000*60*60*24*30.44));
 const monthsToOpen = monthsBetween(TODAY, TARGET_OPEN);
-const monthsToLodge = monthsBetween(TODAY, NESA_LODGE_BY);
+const monthsSinceLodge = monthsBetween(NESA_LODGE_BY, TODAY); // registration lodged; this many months ago
 const fmtAUD = (n) => '$' + Math.round(n).toLocaleString('en-AU');
 const fmtDate = (d) => new Date(d).toLocaleDateString('en-AU', { day:'2-digit', month:'short', year:'numeric' });
 
@@ -114,20 +119,23 @@ const statusBadge = s => {
 };
 
 const SCHOOL = {
-  name: 'The Ihsan Way',
-  shortName: 'Ihsan',
-  tagline: 'From Vision to a Working School',
-  oneLine: 'Knowledge, action and faith as one journey — beauty and excellence as worship.',
-  type: 'Islamic secondary school · Stages 4–6 (Years 7–12)',
-  location: 'Western / South-Western Sydney, NSW · Dharug Country',
-  delivery: 'Face-to-face core · Kitab Maftuh real-world layer · self-paced Manhal online map',
+  name: 'Vantage by Unity',
+  shortName: 'Vantage',
+  operator: 'A Unity Grammar school',
+  tagline: 'The Future of Education is Here',
+  oneLine: 'Project-based, industry-led learning grounded in Islamic values — Years 7–12 in Parramatta.',
+  type: 'Independent Islamic secondary · Years 7–12 (opening with Years 7 & 8)',
+  location: 'Parramatta · Western Sydney, NSW · Dharug Country',
+  delivery: 'Industry-Led Challenges · three specialisation streams · Mentor & Coach educators · HSC + ATAR · Full Meal Program',
   candidate: 'Dr Khaled Altarawneh',
   role: 'Head of School (Founding Appointment)',
   advertisedSalary: 250000,
-  status: 'CANDIDATE — application under review',
-  audiences: 'Founding Board / proprietor · prospective families · NESA registration reviewer',
-  acknowledgement: 'We acknowledge the Dharug people, Traditional Custodians of the land on which the school will stand, and pay respect to Elders past, present and emerging. To read the signs of creation — Iqra — begins with honouring the Country that carries them.',
-  scholarNote: 'The Arabic names in this model are proposals to be reviewed with the school’s scholars and community before adoption — that care is itself adab. Verify all NESA, salary and demographic figures against live sources before publishing.',
+  status: 'CANDIDATE — Head of School recruitment open',
+  proposedFramework: 'The Ihsan Way',
+  proposedNote: 'Sections flagged [proposed] are the candidate’s own pedagogy he would bring to Vantage — “The Ihsan Way”: the real Industry-Led Challenge model deepened with a self-paced knowledge map (Manhal), whole-person coaching (Usrah/Murabbi) and a portfolio of evidence (Athar). Vantage’s name, stages, streams, dates, HSC/ATAR and meal program are the school’s real, published facts.',
+  audiences: 'Founding Board / Unity Grammar · prospective families · NESA registration',
+  acknowledgement: 'We acknowledge the Dharug people, Traditional Custodians of the land on which the school stands, and pay respect to Elders past, present and emerging. To read the signs of creation — Iqra — begins with honouring the Country that carries them.',
+  scholarNote: 'Vantage by Unity’s real facts (name, stages, streams, dates, HSC/ATAR, meal program) are the spine. The Arabic names and the “Ihsan Way” infrastructure are the candidate’s proposals [proposed], to be reviewed with the school’s scholars and community before adoption — that care is itself adab. Verify all NESA, salary and demographic figures against live sources before publishing.',
 };
 
 const KHALED_PROFILE = {
@@ -136,12 +144,12 @@ const KHALED_PROFILE = {
   appliedVia: 'Radical Recruitment Australia',
   appliedOn: '8 May 2026',
   fitToBrief: [
-    'A visionary systems-thinker who can build experiential, project/inquiry-based, design-thinking, faith-informed learning on a NESA-accredited base.',
-    'Positions educators as learning coaches, guides, competency architects and experts-in-residence — exactly the Murabbi / Mu’allim model.',
-    'Practising Muslim able to hold Ihsan and adab as the quiet centre, not a bolt-on subject.',
-    'End-to-end founder capability: registration, curriculum architecture, staffing, finance, partnerships and the Manara platform.',
+    'A visionary systems-thinker who can lead Vantage’s project / inquiry, Industry-Led Challenge model on a NESA-accredited, HSC + ATAR base.',
+    'Lives Vantage’s “Mentor & Coach” educator model — connection, coaching and wellbeing over exam-prep; I would deepen it as Murabbi (coach) / Mu’allim (subject expert). [proposed]',
+    'Practising Muslim able to hold Islamic values and tarbiyah as the quiet centre, not a bolt-on subject — the Ihsan that makes excellence an act of worship.',
+    'End-to-end founder capability: registration, curriculum architecture, staffing, finance and the industry / community partnerships the streams depend on.',
   ],
-  capabilities: ['Curriculum & competency architecture (Manhal)','NESA registration & compliance','PBL / design-thinking pedagogy','Staffing & culture','Finance & viability','Community & industry partnerships (Kitab Maftuh)'],
+  capabilities: ['PBL / design-thinking & Industry-Led Challenge design','NESA registration & compliance (HSC/ATAR)','Curriculum & competency architecture (Manhal [proposed])','Staffing, culture & Mentor-Coach development','Finance & viability','Industry & community partnerships'],
   gapToManage: [
     { item:'NSW NESA teacher accreditation', state:'In progress — Q3 2026 ETA', mitig:'Director of Learning Architecture (accredited) holds teaching-standard sign-off until confirmed.' },
     { item:'Founding team not yet recruited', state:'Sequenced from appointment', mitig:'Phased staffing plan; early recruitment of Directors; grow-your-own coaches.' },
@@ -151,7 +159,7 @@ const KHALED_PROFILE = {
 /* ---------- THE CONVICTION (Mind / Hands / Heart) ---------- */
 const CONVICTION = [
   { faculty:'Mind',  arabic:'‘Ilm', gloss:'beneficial knowledge', school:'The wellspring — Manhal', icon:'📖', tone:'olive' },
-  { faculty:'Hands', arabic:'‘Amal', gloss:'righteous action', school:'Real projects in the real world — ’Amal Projects + Kitab Maftuh', icon:'🛠️', tone:'terra' },
+  { faculty:'Hands', arabic:'‘Amal', gloss:'righteous action', school:'Real projects in the real world — ’Amal Challenges + Kitab Maftuh', icon:'🛠️', tone:'terra' },
   { faculty:'Heart', arabic:'Iman & Akhlaq', gloss:'faith & character', school:'Formed in the doing — evidenced in Athar', icon:'🤲', tone:'bronze' },
 ];
 const DESIGN_TESTS = [
@@ -162,35 +170,42 @@ const DESIGN_TESTS = [
 
 /* ---------- THE NAMED SYSTEM (gloss on first use) ---------- */
 const NAMED_SYSTEM = [
-  { role:'The whole model', name:'The Ihsan Way', gloss:'to do what is beautiful — to act as though you see God, knowing He sees you', job:'The philosophy: do everything beautifully.', comparator:'The connecting idea' },
+  { role:'The proposed overlay', name:'The Ihsan Way', gloss:'to do what is beautiful — to act as though you see God, knowing He sees you', job:'The candidate’s pedagogy layered on Vantage’s real model: do everything beautifully, as worship. [proposed]', comparator:'Deepens Vantage’s Industry-Led, values-grounded model' },
   { role:'The wellspring', name:'Manhal', gloss:'the wellspring you draw from', job:'Self-paced, mastery-gated knowledge map of every outcome.', comparator:'Mirrors the CSU on-demand topic map' },
   { role:'The platform', name:'Manara', gloss:'lighthouse / minaret — the guiding light', job:'Digital home of the map, portfolio & dashboards.', comparator:'Adaptive LMS + Learning Record Store' },
-  { role:'The projects', name:'’Amal Projects', gloss:'righteous action', job:'Knowledge turned into deeds — one real interdisciplinary project a term.', comparator:'Mirrors Gold-Standard PBL' },
+  { role:'The projects', name:'’Amal Challenges', gloss:'righteous action', job:'Vantage’s Industry-Led Challenges, given an Islamic frame — knowledge turned into deeds, one real interdisciplinary challenge a term.', comparator:'IS Vantage’s Industry-Led Challenges + Gold-Standard PBL' },
   { role:'The real-world layer', name:'Kitab Maftuh', gloss:'the Open Book — the world & city as signs', job:'Studios, mosques, councils, workplaces as learning sites.', comparator:'Big Picture “Leaving to Learn”' },
   { role:'The portfolio', name:'Athar', gloss:'the lasting trace one leaves', job:'Curated, defended body of evidence.', comparator:'Mastery Transcript / Portfolio of Learning' },
   { role:'Public exhibitions', name:'Majlis', gloss:'the gathering', job:'Termly public showcase to family, mentors, community.', comparator:'Exhibitions of Learning' },
   { role:'The home-group', name:'Usrah', gloss:'the learning family', job:'Small belonging-group, 2+ years with one coach.', comparator:'Big Picture Advisory' },
-  { role:'The coach', name:'Murabbi / Murabbiyah', gloss:'one who nurtures the whole person (from Tarbiyah)', job:'Owns each student’s plan, portfolio and wellbeing.', comparator:'Learning coach / advisor' },
-  { role:'Subject experts', name:'Mu’allim / Mu’allimah', gloss:'the teacher', job:'Author map nodes, lead knowledge sprints.', comparator:'The Domain Guides' },
+  { role:'The coach', name:'Murabbi / Murabbiyah', gloss:'one who nurtures the whole person (from Tarbiyah)', job:'Owns each student’s plan, portfolio and wellbeing.', comparator:'IS Vantage’s “Mentor & Coach”' },
+  { role:'Subject experts', name:'Mu’allim / Mu’allimah', gloss:'the teacher', job:'Author map nodes, lead knowledge sprints.', comparator:'The subject Mentor & Coach' },
 ];
 
 /* ---------- THE JOURNEY (one arc) ---------- */
 const JOURNEY = [
-  { stage:'Talab', en:'Seek', years:'Years 7–8', tone:'olive', meaning:'talab al-‘ilm — the pursuit of knowledge', what:'Foundations: curiosity, core knowledge, learning to learn. High structure, mostly face-to-face.', ratio:'~1:15', coaching:'Daily Usrah + weekly 1:1', mentoring:'Guest practitioners; class site visits' },
-  { stage:'Tafaqquh', en:'Deepen', years:'Years 9–10', tone:'bronze', meaning:'deep understanding / comprehension', what:'Deep understanding & real competence through authentic projects; RoSA evidence builds. More independence, first mentors.', ratio:'~1:16–18', coaching:'Daily Usrah + fortnightly deep 1:1', mentoring:'First project mentor (~monthly)' },
-  { stage:'Riyadah', en:'Lead', years:'Years 11–12', tone:'terra', meaning:'pioneering leadership / enterprise (riyadat al-a‘mal)', what:'The leader who initiates and serves; capstone + HSC. Highest flexibility, sustained internship.', ratio:'~1:18', coaching:'Daily Usrah + fortnightly 1:1 + capstone supervision', mentoring:'Internship host (weekly) + academic mentor' },
+  { stage:'Explore & Discover', arabic:'Talab', en:'Seek', years:'Years 7–8', tone:'olive', meaning:'overlay: Talab — talab al-‘ilm, the pursuit of knowledge', what:'Vantage’s foundation years (the 2027 opening cohort): curiosity, core knowledge, learning to learn and a first taste of all three streams. High structure, strong Mentor & Coach relationships.', ratio:'~1:15', coaching:'Daily Usrah + weekly 1:1 [proposed]', mentoring:'Guest practitioners; first Industry-Led Challenges' },
+  { stage:'Focus & Build', arabic:'Tafaqquh', en:'Deepen', years:'Years 9–10', tone:'bronze', meaning:'overlay: Tafaqquh — deep understanding / comprehension', what:'Deepening real competence through Industry-Led Challenges as students focus toward a specialisation stream; RoSA evidence builds. More independence; first industry mentors.', ratio:'~1:16–18', coaching:'Daily Usrah + fortnightly deep 1:1 [proposed]', mentoring:'Stream / industry mentor (~monthly)' },
+  { stage:'Mastery & Pathways', arabic:'Riyadah', en:'Lead', years:'Years 11–12', tone:'terra', meaning:'overlay: Riyadah — pioneering leadership / enterprise (riyadat al-a‘mal)', what:'Mastery in the chosen stream: the HSC and ATAR plus a capstone of real consequence and a sustained industry placement. Highest flexibility.', ratio:'~1:18', coaching:'Daily Usrah + fortnightly 1:1 + capstone supervision [proposed]', mentoring:'Industry placement host (weekly) + academic mentor' },
+];
+
+/* ---------- THREE SPECIALISATION STREAMS (Vantage — real) ---------- */
+const STREAMS = [
+  { name:'Media, Communications & Creative Arts', icon:'🎬', tone:'terra', detail:'Storytelling, design, digital media and communication — voice, audience and craft.', ihsan:'Athar as a public portfolio; beauty (ihsan) in the made thing. [proposed]' },
+  { name:'Law, Government & Institutional Systems', icon:'⚖️', tone:'green', detail:'How rules, institutions and civic systems work — advocacy, ethics and justice.', ihsan:'‘Adl (justice) and amanah (trust) as the moral spine of the work. [proposed]' },
+  { name:'Tech Innovation & Entrepreneurship', icon:'💡', tone:'bronze', detail:'Building products and ventures — problem-finding, prototyping and enterprise in the AI era.', ihsan:'Riyadah — enterprise that serves; halal, beneficial innovation. [proposed]' },
 ];
 
 /* ---------- FOUR INTERLOCKING LAYERS ---------- */
 const LAYERS = [
   { name:'Manhal', sub:'the wellspring', icon:'💧', tone:'olive', text:'Every NESA outcome is a self-paced, mastery-gated node; students draw on demand.' },
-  { name:'’Amal Projects', sub:'knowledge into action', icon:'🛠️', tone:'terra', text:'One real, interdisciplinary project a term, co-designed with mentors.' },
+  { name:'’Amal Challenges', sub:'knowledge into action', icon:'🛠️', tone:'terra', text:'Vantage’s Industry-Led Challenges — one real, interdisciplinary challenge a term, co-designed with industry mentors.' },
   { name:'Kitab Maftuh', sub:'the world as campus', icon:'🌏', tone:'bronze', text:'Studios, mosques, councils and workplaces as real learning sites.' },
   { name:'Athar', sub:'the evidence', icon:'📜', tone:'green', text:'Application, reflection and contribution — the inspector’s cleanest audit trail.' },
 ];
 const MODALITY = [
   { name:'Knowledge sprints', detail:'F2F, Guide-led explicit teaching' },
-  { name:'’Amal Project studios', detail:'collaborative, project-based' },
+  { name:'’Amal Challenge studios', detail:'collaborative, industry-led, project-based' },
   { name:'Self-paced Manhal time', detail:'independent, coach circulating' },
   { name:'Usrah', detail:'daily home-family with the Murabbi' },
   { name:'Kitab Maftuh', detail:'off-site, real-world' },
@@ -201,14 +216,14 @@ const PERSONAS = [
   { who:'Aisha', stage:'Talab', years:'Y7–8', tone:'olive', note:'Highest structure, relationship, routine.',
     steps:['Opens in her Usrah with her Murabbi — spiritual anchor + the day’s plan','Knowledge sprint on ratio & proportion (her project needs it)','Self-paced Manhal — masters two nodes, coach checking each gate','After prayer & lunch, the ’Amal studio — a fair water-roster for the school garden','Closes with an Athar reflection; fortnightly community visit (gentle Kitab Maftuh)'] },
   { who:'Yusuf', stage:'Tafaqquh', years:'Y9–10', tone:'bronze', note:'Evidence builds toward his RoSA.',
-    steps:['Two mornings off-site at a council sustainability office on his ’Amal Project, “The Cool Courtyard”','Pulls heat-transfer & water-cycle nodes from Manhal exactly when his calcs need them','Books a tutorial with the science Guide','Joins a technical-writing sprint','Fortnightly deep 1:1 with his Murabbi'] },
+    steps:['Two mornings off-site at a council sustainability office on his ’Amal Challenge, “The Cool Courtyard”','Pulls heat-transfer & water-cycle nodes from Manhal exactly when his calcs need them','Books a tutorial with the science Guide','Joins a technical-writing sprint','Fortnightly deep 1:1 with his Murabbi'] },
   { who:'Mariam', stage:'Riyadah', years:'Y11–12', tone:'terra', note:'Sits the HSC AND graduates with an Athar portfolio + a real professional reference.',
     steps:['~A day a week in a real internship','On-campus time in self-paced Manhal and HSC sprints','Her capstone — a Riyadah project of real consequence — supervised by a Guide + industry mentor','Fortnightly coaching with her Murabbi','Builds her Athar portfolio defence for the Majlis'] },
 ];
 const WEEKLY_HOURS = [
   { el:'Knowledge sprints (F2F)', t:'8 hr', f:'6 hr', r:'6 hr (HSC)' },
   { el:'Self-paced Manhal', t:'5 hr', f:'7 hr', r:'8 hr' },
-  { el:'’Amal Project studio', t:'7 hr', f:'7 hr', r:'5 hr (capstone)' },
+  { el:'’Amal Challenge studio', t:'7 hr', f:'7 hr', r:'5 hr (capstone)' },
   { el:'Usrah + coaching', t:'3 hr', f:'2.5 hr', r:'2 hr' },
   { el:'Kitab Maftuh (off-site)', t:'2 hr', f:'4 hr', r:'6 hr (~1 day)' },
   { el:'Spiritual, wellbeing, physical, creative', t:'2 hr', f:'0.5 hr', r:'embedded' },
@@ -224,8 +239,8 @@ const MANHAL_NODE = {
 /* ---------- A REAL ’AMAL PROJECT — THE COOL COURTYARD ---------- */
 const COOL_COURTYARD = {
   title: 'The Cool Courtyard',
-  stage: 'Tafaqquh · Year 9 · one term',
-  brief: 'Design a passive-cooling, water-wise courtyard and an ablution-water re-use concept for a partner mosque; presented to the mosque committee and a council sustainability officer.',
+  stage: 'Focus & Build (Year 9) · one term · an Industry-Led Challenge',
+  brief: 'An Industry-Led Challenge (Tech Innovation + civic systems): design a passive-cooling, water-wise courtyard and an ablution-water re-use concept for a partner mosque; presented to the mosque committee and a council sustainability officer. Framed as an ’Amal Challenge. [proposed framing]',
   phases: [
     { phase:'Empathise & Define', wk:'1–2', nodes:'P: client brief; sustainability; urban-heat · C: interviewing', artefact:'Brief & needs analysis', bloom:'Understand / Analyse', nesa:'English; Geography' },
     { phase:'Investigate', wk:'2–4', nodes:'P: measurement; area; scale drawing; data · C: spreadsheets & stats', artefact:'Site dataset + scaled plan', bloom:'Apply / Analyse', nesa:'Maths; Science' },
@@ -247,7 +262,7 @@ const MANARA_STACK = [
   { layer:'Analytics / early-warning', fn:'Coverage audit, mastery dashboards, at-risk flags', options:'Built on LRS + LMS data' },
 ];
 const MANARA_DASHBOARDS = [
-  { who:'Student', tone:'olive', shows:'“My map” — mastered / in-progress / next · current ’Amal Project · Athar · coverage map · next sprint / booking' },
+  { who:'Student', tone:'olive', shows:'“My map” — mastered / in-progress / next · current ’Amal Challenge · Athar · coverage map · next sprint / booking' },
   { who:'Murabbi', tone:'bronze', shows:'Whole Usrah at a glance — pace, flags, plan, portfolio completeness' },
   { who:'Parent', tone:'terra', shows:'Coverage vs the mandatory map in plain language · mastery · Majlis invitations' },
   { who:'Leadership / NESA', tone:'green', shows:'School-wide coverage assurance · teaching-standard evidence · attendance · full audit trail' },
@@ -301,8 +316,8 @@ const PHASED_STAFFING = [
   { role:'Director, Registration & Compliance', band:'~$150k–$175k', y1:'1', full:'1', salaryK:162 },
   { role:'Director of Learning Architecture', band:'~$150k–$175k', y1:'1', full:'1', salaryK:162 },
   { role:'Competency Architects', band:'~$130k–$150k', y1:'1–2', full:'2–3', salaryK:140 },
-  { role:'Domain Guides (Mu’allim) — accredited', band:'$90k–$130k + allowances', y1:'3–4', full:'20–26 (incl. HSC)', salaryK:110 },
-  { role:'Learning Coaches (Murabbi)', band:'teacher scale + coordination allowance', y1:'Guides double', full:'8–12', salaryK:115 },
+  { role:'Mentor & Coach — subject (Mu’allim) — accredited', band:'$90k–$130k + allowances', y1:'3–4', full:'20–26 (incl. HSC)', salaryK:110 },
+  { role:'Mentor & Coach — wellbeing (Murabbi)', band:'teacher scale + coordination allowance', y1:'subject staff double', full:'8–12', salaryK:115 },
   { role:'Islamic Studies & Spiritual Formation (Imam)', band:'teacher scale + leadership allowance', y1:'1', full:'2–3', salaryK:120 },
   { role:'Wellbeing & Inclusion Lead', band:'~$130k–$150k (or P/T + external psych)', y1:'0.5–1', full:'2', salaryK:140 },
   { role:'Learning Technologist (Manara)', band:'~$90k–$120k', y1:'0.5–1', full:'1–2', salaryK:105, flag:'plan' },
@@ -314,29 +329,29 @@ const FTE_TOTALS = { y1:'~10–13 FTE', full:'~45–55 FTE (≈600 students)' };
 const ORG = {
   hos:'Head of School',
   pillars:[
-    { name:'Learning', tone:'olive', roles:['Director of Learning Architecture','Competency Architects','Domain Guides (Mu’allim)','Learning Technologist (Manara)'] },
+    { name:'Learning', tone:'olive', roles:['Director of Learning Architecture','Competency Architects','Mentor & Coach — subject (Mu’allim)','Learning Technologist (Manara)'] },
     { name:'Compliance & operations', tone:'bronze', roles:['Director of Registration & Compliance','Business Manager / Operations'] },
     { name:'Culture & wellbeing', tone:'terra', roles:['Islamic Studies & Spiritual Formation (Imam)','Wellbeing & Inclusion Lead'] },
   ],
-  notes:['Learning Coaches (Murabbi) run the Usrahs','Partnerships & Community Lead runs the Kitab Maftuh host network','Experts-in-Residence are external / sessional'],
+  notes:['Mentor & Coaches (Murabbi) run the Usrahs','Partnerships & Community Lead runs the industry / Kitab Maftuh host network','Experts-in-Residence are external / sessional'],
 };
 
 /* ---------- HR SUITE — position descriptions ---------- */
 const HR_POSITIONS = [
   { id:'HR-01', role:'Head of School (Founding Appointment)', salary:'$210k–$250k', years:'10+ yrs, incl. senior leadership', accred:'NESA-accredited (or in progress); WWCC',
-    pd:'Lead the establishment of The Ihsan Way end to end — vision, registration, curriculum architecture, staffing, culture, finance and partnerships — and pass the first-year NESA inspection.',
+    pd:'Lead the establishment of Vantage by Unity end to end — vision, registration, curriculum, staffing, the Mentor & Coach culture, finance and the industry partnerships the three streams depend on — and pass the first-year NESA inspection.',
     sc:['Demonstrated visionary, systems-thinking leadership in schooling','Practising Muslim able to hold Ihsan & adab as the centre','Track record building PBL / inquiry / design-thinking on a regulated base','Financial & governance literacy; stakeholder leadership'] },
   { id:'HR-02', role:'Director, Registration & Compliance', salary:'~$150k–$175k', years:'8+ yrs', accred:'NESA / regulatory expertise; WWCC',
     pd:'Own the NESA Section 83 application and the B/C compliance crosswalk; assure child-protection, welfare and audited viability.',
     sc:['Deep NESA registration & ACE Rules knowledge','Policy authoring & evidence management','Child-protection (Strand A) leadership'] },
   { id:'HR-03', role:'Director of Learning Architecture', salary:'~$150k–$175k', years:'8+ yrs', accred:'NESA-accredited; WWCC',
-    pd:'Build the Manhal coverage matrix, the ’Amal Project arc and the Athar assessment model; hold teaching-standard sign-off until the HoS accreditation confirms.',
+    pd:'Build the Manhal coverage matrix, the ’Amal Challenge arc and the Athar assessment model; hold teaching-standard sign-off until the HoS accreditation confirms.',
     sc:['Curriculum & competency design across KLAs','Mastery-based assessment & moderation','PBL / design-thinking fluency'] },
   { id:'HR-04', role:'Competency Architect', salary:'~$130k–$150k', years:'5+ yrs', accred:'NESA-accredited; WWCC',
     pd:'Author Manhal nodes — outcome tagging, Bloom badges, prerequisites and mastery checks — and run the coverage audit.',
     sc:['Syllabus outcome mapping','Assessment design','LMS competency configuration'] },
   { id:'HR-05', role:'Domain Guide (Mu’allim / Mu’allimah)', salary:'$90k–$130k + allowances', years:'2+ yrs (graduate entry welcome)', accred:'NESA-accredited; WWCC',
-    pd:'Author map nodes and lead knowledge sprints; the accredited teacher of record for mandatory outcomes; co-design ’Amal Projects.',
+    pd:'Author map nodes and lead knowledge sprints; the accredited teacher of record for mandatory outcomes; co-design ’Amal Challenges.',
     sc:['Subject expertise & registration','Explicit teaching in sprint format','Project co-design with mentors'] },
   { id:'HR-06', role:'Learning Coach (Murabbi / Murabbiyah)', salary:'teacher scale + coordination allowance', years:'3+ yrs', accred:'NESA-accredited; WWCC',
     pd:'Own each student’s plan, portfolio and wellbeing across 2+ years; run the daily Usrah; lead coaching cadence per stage.',
@@ -351,24 +366,24 @@ const HR_POSITIONS = [
 
 /* ---------- ROADMAP & RISK ---------- */
 const ROADMAP_PHASES = [
-  { id:'Phase 0', name:'Feasibility', tone:'idle', gateway:'Funded mandate + viable site', detail:'Demography & demand confirmed [verify]; proprietor mandate; capital pathway; candidate site optioned.' },
+  { id:'Phase 0', name:'Feasibility', tone:'idle', gateway:'Funded mandate + viable site', detail:'Established by Unity Grammar with a secured Parramatta site and confirmed demand — the proprietor mandate and capital pathway are in place.' },
   { id:'Phase 1', name:'Design & evidence', tone:'bronze', gateway:'Application ready', detail:'Opening-stage Manhal coverage matrix; policies; staffing & financial model; NESA pre-lodgement engagement.' },
-  { id:'Phase 2', name:'Build & approve', tone:'olive', gateway:'Provisional registration', detail:'Submit NESA Section 83 by 31 March 2028; recruit founding team; fit-out; enrolment campaign.' },
-  { id:'Phase 3', name:'Launch & prove', tone:'green', gateway:'Pass first-year inspection', detail:'Open Year 7 (Term 1 2029); inspection ~Term 2 — Strand A welfare, Strand B teaching; iterate fidelity.' },
+  { id:'Phase 2', name:'Build & approve', tone:'olive', gateway:'Registration in assessment', detail:'Section 83 lodged 31 March 2026; recruit founding team (Mentor & Coach); fit-out the Parramatta site; EOI / enrolment campaign for Years 7 & 8.' },
+  { id:'Phase 3', name:'Launch & prove', tone:'green', gateway:'Pass first-year inspection', detail:'Open Years 7 & 8 (Term 1 2027); inspection ~Term 2 — Strand A welfare, Strand B teaching; iterate fidelity.' },
 ];
 const CONSTRAINTS = [
-  { c:'The immovable 31 March date', d:'~9–10 months before a January open. [NESA]' },
-  { c:'Premises / planning', d:'A State Significant Development can take ~24 months.' },
-  { c:'Opening-stage Manhal', d:'Must be coverage-complete before opening.' },
+  { c:'The immovable 31 March date', d:'Section 83 was due 31 Mar 2026 for a 2027 open — now lodged and in assessment. [NESA]' },
+  { c:'Premises / planning', d:'Vantage’s Parramatta site is secured; fit-out and approvals on the critical path.' },
+  { c:'Opening curriculum (Years 7 & 8)', d:'Coverage-complete for both opening year groups before Term 1 2027.' },
 ];
 const SINGLE_STAGE = {
-  line:'“Open one year group well — not a whole school.”',
-  steps:['Year 7','+ Year 8','+ Year 9','+ Year 10','+ Year 11','+ Year 12'],
-  benefits:['Shrinks the Year-1 Manhal to one stage','Needs a smaller team and less capital','Defers HSC accreditation ~4–5 years — registration secured first'],
+  line:'“Open Years 7 & 8 well, then grow a year at a time.”',
+  steps:['Years 7 & 8 (2027)','+ Year 9','+ Year 10','+ Year 11','+ Year 12'],
+  benefits:['Keeps the opening curriculum to two year groups','Needs a smaller founding team and less capital','Defers HSC accreditation ~3–4 years — registration secured first','Lets the Mentor & Coach culture set before scale'],
 };
 const RISKS = [
   { id:'T-01', kind:'threat', title:'NESA delay or refusal', cat:'Governance', L:3, C:5, owner:'Director, Registration & Compliance', response:'Engage NESA early; single-stage launch defers HSC accreditation; pristine evidence pack.', status:'open' },
-  { id:'T-02', kind:'threat', title:'No / late site', cat:'Premises', L:3, C:4, owner:'Business Manager', response:'Start Phase 0 site search now; interim lease; SSD timeline built into the critical path.', status:'open' },
+  { id:'T-02', kind:'threat', title:'Site fit-out / approvals slip', cat:'Premises', L:2, C:4, owner:'Business Manager', response:'Parramatta site secured; manage fit-out & approvals on the critical path; staged occupancy if needed.', status:'open' },
   { id:'T-03', kind:'threat', title:'Manhal not coverage-complete at open', cat:'Scope', L:3, C:4, owner:'Director of Learning Architecture', response:'Coverage audit gates “ready”; single-stage scope keeps Year-1 map to one stage.', status:'open' },
   { id:'T-04', kind:'threat', title:'Can’t recruit aligned accredited staff', cat:'Resources', L:3, C:4, owner:'Head of School', response:'Early recruitment; grow-your-own coaches; hire for character then train.', status:'open' },
   { id:'T-05', kind:'threat', title:'Financial viability under low enrolment', cat:'Finance', L:3, C:4, owner:'Business Manager', response:'Conservative enrolment; staged scaling; single-stage launch lowers Year-1 cost base.', status:'open' },
@@ -415,7 +430,7 @@ const PMBOK8_PRINCIPLES = [
 const PMBOK8_DOMAINS = [
   { d:'Governance', s:'Board fit-and-proper; conflicts; audited viability', tone:'green' },
   { d:'Scope', s:'Opening-stage Manhal coverage matrix; single-stage scope', tone:'olive' },
-  { d:'Schedule', s:'31 Mar 2028 lodge → Term 1 2029 open; SSD ~24 mo', tone:'bronze' },
+  { d:'Schedule', s:'Section 83 lodged Mar 2026 → Years 7 & 8 open Term 1 2027', tone:'bronze' },
   { d:'Finance', s:'SES recurrent + fees; conservative enrolment', tone:'terra' },
   { d:'Stakeholders', s:'Families, scholars, NESA, partners, Dharug community', tone:'green' },
   { d:'Resources', s:'Phased staffing; grow-your-own; Manara platform', tone:'olive' },
@@ -423,9 +438,9 @@ const PMBOK8_DOMAINS = [
 ];
 
 /* ---------- FINANCE [plan / verify] (single-stage Year-1, ~84 Year-7 students) ---------- */
-const ENROL_Y1 = 84;
+const ENROL_Y1 = 120;
 const BUDGET = {
-  basis:'Single-stage Year-7 launch, ~84 students [plan]. 2026 secondary SES ~$18,233/student [NSW$ · verify]. Conservative; never presented as committed.',
+  basis:'Two-year-group launch (Years 7 & 8), ~120 students [plan]. 2026 secondary SES ~$18,233/student [NSW$ · verify]. Conservative; never presented as committed.',
   capex: [
     { item:'Fit-out & safe spaces (B5/B6)', amount:1200000, flag:'plan' },
     { item:'IT & Manara platform setup', amount:180000, flag:'plan' },
@@ -433,7 +448,7 @@ const BUDGET = {
     { item:'Library & learning resources', amount:80000, flag:'plan' },
   ],
   opexYear1: [
-    { item:'Staff (~11 FTE, blended)', amount:1320000, flag:'NSW$' },
+    { item:'Staff (~13 FTE, blended)', amount:1560000, flag:'NSW$' },
     { item:'Facilities lease & outgoings', amount:300000, flag:'plan' },
     { item:'Manara platform licences', amount:60000, flag:'plan' },
     { item:'Insurance & compliance', amount:80000, flag:'plan' },
@@ -441,29 +456,29 @@ const BUDGET = {
     { item:'PD & fidelity', amount:40000, flag:'plan' },
   ],
   revenueYear1: [
-    { item:'SES recurrent (84 × ~$18,233)', amount:1531572, flag:'verify' },
-    { item:'Tuition fees (84 × ~$6,000)', amount:504000, flag:'plan' },
+    { item:'SES recurrent (120 × ~$18,233)', amount:2187960, flag:'verify' },
+    { item:'Tuition fees (120 × ~$6,000)', amount:720000, flag:'plan' },
   ],
 };
 
 /* ---------- DASHBOARD KPIs & HEALTH ---------- */
 const KPIS = [
-  { label:'Months to NESA lodge', value:String(monthsToLodge), suffix:'mo', delta:'Section 83 due 31 Mar 2028', tone:'bronze', spark:[26,24,23,22,monthsToLodge] },
-  { label:'Months to open', value:String(monthsToOpen), suffix:'mo', delta:'Year 7 · Term 1 2029', tone:'olive', spark:[36,35,34,33,monthsToOpen] },
-  { label:'Opening-stage Manhal coverage', value:'0', suffix:'%', delta:'Built in Phase 1 (from appointment)', tone:'idle', spark:[0,0,0,0,0] },
-  { label:'Founding FTE secured', value:'0', suffix:'/ ~11', delta:'Sequenced from appointment', tone:'idle', spark:[0,0,0,0,0] },
-  { label:'Kitab Maftuh MOUs', value:'0', suffix:'signed', delta:'Partnerships pipeline opens Phase 1', tone:'idle', spark:[0,0,0,0,0] },
+  { label:'Months to open', value:String(monthsToOpen), suffix:'mo', delta:'Years 7 & 8 · Term 1 2027', tone:'olive', spark:[12,11,10,9,monthsToOpen] },
+  { label:'NESA registration', value:String(monthsSinceLodge), suffix:'mo since lodge', delta:'Section 83 lodged 31 Mar 2026 · in assessment', tone:'bronze', spark:[0,0,1,1,monthsSinceLodge] },
+  { label:'Manhal coverage [proposed]', value:'0', suffix:'%', delta:'Candidate’s overlay — built from appointment', tone:'idle', spark:[0,0,0,0,0] },
+  { label:'Founding FTE secured', value:'0', suffix:'/ ~13', delta:'Mentor & Coach team — sequenced from appointment', tone:'idle', spark:[0,0,0,0,0] },
+  { label:'Industry partner MOUs', value:'0', suffix:'signed', delta:'Stream partnerships pipeline', tone:'idle', spark:[0,0,0,0,0] },
   { label:'Founding artefacts complete', value:'0', suffix:'%', delta:'See Artefacts register', tone:'idle', spark:[0,0,0,0,0] },
 ];
 const HEALTH_PILLARS = [
-  { key:'vision', label:'Vision & model clarity', score:92, tone:'good', note:'The Ihsan Way is fully articulated — this platform is its evidence.' },
-  { key:'concept', label:'Board concept & mandate', score:70, tone:'olive', note:'Proprietor mandate; capital pathway being firmed [plan].' },
-  { key:'site', label:'Premises / site', score:20, tone:'risk', note:'Phase 0 — site to be optioned; SSD ~24 months.' },
-  { key:'nesa', label:'NESA registration readiness', score:25, tone:'warn', note:'Evidence pack designed; lodge 31 Mar 2028.' },
-  { key:'manhal', label:'Manhal coverage (opening stage)', score:10, tone:'risk', note:'Coverage matrix designed; build in Phase 1.' },
+  { key:'vision', label:'Vision & model clarity', score:92, tone:'good', note:'Vantage’s model is published; this platform shows how the candidate would lead it — The Ihsan Way [proposed].' },
+  { key:'concept', label:'Proprietor mandate (Unity Grammar)', score:88, tone:'good', note:'Established by Unity Grammar; proprietor mandate and capital pathway in place.' },
+  { key:'site', label:'Premises / site', score:75, tone:'olive', note:'Parramatta site secured by Vantage / Unity Grammar; fit-out on the critical path.' },
+  { key:'nesa', label:'NESA registration', score:55, tone:'olive', note:'Section 83 lodged 31 Mar 2026; in assessment for a 2027 open.' },
+  { key:'manhal', label:'Manhal coverage [proposed]', score:10, tone:'risk', note:'Candidate’s overlay — coverage matrix designed; build from appointment.' },
   { key:'staff', label:'Founding team', score:8, tone:'risk', note:'Phased plan ready; recruitment from appointment.' },
   { key:'platform', label:'Manara platform', score:30, tone:'warn', note:'Stack & build-vs-buy decided; configure in Phase 1–2.' },
-  { key:'partners', label:'Kitab Maftuh partners', score:15, tone:'warn', note:'Target host list drafted; MOUs in Phase 1.' },
+  { key:'partners', label:'Industry & community partners', score:20, tone:'warn', note:'Stream partners (media · law/gov · tech) targeted; MOUs to build (Kitab Maftuh [proposed]).' },
   { key:'finance', label:'Financial model', score:55, tone:'olive', note:'Conservative single-stage model built [plan].' },
   { key:'risk', label:'Risk & fidelity controls', score:65, tone:'olive', note:'Register live; fidelity + coverage gates defined.' },
   { key:'community', label:'Community & scholar alignment', score:60, tone:'olive', note:'Scholar-review of naming convened (adab).' },
@@ -472,9 +487,9 @@ const HEALTH_PILLARS = [
 
 /* ---------- ARTEFACTS REGISTER ---------- */
 const ARTEFACTS = [
-  { id:'A-01', name:'Vision & model paper (The Ihsan Way)', phase:'Phase 1', owner:'HoS', maps:'B1', status:'complete' },
-  { id:'A-02', name:'Manhal coverage matrix — Year 7', phase:'Phase 1', owner:'Director of Learning', maps:'B4 / C1', status:'drafting' },
-  { id:'A-03', name:'’Amal Project bank (Stage 4)', phase:'Phase 1', owner:'Competency Architects', maps:'B4', status:'drafting' },
+  { id:'A-01', name:'Vision & leadership paper (The Ihsan Way — proposed)', phase:'Phase 1', owner:'HoS', maps:'B1', status:'complete' },
+  { id:'A-02', name:'Manhal coverage matrix — Years 7 & 8', phase:'Phase 1', owner:'Director of Learning', maps:'B4 / C1', status:'drafting' },
+  { id:'A-03', name:'’Amal Challenge bank (Stage 4)', phase:'Phase 1', owner:'Competency Architects', maps:'B4', status:'drafting' },
   { id:'A-04', name:'Athar assessment & moderation policy', phase:'Phase 1', owner:'Director of Learning', maps:'C3', status:'planned' },
   { id:'A-05', name:'NESA Section 83 evidence pack', phase:'Phase 2', owner:'Director, Compliance', maps:'B1–C3', status:'drafting' },
   { id:'A-06', name:'Child-protection & welfare framework (Strand A)', phase:'Phase 1', owner:'Designated officer', maps:'B8', status:'review' },
@@ -496,14 +511,14 @@ const ARTEFACTS = [
 const NAV = [
   { key:'dashboard', label:'Command Centre', icon:'⌂', group:'Overview' },
   { key:'principal', label:'The Candidate', icon:'👤', group:'Overview' },
-  { key:'vision', label:'The Conviction', icon:'✦', group:'The Ihsan Way' },
-  { key:'system', label:'The Named System', icon:'❖', group:'The Ihsan Way' },
-  { key:'journey', label:'The Journey', icon:'➜', group:'The Ihsan Way' },
-  { key:'pedagogy', label:'Four Layers', icon:'◷', group:'The Ihsan Way' },
-  { key:'day', label:'A Day in the Life', icon:'☼', group:'The Ihsan Way' },
-  { key:'manhal', label:'The Manhal', icon:'💧', group:'The Ihsan Way' },
-  { key:'project', label:'A Real ’Amal Project', icon:'🛠', group:'The Ihsan Way' },
-  { key:'manara', label:'The Manara Platform', icon:'⌖', group:'The Ihsan Way' },
+  { key:'vision', label:'The Conviction', icon:'✦', group:'The Learning Model' },
+  { key:'system', label:'The Named System', icon:'❖', group:'The Learning Model' },
+  { key:'journey', label:'The Journey', icon:'➜', group:'The Learning Model' },
+  { key:'pedagogy', label:'Four Layers', icon:'◷', group:'The Learning Model' },
+  { key:'day', label:'A Day in the Life', icon:'☼', group:'The Learning Model' },
+  { key:'manhal', label:'The Manhal', icon:'💧', group:'The Learning Model' },
+  { key:'project', label:'A Real ’Amal Challenge', icon:'🛠', group:'The Learning Model' },
+  { key:'manara', label:'The Manara Platform', icon:'⌖', group:'The Learning Model' },
   { key:'compliance', label:'Rigorous & Registrable', icon:'⚖', group:'Registrable & Run' },
   { key:'roadmap', label:'Foundation Roadmap', icon:'🗺', group:'Registrable & Run' },
   { key:'pmbok', label:'PMBOK 8 Governance', icon:'◫', group:'Registrable & Run' },
@@ -516,8 +531,8 @@ const NAV = [
   { key:'reports', label:'Reports & Exports', icon:'📑', group:'Evidence' },
 ];
 
-window.__SP_DATA__ = { SCHOOL, KHALED_PROFILE, CONVICTION, DESIGN_TESTS, NAMED_SYSTEM, JOURNEY, LAYERS, MODALITY, PERSONAS, WEEKLY_HOURS, MANHAL_NODE, COOL_COURTYARD, MANARA_STACK, MANARA_DASHBOARDS, BUILD_BUY, NESA_CROSSWALK, MANDATORY_HOURS, EXAM_POSITION, ASSURANCE_CARDS, SALARY_BENCHMARKS, SALARY_BASIS, PHASED_STAFFING, FTE_TOTALS, ORG, HR_POSITIONS, ROADMAP_PHASES, CONSTRAINTS, SINGLE_STAGE, RISKS, COMPARATORS, SAME_DIFFERENT, PATHWAYS, GRADUATE_ATTRIBUTES, PMBOK8_PRINCIPLES, PMBOK8_DOMAINS, BUDGET, ENROL_Y1, KPIS, HEALTH_PILLARS, ARTEFACTS, NAV };
-window.__SP_UTILS__ = { toneColor, toneBar, statusBadge, downloadFile, exportCSV, fmtAUD, fmtDate, TODAY, TARGET_OPEN, NESA_LODGE_BY, monthsToOpen, monthsToLodge };
+window.__SP_DATA__ = { SCHOOL, KHALED_PROFILE, CONVICTION, DESIGN_TESTS, NAMED_SYSTEM, JOURNEY, STREAMS, LAYERS, MODALITY, PERSONAS, WEEKLY_HOURS, MANHAL_NODE, COOL_COURTYARD, MANARA_STACK, MANARA_DASHBOARDS, BUILD_BUY, NESA_CROSSWALK, MANDATORY_HOURS, EXAM_POSITION, ASSURANCE_CARDS, SALARY_BENCHMARKS, SALARY_BASIS, PHASED_STAFFING, FTE_TOTALS, ORG, HR_POSITIONS, ROADMAP_PHASES, CONSTRAINTS, SINGLE_STAGE, RISKS, COMPARATORS, SAME_DIFFERENT, PATHWAYS, GRADUATE_ATTRIBUTES, PMBOK8_PRINCIPLES, PMBOK8_DOMAINS, BUDGET, ENROL_Y1, KPIS, HEALTH_PILLARS, ARTEFACTS, NAV };
+window.__SP_UTILS__ = { toneColor, toneBar, statusBadge, downloadFile, exportCSV, fmtAUD, fmtDate, TODAY, TARGET_OPEN, NESA_LODGE_BY, monthsToOpen, monthsSinceLodge };
 window.__SP_HOOKS__ = { useState, useEffect, useMemo, useRef, Fragment };
 </script>
 
@@ -537,6 +552,7 @@ const Flag = ({ k }) => {
     practice:'bg-slate-100 text-slate-600 border-slate-200',
     plan:'bg-olive-50 text-olive-700 border-olive-500',
     verify:'bg-terra-50 text-terra-700 border-terra-500',
+    proposed:'bg-indigo-50 text-indigo-700 border-indigo-200',
   };
   return <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold border align-middle ${map[k]||map.practice}`}>[{k}]</span>;
 };
@@ -640,8 +656,8 @@ window.__SP_UI__ = { StatusDot, Flag, KpiCard, Section, Pill, Btn, Modal, Plot, 
 
 <script type="text/babel" id="modules-a">
 const D = window.__SP_DATA__;
-const { SCHOOL, KHALED_PROFILE, JOURNEY, NESA_CROSSWALK, PHASED_STAFFING, SALARY_BENCHMARKS, ROADMAP_PHASES, RISKS, BUDGET, KPIS, HEALTH_PILLARS, CONVICTION, NAMED_SYSTEM, COOL_COURTYARD, SINGLE_STAGE } = D;
-const { toneColor, toneBar, exportCSV, fmtAUD, fmtDate, TODAY, TARGET_OPEN, NESA_LODGE_BY, monthsToOpen, monthsToLodge } = window.__SP_UTILS__;
+const { SCHOOL, KHALED_PROFILE, JOURNEY, STREAMS, NESA_CROSSWALK, PHASED_STAFFING, SALARY_BENCHMARKS, ROADMAP_PHASES, RISKS, BUDGET, KPIS, HEALTH_PILLARS, CONVICTION, NAMED_SYSTEM, COOL_COURTYARD, SINGLE_STAGE } = D;
+const { toneColor, toneBar, exportCSV, fmtAUD, fmtDate, TODAY, TARGET_OPEN, NESA_LODGE_BY, monthsToOpen, monthsSinceLodge } = window.__SP_UTILS__;
 const { useState } = window.__SP_HOOKS__;
 const { StatusDot, Flag, KpiCard, Section, Pill, Btn, Plot } = window.__SP_UI__;
 
@@ -651,12 +667,12 @@ const exportBoardPDF = (state) => {
   const doc = new jsPDF({ unit:'pt', format:'a4' });
   const W = doc.internal.pageSize.getWidth(); const M = 40; let y = M;
   doc.setFillColor(47,74,60); doc.rect(0,0,W,118,'F');
-  doc.setTextColor(255,255,255); doc.setFont('times','bold'); doc.setFontSize(24); doc.text('The Ihsan Way — Founding Board Pack', M, 50);
+  doc.setTextColor(255,255,255); doc.setFont('times','bold'); doc.setFontSize(24); doc.text('Vantage by Unity — Founding Board Pack', M, 50);
   doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.text(SCHOOL.oneLine, M, 70);
   doc.setFontSize(9); doc.text(SCHOOL.type + '  ·  ' + SCHOOL.location, M, 86);
   doc.text('Candidate: ' + SCHOOL.candidate + ' · ' + SCHOOL.role + '  ·  Generated ' + fmtDate(TODAY), M, 100);
   doc.setTextColor(31,36,33); y = 140;
-  doc.setFont('times','bold'); doc.setFontSize(13); doc.text('1 · The journey (Talab → Tafaqquh → Riyadah)', M, y);
+  doc.setFont('times','bold'); doc.setFontSize(13); doc.text('1 · The journey (Explore & Discover → Focus & Build → Mastery & Pathways)', M, y);
   doc.autoTable({ startY:y+6, head:[['Stage','English','Years','What it is']], body: JOURNEY.map(s=>[s.stage, s.en, s.years, s.what]), styles:{ fontSize:8 }, columnStyles:{ 3:{cellWidth:260}}, headStyles:{ fillColor:[47,74,60] } });
   y = doc.lastAutoTable.finalY + 16;
   doc.setFont('times','bold'); doc.setFontSize(13); doc.text('2 · NESA compliance crosswalk (Part B / C)', M, y);
@@ -671,16 +687,16 @@ const exportBoardPDF = (state) => {
   doc.setFont('times','bold'); doc.setFontSize(13); doc.text('5 · Foundation roadmap (single-stage launch)', M, y);
   doc.autoTable({ startY:y+6, head:[['Phase','Name','Gateway','Detail']], body: ROADMAP_PHASES.map(p=>[p.id,p.name,p.gateway,p.detail]), styles:{ fontSize:7.5 }, columnStyles:{ 3:{cellWidth:230}}, headStyles:{ fillColor:[47,74,60] } });
   doc.setFontSize(8); doc.setTextColor(120,110,95); doc.text(SCHOOL.scholarNote, M, doc.lastAutoTable.finalY + 22, { maxWidth: W-2*M });
-  doc.save('TheIhsanWay_BoardPack_' + TODAY.toISOString().slice(0,10) + '.pdf');
+  doc.save('VantageByUnity_BoardPack_' + TODAY.toISOString().slice(0,10) + '.pdf');
 };
 
 const exportPitchPPTX = (state) => {
   const pres = new window.PptxGenJS(); pres.layout='LAYOUT_WIDE'; const green='2F4A3C', bronze='9A7B4F', ink='1F2421';
   let s = pres.addSlide(); s.background={ color:green };
-  s.addText('The Ihsan Way', { x:0.6, y:1.5, w:12, h:1.2, fontSize:48, color:'FFFFFF', bold:true, fontFace:'Georgia' });
+  s.addText('Vantage by Unity', { x:0.6, y:1.5, w:12, h:1.2, fontSize:48, color:'FFFFFF', bold:true, fontFace:'Georgia' });
   s.addText(SCHOOL.oneLine, { x:0.6, y:2.8, w:12, h:0.7, fontSize:18, color:'EAD9BF', italic:true });
   s.addText(SCHOOL.type + '  ·  ' + SCHOOL.location, { x:0.6, y:4.6, w:12, fontSize:14, color:'FFFFFF' });
-  s.addText(SCHOOL.candidate + ' · ' + SCHOOL.role + '  ·  ' + fmtDate(TODAY), { x:0.6, y:5.15, w:12, fontSize:12, color:'C9D6CC' });
+  s.addText(SCHOOL.candidate + ' · ' + SCHOOL.role + '  ·  proposed approach: ' + SCHOOL.proposedFramework + '  ·  ' + fmtDate(TODAY), { x:0.6, y:5.15, w:12, fontSize:12, color:'C9D6CC' });
 
   s = pres.addSlide();
   s.addText('The conviction — one journey, not three subjects', { x:0.5, y:0.4, fontSize:24, color:ink, bold:true, fontFace:'Georgia' });
@@ -692,7 +708,7 @@ const exportPitchPPTX = (state) => {
   s.addTable([[{text:'Stage',options:{bold:true,fill:green,color:'FFFFFF'}},{text:'English',options:{bold:true,fill:green,color:'FFFFFF'}},{text:'Years',options:{bold:true,fill:green,color:'FFFFFF'}},{text:'What it is',options:{bold:true,fill:green,color:'FFFFFF'}}], ...JOURNEY.map(j=>[j.stage,j.en,j.years,j.what])], { x:0.5, y:1.2, w:12.4, fontSize:11, color:ink });
 
   s = pres.addSlide();
-  s.addText('A real ’Amal Project — ' + COOL_COURTYARD.title, { x:0.5, y:0.4, fontSize:22, color:ink, bold:true, fontFace:'Georgia' });
+  s.addText('A real ’Amal Challenge — ' + COOL_COURTYARD.title, { x:0.5, y:0.4, fontSize:22, color:ink, bold:true, fontFace:'Georgia' });
   s.addText(COOL_COURTYARD.brief, { x:0.5, y:1.05, w:12.4, fontSize:12, color:ink, italic:true });
   s.addTable([[{text:'Phase',options:{bold:true,fill:green,color:'FFFFFF'}},{text:'Artefact',options:{bold:true,fill:green,color:'FFFFFF'}},{text:'Bloom',options:{bold:true,fill:green,color:'FFFFFF'}},{text:'NESA',options:{bold:true,fill:green,color:'FFFFFF'}}], ...COOL_COURTYARD.phases.map(p=>[p.phase,p.artefact,p.bloom,p.nesa])], { x:0.5, y:1.9, w:12.4, fontSize:10, color:ink });
 
@@ -702,7 +718,7 @@ const exportPitchPPTX = (state) => {
   s.addText(SINGLE_STAGE.steps.join('   →   '), { x:0.6, y:2.2, w:12, fontSize:16, color:ink, bold:true });
   s.addText(SINGLE_STAGE.benefits.map(b=>({ text:b+'\n', options:{ fontSize:14, color:ink, bullet:true }})), { x:0.6, y:3.0, w:12, h:2.5 });
 
-  pres.writeFile({ fileName: 'TheIhsanWay_Pitch_' + TODAY.toISOString().slice(0,10) + '.pptx' });
+  pres.writeFile({ fileName: 'VantageByUnity_Pitch_' + TODAY.toISOString().slice(0,10) + '.pptx' });
 };
 
 /* ================= COMMAND CENTRE ================= */
@@ -715,15 +731,31 @@ const Dashboard = ({ state, setHealthOpen }) => {
   return (
     <div className="space-y-5">
       <div className="rounded-2xl px-6 py-7 text-white shadow-sm fade-in islimi bg-gradient-to-br from-itq-900 to-itq-700">
-        <div className="text-[11px] uppercase tracking-[0.18em] text-bronze-50/90">The Ihsan Way · {SCHOOL.tagline}</div>
+        <div className="text-[11px] uppercase tracking-[0.18em] text-bronze-50/90">{SCHOOL.name} · {SCHOOL.operator} · {SCHOOL.tagline}</div>
         <div className="text-3xl serif font-semibold mt-1">{SCHOOL.oneLine}</div>
         <div className="text-sm text-white/85 mt-2">{SCHOOL.type} · {SCHOOL.location}</div>
-        <div className="text-xs text-white/70 mt-3">Candidate artefact · {SCHOOL.candidate} · {SCHOOL.role} · application via {KHALED_PROFILE.appliedVia}, {KHALED_PROFILE.appliedOn}</div>
+        <div className="text-xs text-white/70 mt-3">Candidate artefact · {SCHOOL.candidate} · {SCHOOL.role} · proposed approach: {SCHOOL.proposedFramework} [proposed]</div>
       </div>
+
+      <Section title="Vantage by Unity — the real school" subtitle="The published facts this candidate vision is built on">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+          <div className="bg-sand rounded-lg p-3"><div className="text-xs text-bronze-700 uppercase tracking-wide">Operator</div><div className="text-itq-900 font-medium">{SCHOOL.operator}</div></div>
+          <div className="bg-sand rounded-lg p-3"><div className="text-xs text-bronze-700 uppercase tracking-wide">Opens</div><div className="text-itq-900 font-medium">Term 1 2027 · Years 7 & 8</div></div>
+          <div className="bg-sand rounded-lg p-3"><div className="text-xs text-bronze-700 uppercase tracking-wide">Location</div><div className="text-itq-900 font-medium">Parramatta · Western Sydney</div></div>
+          <div className="bg-sand rounded-lg p-3"><div className="text-xs text-bronze-700 uppercase tracking-wide">Credentials</div><div className="text-itq-900 font-medium">HSC + ATAR retained</div></div>
+          <div className="bg-sand rounded-lg p-3"><div className="text-xs text-bronze-700 uppercase tracking-wide">Educators</div><div className="text-itq-900 font-medium">Mentor & Coach</div></div>
+          <div className="bg-sand rounded-lg p-3"><div className="text-xs text-bronze-700 uppercase tracking-wide">Wellbeing</div><div className="text-itq-900 font-medium">Full Meal Program</div></div>
+        </div>
+        <div className="mt-3">
+          <div className="text-xs text-bronze-700 uppercase tracking-wide mb-1.5">Three specialisation streams</div>
+          <div className="flex flex-wrap gap-2">{STREAMS.map((s,i)=>(<Pill key={i} tone={s.tone}>{s.icon} {s.name}</Pill>))}</div>
+        </div>
+        <div className="text-[11px] text-slate-500 mt-3"><Flag k="proposed"/> Items flagged this way are {SCHOOL.candidate}’s proposed overlay ({SCHOOL.proposedFramework}), not yet school policy.</div>
+      </Section>
 
       <Section
         title="Command Centre"
-        subtitle={'Today ' + fmtDate(TODAY) + ' · Lodge NESA ' + fmtDate(NESA_LODGE_BY) + ' (' + monthsToLodge + ' mo) · Open ' + fmtDate(TARGET_OPEN) + ' (' + monthsToOpen + ' mo)'}
+        subtitle={'Today ' + fmtDate(TODAY) + ' · NESA Section 83 lodged ' + fmtDate(NESA_LODGE_BY) + ' (' + monthsSinceLodge + ' mo ago) · Open ' + fmtDate(TARGET_OPEN) + ' (' + monthsToOpen + ' mo)'}
         right={<>
           <Btn tone="ghost" size="sm" onClick={()=>setHealthOpen(true)}>🩺 Health check</Btn>
           <Btn tone="accent" size="sm" onClick={()=>exportBoardPDF(state)}>📑 Board Pack PDF</Btn>
@@ -774,7 +806,7 @@ const Dashboard = ({ state, setHealthOpen }) => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <Section title="Year-1 finance" subtitle="Single-stage launch · conservative">
+        <Section title="Year-1 finance" subtitle="Years 7 & 8 launch · conservative">
           <div className="text-sm grid grid-cols-2 gap-3">
             <div className="bg-sand rounded-lg p-3"><div className="text-xs text-slate-500">Capex plan</div><div className="text-lg font-semibold serif">{fmtAUD(tCapex)}</div></div>
             <div className="bg-sand rounded-lg p-3"><div className="text-xs text-slate-500">Year-1 opex</div><div className="text-lg font-semibold serif">{fmtAUD(tOpex)}</div></div>
@@ -801,8 +833,8 @@ const Dashboard = ({ state, setHealthOpen }) => {
             <Btn full tone="primary" icon="🩺" onClick={()=>setHealthOpen(true)}>Run 12-pillar health check</Btn>
             <Btn full tone="accent" icon="📑" onClick={()=>exportBoardPDF(state)}>Board Pack (PDF · 5 sections)</Btn>
             <Btn full tone="accent" icon="🎬" onClick={()=>exportPitchPPTX(state)}>Vision Pitch (PPTX · 5 slides)</Btn>
-            <Btn full tone="ghost" icon="📊" onClick={()=>exportCSV('TheIhsanWay_RiskRegister.csv', ['ID','Kind','Title','Cat','L','C','LxC','Owner','Response','Status'], state.risks.map(r=>[r.id,r.kind,r.title,r.cat,r.L,r.C,r.L*r.C,r.owner,r.response,r.status]))}>Risk register CSV</Btn>
-            <Btn full tone="ghost" icon="⚖️" onClick={()=>exportCSV('TheIhsanWay_NESACrosswalk.csv', ['Req','Requirement','Owner & evidence'], NESA_CROSSWALK)}>NESA crosswalk CSV</Btn>
+            <Btn full tone="ghost" icon="📊" onClick={()=>exportCSV('VantageByUnity_RiskRegister.csv', ['ID','Kind','Title','Cat','L','C','LxC','Owner','Response','Status'], state.risks.map(r=>[r.id,r.kind,r.title,r.cat,r.L,r.C,r.L*r.C,r.owner,r.response,r.status]))}>Risk register CSV</Btn>
+            <Btn full tone="ghost" icon="⚖️" onClick={()=>exportCSV('VantageByUnity_NESACrosswalk.csv', ['Req','Requirement','Owner & evidence'], NESA_CROSSWALK)}>NESA crosswalk CSV</Btn>
           </div>
         </Section>
       </div>
@@ -849,7 +881,7 @@ window.__SP_MODULES_PART_A__ = { exportBoardPDF, exportPitchPPTX, Dashboard, Pri
 
 <script type="text/babel" id="modules-b">
 const D = window.__SP_DATA__;
-const { SCHOOL, CONVICTION, DESIGN_TESTS, NAMED_SYSTEM, JOURNEY, LAYERS, MODALITY, PERSONAS, WEEKLY_HOURS, MANHAL_NODE, COOL_COURTYARD, MANARA_STACK, MANARA_DASHBOARDS, BUILD_BUY } = D;
+const { SCHOOL, CONVICTION, DESIGN_TESTS, NAMED_SYSTEM, JOURNEY, STREAMS, LAYERS, MODALITY, PERSONAS, WEEKLY_HOURS, MANHAL_NODE, COOL_COURTYARD, MANARA_STACK, MANARA_DASHBOARDS, BUILD_BUY } = D;
 const { toneColor, toneBar } = window.__SP_UTILS__;
 const { useState } = window.__SP_HOOKS__;
 const { Flag, Section, Pill, Btn, FeatureCard } = window.__SP_UI__;
@@ -858,6 +890,7 @@ const { Flag, Section, Pill, Btn, FeatureCard } = window.__SP_UI__;
 const Vision = () => (
   <div className="space-y-5">
     <Section title="The conviction — faith at the centre" subtitle="One principle holds everything together: Ihsan — to do everything beautifully, as worship: to act as though you see God, knowing He sees you.">
+      <div className="text-sm text-indigo-800 bg-indigo-50 border border-indigo-200 rounded-lg p-3 mb-4"><Flag k="proposed"/> This is the candidate’s proposed pedagogical centre — “The Ihsan Way” — offered to deepen Vantage’s Islamic-values, Industry-Led model. The school’s real facts (Years 7–12, HSC/ATAR, three streams) remain the spine.</div>
       <div className="grid md:grid-cols-3 gap-4">
         {CONVICTION.map((c,i)=>(
           <FeatureCard key={i} icon={c.icon} tone={c.tone} title={c.faculty} sub={c.arabic + ' — ' + c.gloss}>{c.school}</FeatureCard>
@@ -886,7 +919,7 @@ const Vision = () => (
 const NamedSystem = () => {
   const [open, setOpen] = useState(null);
   return (
-    <Section title="The named system" subtitle="Names drawn from the Islamic tradition — gloss on first use; click a card for its comparator.">
+    <Section title="The named system" subtitle="The candidate’s proposed overlay [proposed] — names drawn from the Islamic tradition, each mapped to its real-world comparator (and to Vantage’s own model). Gloss on first use; click a card.">
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {NAMED_SYSTEM.map((n,i)=>(
           <button key={i} onClick={()=>setOpen(open===i?null:i)} className="text-left border border-sand rounded-xl p-4 bg-white hover:border-itq-200 hover:shadow transition">
@@ -908,12 +941,13 @@ const Journey = () => {
   const j = JOURNEY[sel];
   return (
     <div className="space-y-5">
-      <Section title="The journey — one arc across the years" subtitle="Seek → Deepen → Lead">
+      <Section title="The journey — Vantage’s three stages" subtitle="Explore & Discover → Focus & Build → Mastery & Pathways · (Arabic names are the candidate’s proposed overlay)">
         <div className="flex flex-col md:flex-row gap-2">
           {JOURNEY.map((s,i)=>(
             <button key={i} onClick={()=>setSel(i)} className={`flex-1 text-left rounded-xl p-4 border transition ${sel===i?toneBar(s.tone)+' text-white border-transparent':'bg-white border-sand hover:border-itq-200'}`}>
               <div className={`text-[11px] uppercase tracking-wide ${sel===i?'text-white/80':'text-bronze-700'}`}>{s.en} · {s.years}</div>
               <div className={`serif text-xl font-semibold ${sel===i?'text-white':'text-itq-900'}`}>{s.stage}</div>
+              <div className={`text-[11px] mt-1 ${sel===i?'text-white/80':'text-bronze-700'}`}>overlay · {s.arabic}</div>
               <div className={`text-xs mt-1 ${sel===i?'text-white/85':'text-slate-500'}`}>{s.meaning}</div>
             </button>
           ))}
@@ -922,11 +956,21 @@ const Journey = () => {
       <Section title={j.stage + ' · ' + j.en + ' (' + j.years + ')'} subtitle={j.meaning}>
         <p className="text-sm text-slate-700">{j.what}</p>
         <div className="grid sm:grid-cols-3 gap-3 mt-4 text-sm">
-          <div className="bg-sand rounded-lg p-3"><div className="text-xs text-bronze-700 uppercase tracking-wide">Murabbi ratio</div><div className="text-itq-900 font-semibold serif">{j.ratio}</div></div>
+          <div className="bg-sand rounded-lg p-3"><div className="text-xs text-bronze-700 uppercase tracking-wide">Coach ratio (Murabbi)</div><div className="text-itq-900 font-semibold serif">{j.ratio}</div></div>
           <div className="bg-sand rounded-lg p-3"><div className="text-xs text-bronze-700 uppercase tracking-wide">Coaching cadence</div><div className="text-itq-900">{j.coaching}</div></div>
           <div className="bg-sand rounded-lg p-3"><div className="text-xs text-bronze-700 uppercase tracking-wide">Mentoring</div><div className="text-itq-900">{j.mentoring}</div></div>
         </div>
-        <div className="text-[11px] text-slate-500 mt-2"><Flag k="plan"/> Ratios sit in the Big Picture advisory range (~15–20:1).</div>
+        <div className="text-[11px] text-slate-500 mt-2"><Flag k="plan"/> <Flag k="proposed"/> Coaching cadence &amp; ratios are the candidate’s proposal, in the Big Picture advisory range (~15–20:1).</div>
+      </Section>
+      <Section title="Three specialisation streams" subtitle="Vantage’s real model — students focus toward one from Focus &amp; Build onward">
+        <div className="grid sm:grid-cols-3 gap-4">
+          {STREAMS.map((s,i)=>(
+            <FeatureCard key={i} icon={s.icon} tone={s.tone} title={s.name}>
+              <div>{s.detail}</div>
+              <div className="text-[11px] text-bronze-700 mt-2 italic">{s.ihsan}</div>
+            </FeatureCard>
+          ))}
+        </div>
       </Section>
     </div>
   );
@@ -974,11 +1018,11 @@ const DayInLife = () => {
         </ol>
         <div className="text-xs text-bronze-700 italic mt-3">{p.note}</div>
       </Section>
-      <Section title="Indicative time per week (~27-hr week)" subtitle="Talab → Tafaqquh → Riyadah">
+      <Section title="Indicative time per week (~27-hr week)" subtitle="Explore & Discover → Focus & Build → Mastery & Pathways">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead><tr className="text-left text-bronze-700 border-b border-sand">
-              <th className="py-2 pr-2">Element</th><th className="py-2 px-2">Talab (Y7–8)</th><th className="py-2 px-2">Tafaqquh (Y9–10)</th><th className="py-2 px-2">Riyadah (Y11–12)</th>
+              <th className="py-2 pr-2">Element</th><th className="py-2 px-2">Explore (Y7–8)</th><th className="py-2 px-2">Focus (Y9–10)</th><th className="py-2 px-2">Mastery (Y11–12)</th>
             </tr></thead>
             <tbody>
               {WEEKLY_HOURS.map((w,i)=>(
@@ -1019,7 +1063,7 @@ const Manhal = () => (
 /* ===== A REAL ’AMAL PROJECT ===== */
 const Project = () => (
   <div className="space-y-5">
-    <Section title={'A real ’Amal Project — ' + COOL_COURTYARD.title} subtitle={COOL_COURTYARD.stage}>
+    <Section title={'A real ’Amal Challenge — ' + COOL_COURTYARD.title} subtitle={COOL_COURTYARD.stage}>
       <div className="bg-itq-50 rounded-xl p-4 text-sm text-itq-900 italic mb-4">{COOL_COURTYARD.brief}</div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
@@ -1100,7 +1144,7 @@ const Compliance = () => {
         right={<>
           <Flag k="NESA"/>
           <Btn size="sm" tone="ghost" onClick={()=>setOpen(!open)}>{open?'Collapse':'Expand'}</Btn>
-          <Btn size="sm" tone="ghost" onClick={()=>exportCSV('TheIhsanWay_NESACrosswalk.csv',['Req','Requirement','Owner & evidence'],NESA_CROSSWALK)}>CSV</Btn>
+          <Btn size="sm" tone="ghost" onClick={()=>exportCSV('VantageByUnity_NESACrosswalk.csv',['Req','Requirement','Owner & evidence'],NESA_CROSSWALK)}>CSV</Btn>
         </>}>
         {open && (
           <div className="overflow-x-auto">
@@ -1233,7 +1277,7 @@ const Staffing = () => {
         <div className="text-[11px] text-slate-500 mt-2">{SALARY_BASIS}</div>
       </Section>
       <Section title="Phased staffing plan" subtitle={'Year 1 ' + FTE_TOTALS.y1 + ' · Full ' + FTE_TOTALS.full}
-        right={<Btn size="sm" tone="ghost" onClick={()=>exportCSV('TheIhsanWay_Staffing.csv',['Role','Band','Yr1','Full'],PHASED_STAFFING.map(s=>[s.role,s.band,s.y1,s.full]))}>CSV</Btn>}>
+        right={<Btn size="sm" tone="ghost" onClick={()=>exportCSV('VantageByUnity_Staffing.csv',['Role','Band','Yr1','Full'],PHASED_STAFFING.map(s=>[s.role,s.band,s.y1,s.full]))}>CSV</Btn>}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead><tr className="text-left text-bronze-700 border-b border-sand"><th className="py-2 pr-2">Role</th><th className="py-2 px-2">Salary band</th><th className="py-2 px-2">Yr 1</th><th className="py-2 px-2">Full (Y7–12)</th></tr></thead>
@@ -1292,7 +1336,7 @@ const RiskRegister = ({ state }) => {
     <Section title="Risk register — PMBOK 8 (threats + opportunities)" subtitle="Live · adjust L/C, cycle status, add entries"
       right={<>
         <Btn size="sm" tone="primary" onClick={()=>setAdd(true)}>+ Add</Btn>
-        <Btn size="sm" tone="ghost" onClick={()=>exportCSV('TheIhsanWay_RiskRegister.csv',['ID','Kind','Title','Cat','L','C','LxC','Owner','Response','Status'],risks.map(r=>[r.id,r.kind,r.title,r.cat,r.L,r.C,r.L*r.C,r.owner,r.response,r.status]))}>CSV</Btn>
+        <Btn size="sm" tone="ghost" onClick={()=>exportCSV('VantageByUnity_RiskRegister.csv',['ID','Kind','Title','Cat','L','C','LxC','Owner','Response','Status'],risks.map(r=>[r.id,r.kind,r.title,r.cat,r.L,r.C,r.L*r.C,r.owner,r.response,r.status]))}>CSV</Btn>
       </>}>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
@@ -1340,7 +1384,7 @@ const Budget = () => {
   const Row = ({ x }) => (<div className="flex justify-between py-1.5 text-sm border-b border-sand/60"><span className="text-slate-700">{x.item} {x.flag && <Flag k={x.flag}/>}</span><span className="text-itq-900 font-medium">{fmtAUD(x.amount)}</span></div>);
   return (
     <div className="space-y-5">
-      <Section title="Finance — single-stage launch" subtitle={'~' + ENROL_Y1 + ' Year-7 students'} right={<><Flag k="plan"/><Flag k="verify"/></>}>
+      <Section title="Finance — Years 7 & 8 launch" subtitle={'~' + ENROL_Y1 + ' students · Years 7 & 8 (2027)'} right={<><Flag k="plan"/><Flag k="verify"/></>}>
         <div className="text-xs text-slate-500 mb-3">{BUDGET.basis}</div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
           <div className="bg-sand rounded-lg p-3"><div className="text-xs text-slate-500">Capex plan</div><div className="text-lg font-semibold serif">{fmtAUD(tCapex)}</div></div>
@@ -1369,7 +1413,7 @@ const ArtefactsRegister = ({ state }) => {
   const pct = Math.round(done/artefacts.length*100);
   return (
     <Section title="Artefacts register" subtitle={done + ' of ' + artefacts.length + ' complete (' + pct + '%) · click a status to advance it'}
-      right={<Btn size="sm" tone="ghost" onClick={()=>exportCSV('TheIhsanWay_Artefacts.csv',['ID','Artefact','Phase','Owner','Maps to','Status'],artefacts.map(a=>[a.id,a.name,a.phase,a.owner,a.maps,a.status]))}>CSV</Btn>}>
+      right={<Btn size="sm" tone="ghost" onClick={()=>exportCSV('VantageByUnity_Artefacts.csv',['ID','Artefact','Phase','Owner','Maps to','Status'],artefacts.map(a=>[a.id,a.name,a.phase,a.owner,a.maps,a.status]))}>CSV</Btn>}>
       <div className="h-2 rounded-full bg-sand overflow-hidden mb-3"><div className="h-2 bg-itq-700" style={{ width: pct+'%' }}></div></div>
       <div className="flex gap-2 mb-3"><input className="flex-1 border border-sand rounded-lg px-3 py-2 text-sm" placeholder="New artefact…" value={name} onChange={e=>setName(e.target.value)} onKeyDown={e=>e.key==='Enter'&&add()}/><Btn tone="primary" onClick={add}>+ Add</Btn></div>
       <div className="overflow-x-auto">
@@ -1390,12 +1434,12 @@ const Reports = ({ state }) => {
       <Section title="Reports & exports" subtitle="Every export is generated live from current platform state">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
           <div className="border border-sand rounded-xl p-4 bg-white"><div className="font-semibold text-itq-900 serif">Founding Board Pack</div><div className="text-sm text-slate-600 mb-3">PDF · journey, NESA crosswalk, risk register, staffing & salaries, roadmap.</div><Btn full tone="accent" icon="📑" onClick={()=>exportBoardPDF(state)}>Generate PDF</Btn></div>
-          <div className="border border-sand rounded-xl p-4 bg-white"><div className="font-semibold text-itq-900 serif">Vision Pitch</div><div className="text-sm text-slate-600 mb-3">PPTX · conviction, the journey, a real ’Amal Project, single-stage launch.</div><Btn full tone="accent" icon="🎬" onClick={()=>exportPitchPPTX(state)}>Generate PPTX</Btn></div>
+          <div className="border border-sand rounded-xl p-4 bg-white"><div className="font-semibold text-itq-900 serif">Vision Pitch</div><div className="text-sm text-slate-600 mb-3">PPTX · conviction, the journey, a real ’Amal Challenge, single-stage launch.</div><Btn full tone="accent" icon="🎬" onClick={()=>exportPitchPPTX(state)}>Generate PPTX</Btn></div>
           <div className="border border-sand rounded-xl p-4 bg-white"><div className="font-semibold text-itq-900 serif">Data exports (CSV)</div><div className="text-sm text-slate-600 mb-3">Open in Excel / Sheets.</div>
             <div className="space-y-2">
-              <Btn full tone="ghost" onClick={()=>exportCSV('TheIhsanWay_RiskRegister.csv',['ID','Kind','Title','Cat','L','C','LxC','Owner','Response','Status'],state.risks.map(r=>[r.id,r.kind,r.title,r.cat,r.L,r.C,r.L*r.C,r.owner,r.response,r.status]))}>Risk register</Btn>
-              <Btn full tone="ghost" onClick={()=>exportCSV('TheIhsanWay_Staffing.csv',['Role','Band','Yr1','Full'],PHASED_STAFFING.map(s=>[s.role,s.band,s.y1,s.full]))}>Staffing plan</Btn>
-              <Btn full tone="ghost" onClick={()=>exportCSV('TheIhsanWay_Artefacts.csv',['ID','Artefact','Phase','Owner','Maps','Status'],state.artefacts.map(a=>[a.id,a.name,a.phase,a.owner,a.maps,a.status]))}>Artefacts register</Btn>
+              <Btn full tone="ghost" onClick={()=>exportCSV('VantageByUnity_RiskRegister.csv',['ID','Kind','Title','Cat','L','C','LxC','Owner','Response','Status'],state.risks.map(r=>[r.id,r.kind,r.title,r.cat,r.L,r.C,r.L*r.C,r.owner,r.response,r.status]))}>Risk register</Btn>
+              <Btn full tone="ghost" onClick={()=>exportCSV('VantageByUnity_Staffing.csv',['Role','Band','Yr1','Full'],PHASED_STAFFING.map(s=>[s.role,s.band,s.y1,s.full]))}>Staffing plan</Btn>
+              <Btn full tone="ghost" onClick={()=>exportCSV('VantageByUnity_Artefacts.csv',['ID','Artefact','Phase','Owner','Maps','Status'],state.artefacts.map(a=>[a.id,a.name,a.phase,a.owner,a.maps,a.status]))}>Artefacts register</Btn>
             </div>
           </div>
         </div>
@@ -1425,7 +1469,7 @@ const { Vision, NamedSystem, Journey, Pedagogy, DayInLife, Manhal, Project, Mana
 const { Compliance, Roadmap, PMBOKView, Comparators, Pathways } = window.__SP_MODULES_PART_C__;
 const { Staffing, RiskRegister, Budget, ArtefactsRegister, Reports } = window.__SP_MODULES_PART_D__;
 
-const GROUPS = ['Overview','The Ihsan Way','Registrable & Run','Evidence'];
+const GROUPS = ['Overview','The Learning Model','Registrable & Run','Evidence'];
 
 const App = () => {
   const [view, setView] = useState('dashboard');
@@ -1466,9 +1510,9 @@ const App = () => {
     <div className="min-h-screen flex">
       <aside className={`fixed lg:static z-40 w-72 shrink-0 h-screen overflow-y-auto bg-itq-900 text-white transition-transform ${navOpen?'translate-x-0':'-translate-x-full lg:translate-x-0'}`}>
         <div className="p-5 border-b border-white/10 islimi">
-          <div className="text-[10px] uppercase tracking-[0.18em] text-bronze-50/80">Founding Head of School</div>
-          <div className="serif text-2xl font-semibold leading-tight">The Ihsan Way</div>
-          <div className="text-[11px] text-white/70 mt-1">{SCHOOL.tagline}</div>
+          <div className="text-[10px] uppercase tracking-[0.18em] text-bronze-50/80">Founding Head of School · candidate vision</div>
+          <div className="serif text-2xl font-semibold leading-tight">{SCHOOL.name}</div>
+          <div className="text-[11px] text-white/70 mt-1">{SCHOOL.operator} · {SCHOOL.tagline}</div>
         </div>
         <nav className="p-3">
           {GROUPS.map(g=>(
