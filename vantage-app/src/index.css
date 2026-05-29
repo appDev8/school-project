@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  margin: 0;
+}
+.serif {
+  font-family: Georgia, 'Times New Roman', ui-serif, serif;
+}
+
+/* ---------------------------------------------------------------------------
+   Print / Save-as-PDF. The app chrome (sidebar, top bar, buttons) carries
+   Tailwind's `print:hidden`; here we keep brand colours, drop interactive
+   graph furniture, and break pages cleanly so any module exports as a tidy
+   PDF straight from the browser.
+   --------------------------------------------------------------------------- */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  html,
+  body,
+  #root {
+    height: auto !important;
+    background: #fff !important;
+  }
+  /* React Flow furniture that makes no sense on paper */
+  .react-flow__controls,
+  .react-flow__minimap,
+  .react-flow__attribution,
+  .react-flow__handle {
+    display: none !important;
+  }
+  /* Full-bleed content once the sidebar is gone */
+  #main > div {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  /* Keep coherent blocks together */
+  section,
+  .rounded-xl,
+  .rounded-lg,
+  li,
+  tr,
+  thead,
+  .recharts-wrapper {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  a[href]::after {
+    content: '';
+  }
+  @page {
+    margin: 14mm;
+  }
+}
