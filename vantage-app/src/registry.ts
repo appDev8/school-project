@@ -32,6 +32,13 @@ export const registry: NavItem[] = [
     Component: lazy(() => import('./content/modules/Overview')),
   },
   {
+    id: 'brief',
+    slug: 'brief',
+    title: 'Answering the brief',
+    group: 'Overview',
+    Component: lazy(() => import('./content/modules/Brief')),
+  },
+  {
     id: 'school',
     slug: 'school',
     title: 'The school — facts',
@@ -44,6 +51,13 @@ export const registry: NavItem[] = [
     title: 'UXL learning model',
     group: 'The Learning Model',
     Component: lazy(() => import('./content/modules/LearningModel')),
+  },
+  {
+    id: 'islamic-ethos',
+    slug: 'islamic-ethos',
+    title: 'Islamic ethos — the architecture',
+    group: 'The Learning Model',
+    Component: lazy(() => import('./content/modules/IslamicEthos')),
   },
   {
     id: 'learning-thread',

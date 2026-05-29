@@ -1,16 +1,18 @@
 import type { FlagKind } from './vantage';
 
 // ---------------------------------------------------------------------------
-// THE LEARNING JOURNEY — UXL stages (fact) + a [proposed] Discovery daily rhythm.
-// Vantage publishes the model (Discovery/Mastery/Impact, micro-projects, Full
-// Meal Program, city-as-campus) but not an hour-by-hour timetable; the rhythm
-// below is my candidate design, grounded in the confirmed elements and flagged.
+// THE LEARNING JOURNEY — UXL stages (fact) + a Discovery daily rhythm.
+// Vantage publishes the model and many rhythm elements (Full Meal Program,
+// Qur’an Halaqa, congregational Dhuhr, the Murabbi, micro-projects, city-as-
+// campus) but not an hour-by-hour timetable. Each block below carries its own
+// flag: confirmed elements are [fact]; the specific ordering/Manhal/Athar naming
+// is my candidate design [proposed].
 // ---------------------------------------------------------------------------
 
 export interface JourneyBlock {
   time: string;
   title: string;
-  kind: 'meal' | 'coaching' | 'knowledge' | 'project' | 'expedition' | 'prayer' | 'reflection';
+  kind: 'meal' | 'coaching' | 'knowledge' | 'project' | 'expedition' | 'prayer' | 'reflection' | 'deen';
   detail: string;
   role?: string; // which of the four educator roles leads
   flag: FlagKind;
@@ -26,12 +28,19 @@ export const DAY_RHYTHM: JourneyBlock[] = [
     flag: 'fact',
   },
   {
-    time: '8:30',
+    time: '8:20',
+    title: 'Qur’an Halaqa',
+    kind: 'deen',
+    detail: 'The day begins with the Qur’an — dedicated time for tilāwah, revision and adhkār.',
+    flag: 'fact',
+  },
+  {
+    time: '8:45',
     title: 'Murabbi circle',
     kind: 'coaching',
-    detail: 'Advisory check-in, goals for the day, and intention (niyyah). Small, consistent groups.',
+    detail: 'Advisory check-in, intention-setting and a sharing circle. Small, consistent groups with the Murabbi.',
     role: 'Learning Coaches',
-    flag: 'proposed',
+    flag: 'fact',
   },
   {
     time: '9:00',
@@ -89,6 +98,7 @@ export const KIND_TONE: Record<JourneyBlock['kind'], string> = {
   expedition: 'bg-sky-50 border-sky-200 text-sky-800',
   prayer: 'bg-teal-50 border-teal-200 text-teal-800',
   reflection: 'bg-violet-50 border-violet-200 text-violet-800',
+  deen: 'bg-itq/10 border-itq/20 text-itq',
 };
 
 // The connective tissue the platform makes visible: knowledge → project →
@@ -127,7 +137,7 @@ export const LEARNING_SPINE: SpineElement[] = [
     key: 'murabbi',
     arabic: 'Murabbi',
     english: 'Coaching',
-    gloss: 'The Learning Coach who nurtures the whole learner — connection over exam-drilling.',
-    flag: 'proposed',
+    gloss: 'The school’s term for the Learning Coach who nurtures the whole learner — connection over exam-drilling.',
+    flag: 'fact',
   },
 ];

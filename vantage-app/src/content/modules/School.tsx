@@ -5,6 +5,9 @@ import {
   CAMPUS_SAFETY,
   FEES,
   FEES_NOTE,
+  FEES_POSITIONING,
+  CURRICULUM_DELIVERY,
+  WHY_NOT_A_RISK,
   ENROLMENT_STEPS,
   UNITY_LEADERS,
   VANTAGE_EVENT,
@@ -40,6 +43,7 @@ export default function School() {
             <Row k="Model" v={SCHOOL.model} />
             <Row k="Campus" v={SCHOOL.address} />
             <Row k="Credentials" v={SCHOOL.credentials} />
+            <Row k="Class ratio" v={`${SCHOOL.ratio} educator-to-learner`} />
             <Row k="Wellbeing" v={SCHOOL.meals} />
             <Row k="Graduate" v="the “Smart Muslim Creative”" />
           </dl>
@@ -48,7 +52,9 @@ export default function School() {
           <h2 className="serif text-2xl text-itq">Operator — Unity Grammar</h2>
           <p className="text-sm text-ink/70">
             Independent co-ed Islamic school, founded {SCHOOL.parent.founded} in {SCHOOL.parent.location};
-            NESA-registered K–12; CIS member. Vantage is built on its foundations.
+            NESA-registered K–12; CIS member. Vantage isn’t an independent start-up — it’s a
+            deliberate expansion built on nearly 20 years of Unity Grammar’s governance, systems and
+            regulatory compliance.
           </p>
           <ul className="text-sm space-y-1.5 mt-2">
             {UNITY_LEADERS.map((l) => (
@@ -59,6 +65,22 @@ export default function School() {
             ))}
           </ul>
         </div>
+      </section>
+
+      {/* Why this isn't a risk */}
+      <section className="rounded-xl border-l-2 border-itq bg-itq/[0.03] p-5">
+        <h2 className="serif text-2xl text-itq mb-1">{WHY_NOT_A_RISK.question}</h2>
+        <p className="text-sm text-ink/70 mb-3 max-w-3xl">{WHY_NOT_A_RISK.answer}</p>
+        <ul className="grid md:grid-cols-2 gap-x-6 gap-y-2">
+          {WHY_NOT_A_RISK.points.map((p) => (
+            <li key={p.point} className="flex items-start gap-2 text-sm text-ink/75">
+              <span className="mt-0.5">
+                <Flag kind={p.flag} />
+              </span>
+              <span>{p.point}</span>
+            </li>
+          ))}
+        </ul>
       </section>
 
       {/* Streams */}
@@ -78,6 +100,23 @@ export default function School() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Curriculum & accreditation */}
+      <section className="rounded-xl border border-sand bg-white p-5">
+        <div className="flex flex-wrap items-center gap-2 mb-1">
+          <h2 className="serif text-2xl text-itq">Will my child get a real qualification?</h2>
+          <Flag kind="fact">curriculum &amp; accreditation</Flag>
+        </div>
+        <p className="text-sm text-ink/70 mb-3 max-w-3xl">{CURRICULUM_DELIVERY.headline}</p>
+        <ul className="grid md:grid-cols-2 gap-x-6 gap-y-2">
+          {CURRICULUM_DELIVERY.points.map((p) => (
+            <li key={p} className="flex items-start gap-2 text-sm text-ink/75">
+              <span className="text-olive shrink-0 mt-0.5">✓</span>
+              <span>{p}</span>
+            </li>
+          ))}
+        </ul>
       </section>
 
       {/* Campus, transport & fees */}
@@ -112,6 +151,9 @@ export default function School() {
             ))}
           </div>
           <p className="text-xs text-ink/50 pt-1">{FEES_NOTE}</p>
+          <p className="text-xs text-ink/60 border-t border-sand pt-2 mt-1">
+            {FEES_POSITIONING.summary}
+          </p>
         </div>
       </section>
 

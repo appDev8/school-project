@@ -1,4 +1,5 @@
-import { SCHOOL, STAGES, STREAMS, EDUCATOR_ROLES, FEES } from '../data/vantage';
+import { SCHOOL, STAGES, STREAMS, EDUCATOR_ROLES, FEES, GRADUATE_VISION } from '../data/vantage';
+import { Flag } from '../../components/Flag';
 
 export default function Overview() {
   const glance: [string, string][] = [
@@ -9,6 +10,7 @@ export default function Overview() {
     ['Fees', `${FEES[0].amount}/yr · scholarships ${FEES[1].amount}`],
     ['Wellbeing', SCHOOL.meals],
     ['Educators', '4 roles · Mentor & Coach'],
+    ['Class ratio', `${SCHOOL.ratio} educator-to-learner`],
     ['Operator', `${SCHOOL.parent.name} · ${SCHOOL.parent.ceo}`],
   ];
 
@@ -34,6 +36,33 @@ export default function Overview() {
               <div className="text-sm font-medium mt-1">{v}</div>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section>
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          <h2 className="serif text-2xl text-itq">The graduate we&rsquo;re forming</h2>
+          <Flag kind="fact">Vantage purpose</Flag>
+        </div>
+        <div className="rounded-xl border border-itq/20 bg-itq/[0.03] p-5">
+          <div className="serif text-2xl text-itq">
+            The {GRADUATE_VISION.archetype}
+          </div>
+          <p className="text-sm text-ink/70 mt-1 max-w-3xl">
+            &mdash; {GRADUATE_VISION.definition}.
+          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
+            {GRADUATE_VISION.qualities.map((q) => (
+              <div key={q.name} className="rounded-lg border border-sand bg-white p-3">
+                <div className="text-sm font-medium text-itq">{q.name}</div>
+                <p className="text-xs text-ink/60 mt-1">{q.detail}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-ink/50 mt-4 border-t border-sand pt-3 max-w-3xl">
+            <span className="uppercase tracking-wide text-bronze">Mission · </span>
+            {GRADUATE_VISION.mission}.
+          </p>
         </div>
       </section>
 
@@ -76,9 +105,12 @@ export default function Overview() {
             <div key={r.name} className="rounded-lg border border-sand bg-white p-4">
               <div className="font-medium">
                 {r.name}
-                {r.overlay && (
-                  <span className="text-xs text-indigo-700"> · [proposed] {r.overlay}</span>
-                )}
+                {r.overlay &&
+                  (r.overlayFlag === 'fact' ? (
+                    <span className="text-xs text-olive"> · {r.overlay}</span>
+                  ) : (
+                    <span className="text-xs text-indigo-700"> · [proposed] {r.overlay}</span>
+                  ))}
               </div>
               <div className="text-sm text-ink/70 mt-1">{r.desc}</div>
             </div>

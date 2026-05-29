@@ -24,6 +24,8 @@ export const SCHOOL = {
   opens: 'January 2027 — Stage 4 (Years 7 & 8)',
   credentials: 'HSC + ATAR retained',
   meals: 'Full Meal Program — breakfast, lunch & snacks',
+  ratio: '1:15',
+  ratioNational: '1:25',
   enrolment: 'EOI → free Talent Profile assessment → interview → outcome',
   archetype: 'graduate archetype: the “Smart Muslim Creative”',
   parent: {
@@ -118,16 +120,19 @@ export interface EducatorRole {
   name: string;
   spine: boolean;
   overlay?: string;
+  overlayFlag?: FlagKind; // 'fact' when the school uses the term; 'proposed' when it's my overlay
   desc: string;
 }
 
-// The four real educator roles (spine) with the candidate's Murabbi/Mu‘allim overlay.
+// The four real educator roles (spine). "Murabbi" is the school's own confirmed
+// term for the Learning Coach; "Mu‘allim" is the candidate's [proposed] overlay.
 export const EDUCATOR_ROLES: EducatorRole[] = [
   {
     name: 'Learning Coaches',
     spine: true,
-    overlay: 'Murabbi (wellbeing)',
-    desc: 'Advisory, coaching and pastoral care — connection over exam-drilling.',
+    overlay: 'Murabbi',
+    overlayFlag: 'fact',
+    desc: 'Advisory, coaching and pastoral care — connection over exam-drilling. Vantage calls this mentor the Murabbi: one person holding a learner’s academic progress, character and wellbeing together, not a coordinator managing hundreds.',
   },
   {
     name: 'Expedition Guides',
@@ -138,12 +143,81 @@ export const EDUCATOR_ROLES: EducatorRole[] = [
     name: 'Competency Architects',
     spine: true,
     overlay: 'Mu‘allim (subject)',
+    overlayFlag: 'proposed',
     desc: 'Design and gate mastery of NESA outcomes through Manhal.',
   },
   {
     name: 'Experts in Residence',
     spine: true,
     desc: 'Industry mentors and practitioners embedded in projects.',
+  },
+];
+
+// --- The graduate vision — the north star (Vantage's own published purpose) ---
+// Every design decision serves this: the kind of person Vantage exists to form.
+export interface GraduateQuality {
+  name: string;
+  detail: string;
+}
+
+export const GRADUATE_VISION = {
+  archetype: 'Smart Muslim Creative',
+  definition:
+    'a deep generalist who combines academic mastery, spiritual depth, creative problem-solving and moral conviction',
+  mission:
+    'to systematically develop specialised Muslim leaders — with relentless curiosity, an influential network and mastery of competent skills — who lead teams and organisations that solve for the betterment of humanity',
+  qualities: [
+    {
+      name: 'Academically Excellent',
+      detail: 'Master core disciplines, then apply that knowledge in authentic contexts.',
+    },
+    {
+      name: 'Spiritually Anchored',
+      detail: 'Guided by Qur’anic principles, prophetic character and a sense of higher purpose.',
+    },
+    {
+      name: 'Future-Ready',
+      detail: 'Equipped for industry, entrepreneurship and social innovation.',
+    },
+    {
+      name: 'Ethically Driven',
+      detail: 'Using creativity and intellect in service to humanity.',
+    },
+  ] as GraduateQuality[],
+} as const;
+
+// --- Theory of change — the four building blocks (Vantage fact) ---------------
+// How the model actually delivers the graduate vision: not subjects, but blocks.
+export interface BuildingBlock {
+  name: string;
+  detail: string;
+  icon: string;
+}
+
+export const BUILDING_BLOCKS: BuildingBlock[] = [
+  {
+    name: 'Programming',
+    icon: '◷',
+    detail:
+      'The NESA-accredited curriculum delivered through the UXL sequence of projects and experiences — knowledge earned in the service of real work.',
+  },
+  {
+    name: 'Coaching',
+    icon: '◎',
+    detail:
+      'Educators as Learning Coaches: advisory, feedback and pastoral care — connection and growth over rote drilling.',
+  },
+  {
+    name: 'Experiences + Immersions',
+    icon: '◈',
+    detail:
+      'The city as campus — studios, labs, galleries and civic institutions, with industry mentors and creative professionals.',
+  },
+  {
+    name: 'Attainment & Pathways',
+    icon: '◆',
+    detail:
+      'Mastery and credentials that travel: HSC + ATAR retained, opening real doors into industry, entrepreneurship and university.',
   },
 ];
 
@@ -234,6 +308,128 @@ export const FEES: FeeModel[] = [
 
 export const FEES_NOTE =
   'Two pricing models for the founding (2027) cohort. Scholarship places are limited to 40 and reduce tuition by $4,000 a year.';
+
+// How Vantage positions its fees (its own FAQ): competitive within greater
+// Parramatta, with value carried by the staffing model rather than facilities.
+export const FEES_POSITIONING = {
+  summary:
+    'Fees sit competitively within the greater Parramatta landscape — comparable to other academically oriented high schools, with the difference in what they buy.',
+  value: [
+    'A dedicated Murabbi: a personal coach holding academic progress, character and wellbeing as one responsibility — not a pastoral coordinator with a list of hundreds.',
+    'A 1:15 educator-to-learner ratio, against a national average closer to 1:25.',
+    'A personalised pathway: each learner gets a distinct profile and a coach invested in their growth from Year 7 to the HSC.',
+  ],
+} as const;
+
+// --- Curriculum & accreditation (Vantage's own FAQ) -------------------------
+// The reassurance that "no traditional subjects" does NOT mean "no syllabus":
+// projects are backward-mapped to NESA outcomes and graded on the same A–E scale.
+export const CURRICULUM_DELIVERY = {
+  headline: 'No subjects on the timetable — but the full NSW syllabus is delivered, mapped and graded.',
+  points: [
+    'Every project is backward-mapped to NSW curriculum outcomes across English, Mathematics, Science, HSIE and Technology.',
+    'The syllabus is fully delivered, and the same A–E grading scale is used as in any NSW school.',
+    'Learners complete the HSC and receive an ATAR — the destination is unchanged; the journey is different.',
+    'Personalised learning plans and a dedicated Murabbi mean no learner quietly underperforms without support.',
+  ],
+} as const;
+
+// One day a week of self-directed passion projects (Vantage FAQ — wellbeing/learning).
+export const SELF_DIRECTED =
+  'One day each week, learners step away from structured projects to pursue a self-directed passion project — a genuine area of curiosity or interest.';
+
+// --- "What's the risk?" — the assurance answer (Vantage's own FAQ) ----------
+// A founding leader meets the risk question head-on: Vantage is an expansion of
+// an established institution, and the pedagogy is evidence-backed.
+export interface AssurancePoint {
+  point: string;
+  flag: FlagKind;
+}
+
+export const WHY_NOT_A_RISK: { question: string; answer: string; points: AssurancePoint[] } = {
+  question: 'A brand-new school — what’s the risk?',
+  answer:
+    'Vantage is a deliberate expansion of an established institution, not an independent start-up — and project-based learning is evidence-backed.',
+  points: [
+    {
+      point:
+        'Built on nearly 20 years of institutional experience through Unity Grammar — established governance, systems and regulatory compliance.',
+      flag: 'fact',
+    },
+    {
+      point:
+        'Project-based learning is evidence-backed: research links it to gains in academic achievement, engagement and motivation.',
+      flag: 'fact',
+    },
+    {
+      point:
+        'PBL schools already operating in NSW report strong results — Vantage cites cohorts with nearly 30% of students achieving ATARs above 90.',
+      flag: 'fact',
+    },
+    {
+      point:
+        'A 1:15 educator-to-learner ratio (against a ~1:25 national average) keeps high academic outcomes non-negotiable.',
+      flag: 'fact',
+    },
+  ],
+};
+
+// --- Islamic ethos (Vantage's own FAQ: "Islam is the architecture") ---------
+// The school is explicit that Islam is the lens the curriculum is built through,
+// not a parallel subject. These are confirmed practices; the candidate's Ihsan
+// Way overlay (niyyah/adab/iḥsān threaded through Manhal) builds on this base.
+export const VANTAGE_SKILLS = {
+  note: 'Across every project, learners are assessed on character competencies — not only academic outcomes.',
+  competencies: [
+    {
+      name: 'Ethical Reasoning',
+      detail: 'Weighing how learners think, design and decide against Islamic ethics and the public good.',
+    },
+    {
+      name: 'Prophetic Character',
+      detail: 'Adab and conduct modelled on prophetic example — taught, modelled and assessed, not assumed.',
+    },
+  ],
+} as const;
+
+export interface DeenPractice {
+  name: string;
+  arabic?: string;
+  cadence: string;
+  detail: string;
+}
+
+export const ISLAMIC_RHYTHM: DeenPractice[] = [
+  {
+    name: 'Qur’an Halaqa',
+    cadence: 'Every morning',
+    detail: 'The day opens with the Qur’an — dedicated, structured time for tilāwah, revision and adhkār.',
+  },
+  {
+    name: 'Daily Prayer',
+    arabic: 'Ṣalāh',
+    cadence: 'Daily',
+    detail: 'Dhuhr is formally scheduled into the timetable and prayed together in congregation.',
+  },
+  {
+    name: 'Aqeedah Framework',
+    cadence: 'Across the week',
+    detail:
+      'Islamic Studies is delivered through a coherent ʿaqīdah framework — a theological foundation learners can articulate, defend and live by.',
+  },
+  {
+    name: 'Tarbiyah & Adab',
+    cadence: 'Continuous',
+    detail:
+      'Character is cultivated and measured through Unity Grammar’s established frameworks; adab is taught, modelled and assessed, and growth shows up in the portfolio alongside academics.',
+  },
+  {
+    name: 'Micro Ijāzāt',
+    cadence: 'Once each term',
+    detail:
+      'A 3–5 day intensive where learners step out of the project cycle to study selected classical texts with qualified scholars, age- and stage-appropriate.',
+  },
+];
 
 export const UNITY_LEADERS: { name: string; role: string }[] = [
   { name: 'Dr Sayd Farook', role: 'CEO (ex-Thomson Reuters Global Head, Islamic Markets; PhD, UTS)' },

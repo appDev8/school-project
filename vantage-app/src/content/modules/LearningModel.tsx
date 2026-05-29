@@ -1,4 +1,4 @@
-import { STAGES, STREAMS } from '../data/vantage';
+import { STAGES, STREAMS, BUILDING_BLOCKS, SELF_DIRECTED } from '../data/vantage';
 import { DAY_RHYTHM, KIND_TONE, LEARNING_SPINE } from '../data/journey';
 import { AMAL_CHALLENGES } from '../data/manhal/projects';
 import { Flag } from '../../components/Flag';
@@ -26,6 +26,32 @@ export default function LearningModel() {
           <Flag kind="proposed">Arabic overlay — The Ihsan Way</Flag>
         </div>
       </header>
+
+      {/* Theory of change — the four building blocks */}
+      <section>
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          <h2 className="serif text-2xl text-itq">The theory of change — four building blocks</h2>
+          <Flag kind="fact">Vantage model</Flag>
+        </div>
+        <p className="text-sm text-ink/60 mb-4 max-w-3xl">
+          UXL isn&rsquo;t a timetable of subjects — it rests on four blocks that work together to
+          form the graduate. The platform you&rsquo;re reading makes each one concrete and connected.
+        </p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {BUILDING_BLOCKS.map((b) => (
+            <div key={b.name} className="rounded-xl border border-sand bg-white p-5">
+              <div className="text-2xl text-bronze">{b.icon}</div>
+              <div className="serif text-lg text-itq mt-1">{b.name}</div>
+              <p className="text-sm text-ink/70 mt-1">{b.detail}</p>
+            </div>
+          ))}
+        </div>
+        <p className="text-xs text-ink/50 mt-3 max-w-3xl">
+          This isn&rsquo;t experimental: project-based learning is evidence-backed for achievement and
+          engagement, and PBL schools already operating in NSW report strong results — Vantage cites
+          cohorts with nearly 30% of students achieving ATARs above 90.
+        </p>
+      </section>
 
       {/* UXL stages */}
       <section>
@@ -86,8 +112,9 @@ export default function LearningModel() {
         <div className="flex items-center gap-2 mb-4">
           <Flag kind="proposed">candidate daily rhythm</Flag>
           <span className="text-xs text-ink/50">
-            grounded in confirmed elements (meals, micro-projects, city-as-campus); timetable not yet
-            published
+            many blocks confirmed (Full Meal Program, Qur&rsquo;an Halaqa, congregational Dhuhr, the
+            Murabbi, micro-projects, city-as-campus); the hour-by-hour ordering is mine — timetable
+            not yet published
           </span>
         </div>
         <div className="space-y-2">
@@ -114,6 +141,10 @@ export default function LearningModel() {
               </div>
             </div>
           ))}
+        </div>
+        <div className="mt-3 rounded-lg border border-sand bg-sand/30 p-3 flex items-start gap-2">
+          <Flag kind="fact" />
+          <p className="text-sm text-ink/75">{SELF_DIRECTED}</p>
         </div>
       </section>
 
