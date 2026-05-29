@@ -46,11 +46,25 @@ export const registry: NavItem[] = [
     Component: lazy(() => import('./content/modules/LearningModel')),
   },
   {
+    id: 'learning-thread',
+    slug: 'learning-thread',
+    title: 'The learning thread — end to end',
+    group: 'The Learning Model',
+    Component: lazy(() => import('./content/modules/LearningThread')),
+  },
+  {
     id: 'manhal',
     slug: 'manhal',
     title: 'Manhal — knowledge graph',
     group: 'Manhal',
     Component: lazy(() => import('./content/modules/Manhal')),
+  },
+  {
+    id: 'manhal-anatomy',
+    slug: 'manhal-anatomy',
+    title: 'Manhal — anatomy & workflow',
+    group: 'Manhal',
+    Component: lazy(() => import('./content/modules/ManhalAnatomy')),
   },
   {
     id: 'dashboards',

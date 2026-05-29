@@ -20,6 +20,7 @@ export const SCHOOL = {
   model: 'UXL — Unity Experiential Learning',
   type: 'Independent Islamic secondary · Years 7–12 (opens with Years 7 & 8)',
   location: 'Parramatta · Western Sydney, NSW · Dharug Country',
+  address: '27–31 Argyle Street, Parramatta NSW 2150',
   opens: 'January 2027 — Stage 4 (Years 7 & 8)',
   credentials: 'HSC + ATAR retained',
   meals: 'Full Meal Program — breakfast, lunch & snacks',
@@ -153,6 +154,87 @@ export const ENROLMENT_STEPS: { step: string; detail: string }[] = [
   { step: 'Outcome', detail: 'Offer and onboarding into the founding cohort.' },
 ];
 
+// --- Campus & location (Vantage's own published facts) ----------------------
+// Address, walking distance and transport are confirmed by the school's own
+// channels. They are facts; the way the school adds supervision discipline on
+// top (the safety answer) is the candidate plan and flagged as such.
+export const CAMPUS = {
+  address: '27–31 Argyle Street, Parramatta NSW 2150',
+  area: 'Parramatta CBD · Western Sydney, NSW · Dharug Country',
+  toStation: '600 m — a 7–8 minute walk from Parramatta Station',
+  hub: 'Parramatta is Sydney’s second CBD and one of the best-connected transport hubs in Greater Sydney.',
+  rail: 'Multiple train lines converge at Parramatta Station.',
+  bus: 'Over 50 bus routes serve the area.',
+} as const;
+
+export interface SafetyPoint {
+  point: string;
+  flag: FlagKind;
+}
+
+// The school's FAQ asks the question; the answer below pairs the confirmed
+// transport facts with the child-safe operating discipline I would run.
+export const CAMPUS_SAFETY: { question: string; points: SafetyPoint[] } = {
+  question: 'Will my child be safe getting to your campus?',
+  points: [
+    {
+      point:
+        'The campus sits 600 m — a 7–8 minute walk — from Parramatta Station, on well-trafficked CBD streets with signalised crossings.',
+      flag: 'fact',
+    },
+    {
+      point:
+        'Parramatta’s converging train lines and 50+ bus routes mean most families have a direct, supervised public-transport option.',
+      flag: 'fact',
+    },
+    {
+      point:
+        'Staff supervise a defined arrival and departure window at the entrance; the school day starts with breakfast, so early arrivals are accounted for.',
+      flag: 'plan',
+    },
+    {
+      point:
+        'Every adult on site holds a current Working With Children Check and child-safe induction, under the NSW Child Safe Standards.',
+      flag: 'plan',
+    },
+    {
+      point:
+        'A standardised travel-route briefing and a parent communication channel keep families informed of arrival, absence and any disruption.',
+      flag: 'plan',
+    },
+  ],
+};
+
+// --- Fees (Vantage's own published pricing for the founding cohort) ----------
+export interface FeeModel {
+  label: string;
+  amount: string;
+  perYear: number;
+  detail: string;
+  flag: FlagKind;
+}
+
+export const FEES: FeeModel[] = [
+  {
+    label: 'Founding Families',
+    amount: '$12,500',
+    perYear: 12500,
+    detail: 'Tuition per year for families who join us to commence in 2027.',
+    flag: 'fact',
+  },
+  {
+    label: 'Founding scholarship',
+    amount: '$8,500',
+    perYear: 8500,
+    detail:
+      'Up to 40 scholarship places for 2027 learners reduce the fee for these families to $8,500 per year.',
+    flag: 'fact',
+  },
+];
+
+export const FEES_NOTE =
+  'Two pricing models for the founding (2027) cohort. Scholarship places are limited to 40 and reduce tuition by $4,000 a year.';
+
 export const UNITY_LEADERS: { name: string; role: string }[] = [
   { name: 'Dr Sayd Farook', role: 'CEO (ex-Thomson Reuters Global Head, Islamic Markets; PhD, UTS)' },
   { name: 'Sam Halbouni', role: 'Executive / Senior Principal' },
@@ -169,9 +251,9 @@ export const VANTAGE_EVENT = {
 } as const;
 
 // Honesty matters for a founding leader: separate confirmed facts from assumptions.
+// Address and fees are now confirmed from Vantage's own channels and have moved
+// out of this list into CAMPUS and FEES above.
 export const VERIFY_NOTES: string[] = [
-  'Fees are not yet published (the FAQ answer is JavaScript-rendered).',
-  'The exact Parramatta street address / building is not yet public.',
   'Formal NESA registration of Vantage as a distinct school is not yet public.',
   'Head of School salary is not disclosed (“competitive… above standard leadership benchmarks”); any figure is my assumption.',
   '“Radical Recruitment” as the retained recruiter is not publicly substantiated — it comes from a private meeting note, not an official channel.',

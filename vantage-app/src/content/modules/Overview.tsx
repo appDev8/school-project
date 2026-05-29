@@ -1,12 +1,14 @@
-import { SCHOOL, STAGES, STREAMS, EDUCATOR_ROLES } from '../data/vantage';
+import { SCHOOL, STAGES, STREAMS, EDUCATOR_ROLES, FEES } from '../data/vantage';
 
 export default function Overview() {
   const glance: [string, string][] = [
     ['Opens', SCHOOL.opens],
     ['Model', SCHOOL.model],
     ['Credentials', SCHOOL.credentials],
-    ['Educators', '4 roles · Mentor & Coach'],
+    ['Campus', 'Parramatta CBD · 7-min walk from the station'],
+    ['Fees', `${FEES[0].amount}/yr · scholarships ${FEES[1].amount}`],
     ['Wellbeing', SCHOOL.meals],
+    ['Educators', '4 roles · Mentor & Coach'],
     ['Operator', `${SCHOOL.parent.name} · ${SCHOOL.parent.ceo}`],
   ];
 

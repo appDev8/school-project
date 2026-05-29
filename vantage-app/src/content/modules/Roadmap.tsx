@@ -1,5 +1,6 @@
 import {
   ROADMAP_PHASES,
+  HIRING_SEQUENCE,
   GROWTH_MODEL,
   GROWTH_ENDSTATE,
   WORKSTREAMS,
@@ -56,8 +57,59 @@ export default function Roadmap() {
                   </li>
                 ))}
               </ul>
+              <div className="mt-3 rounded-lg bg-sand/40 border border-sand p-3">
+                <div className="text-[10px] uppercase tracking-widest text-bronze mb-1.5">
+                  Artefacts shipped
+                </div>
+                <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-1">
+                  {p.artefacts.map((a) => (
+                    <li key={a} className="flex gap-2 text-sm text-itq/90">
+                      <span className="text-olive shrink-0">✓</span>
+                      <span>{a}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Recruitment & onboarding ramp */}
+      <section>
+        <h2 className="serif text-2xl text-itq mb-1">Recruitment &amp; onboarding ramp</h2>
+        <p className="text-sm text-ink/60 mb-4 max-w-3xl">
+          Who comes in when, and the running headcount it builds to. Leadership lands first to set
+          the spine; the whole founding team is in for a 2–4 week induction before term one. The full
+          role model, salary bands and skill profiles live in People &amp; staffing — this is the
+          timeline view.
+        </p>
+        <div className="space-y-3">
+          {HIRING_SEQUENCE.map((h) => (
+            <div
+              key={h.window}
+              className="rounded-xl border border-sand bg-white p-5 flex flex-col md:flex-row md:items-start gap-3 md:gap-5"
+            >
+              <div className="md:w-44 shrink-0">
+                <div className="text-xs text-bronze">{h.window}</div>
+                <div className="mt-1 flex items-baseline gap-1.5">
+                  <span className="serif text-2xl text-itq tabular-nums">{h.cumulativeFte}</span>
+                  <span className="text-[11px] text-ink/50">cumulative FTE</span>
+                </div>
+                <div className="mt-1">
+                  <Flag kind={h.flag} />
+                </div>
+              </div>
+              <div className="flex-1 md:border-l md:border-sand md:pl-5">
+                <div className="text-sm font-medium text-itq">{h.hires}</div>
+                <p className="text-sm text-ink/70 mt-1.5">{h.onboarding}</p>
+              </div>
+            </div>
+          ))}
+          <p className="text-xs text-ink/50 pt-1">
+            FTE figures are the candidate staffing plan, sequenced to the phases above. The jump into
+            January 2027 is the founding team arriving together for induction.
+          </p>
         </div>
       </section>
 

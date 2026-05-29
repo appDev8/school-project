@@ -1,6 +1,10 @@
 import {
   SCHOOL,
   STREAMS,
+  CAMPUS,
+  CAMPUS_SAFETY,
+  FEES,
+  FEES_NOTE,
   ENROLMENT_STEPS,
   UNITY_LEADERS,
   VANTAGE_EVENT,
@@ -34,7 +38,7 @@ export default function School() {
           <p className="text-sm text-ink/75">{SCHOOL.oneLine}</p>
           <dl className="text-sm space-y-1 mt-2">
             <Row k="Model" v={SCHOOL.model} />
-            <Row k="Location" v={SCHOOL.location} />
+            <Row k="Campus" v={SCHOOL.address} />
             <Row k="Credentials" v={SCHOOL.credentials} />
             <Row k="Wellbeing" v={SCHOOL.meals} />
             <Row k="Graduate" v="the “Smart Muslim Creative”" />
@@ -74,6 +78,62 @@ export default function School() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Campus, transport & fees */}
+      <section className="grid md:grid-cols-2 gap-4">
+        <div className="rounded-xl border border-sand bg-white p-5 space-y-2">
+          <div className="flex items-center justify-between">
+            <h2 className="serif text-2xl text-itq">Campus &amp; getting here</h2>
+            <Flag kind="fact">Vantage facts</Flag>
+          </div>
+          <p className="text-sm text-itq font-medium">{CAMPUS.address}</p>
+          <p className="text-sm text-ink/70">{CAMPUS.toStation}.</p>
+          <ul className="text-sm text-ink/70 space-y-1.5 mt-1 border-t border-sand pt-2">
+            <li className="flex gap-2"><span className="text-bronze shrink-0">›</span>{CAMPUS.hub}</li>
+            <li className="flex gap-2"><span className="text-bronze shrink-0">›</span>{CAMPUS.rail}</li>
+            <li className="flex gap-2"><span className="text-bronze shrink-0">›</span>{CAMPUS.bus}</li>
+          </ul>
+        </div>
+        <div className="rounded-xl border border-sand bg-white p-5 space-y-2">
+          <div className="flex items-center justify-between">
+            <h2 className="serif text-2xl text-itq">Fees</h2>
+            <Flag kind="fact">2027 pricing</Flag>
+          </div>
+          <div className="space-y-2 mt-1">
+            {FEES.map((f) => (
+              <div key={f.label} className="flex items-baseline gap-3 border-b border-sand pb-2 last:border-0 last:pb-0">
+                <div className="serif text-xl text-itq tabular-nums w-20 shrink-0">{f.amount}</div>
+                <div>
+                  <div className="text-sm font-medium text-itq">{f.label}<span className="text-ink/50 font-normal"> · per year</span></div>
+                  <div className="text-sm text-ink/60">{f.detail}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-ink/50 pt-1">{FEES_NOTE}</p>
+        </div>
+      </section>
+
+      {/* Safety getting to campus */}
+      <section className="rounded-xl border border-sand bg-white p-5">
+        <div className="flex items-center justify-between gap-2 mb-1">
+          <h2 className="serif text-2xl text-itq">{CAMPUS_SAFETY.question}</h2>
+        </div>
+        <p className="text-sm text-ink/60 mb-3 max-w-3xl">
+          The short answer is yes — and here is the substance behind it: the facts that make the
+          commute low-risk, and the supervision discipline the school adds on top.
+        </p>
+        <ul className="grid md:grid-cols-2 gap-x-6 gap-y-2">
+          {CAMPUS_SAFETY.points.map((p) => (
+            <li key={p.point} className="flex items-start gap-2 text-sm text-ink/75">
+              <span className="mt-0.5">
+                <Flag kind={p.flag} />
+              </span>
+              <span>{p.point}</span>
+            </li>
+          ))}
+        </ul>
       </section>
 
       {/* Enrolment + Event */}

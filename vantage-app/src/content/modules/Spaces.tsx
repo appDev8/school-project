@@ -6,6 +6,7 @@ import {
   EXCURSION_PRINCIPLES,
   type StreamTag,
 } from '../data/spaces';
+import { CAMPUS } from '../data/vantage';
 import { Flag } from '../../components/Flag';
 
 // Stream tag → label + dot colour, reusing the app's stream vocabulary.
@@ -41,6 +42,17 @@ export default function Spaces() {
           <Flag kind="fact">benchmarks to NSW EFSG</Flag>
           <Flag kind="verify">all m² indicative — confirm against live EFSG Room Data Sheets</Flag>
           <Flag kind="plan">city partnerships to be negotiated</Flag>
+        </div>
+        <div className="rounded-xl border border-sand bg-sand/30 p-4 mt-2">
+          <div className="flex items-center justify-between gap-2">
+            <div className="text-[11px] uppercase tracking-widest text-bronze">Getting here</div>
+            <Flag kind="fact">Vantage facts</Flag>
+          </div>
+          <p className="text-sm text-itq font-medium mt-1">{CAMPUS.address}</p>
+          <p className="text-sm text-ink/70">
+            {CAMPUS.toStation}. {CAMPUS.rail} {CAMPUS.bus} Being in the CBD core is what makes the
+            “city as campus” practical — the institutions below are mostly within a walk or one stop.
+          </p>
         </div>
       </header>
 

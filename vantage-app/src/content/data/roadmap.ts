@@ -14,6 +14,8 @@ export interface Phase {
   window: string;
   intent: string;
   items: string[];
+  /** The concrete, production-ready artefacts this phase must ship. */
+  artefacts: string[];
   flag: FlagKind;
 }
 
@@ -25,11 +27,19 @@ export const ROADMAP_PHASES: Phase[] = [
     intent: 'Stand the school up: registrable, staffed, sited and full.',
     items: [
       'Open the NESA registration dossier (Section 47 evidence) on day one',
-      'Recruit the founding team in sequence — coaches and architects first',
-      'Secure the Parramatta site; brief an EFSG-benchmarked staged fit-out',
-      'Build the Manhal MVP — Stage 4 outcomes as CASE, gating + portfolio glue',
+      'Recruit the founding team in sequence — leadership first, then the four roles',
+      'Secure the Argyle Street site; brief an EFSG-benchmarked staged fit-out',
+      'Build the Manhal MVP — import Stage 4 outcomes as CASE, gating + portfolio glue',
       'Sign first MOUs with Parramatta anchors; build the mentor pipeline',
       'Run the enrolment campaign through the Talent Profile pipeline',
+    ],
+    artefacts: [
+      'NESA registration dossier (Section 47 evidence pack)',
+      'Manhal MVP — Stage 4 syllabus imported, gating live',
+      'Founding staffing plan + signed leadership contracts',
+      'EFSG-benchmarked fit-out brief for 27–31 Argyle Street',
+      'Partner MOUs + vetted Expert-in-Residence pipeline',
+      'Enrolment funnel: Talent Profile assessment → offers',
     ],
     flag: 'plan',
   },
@@ -40,9 +50,15 @@ export const ROADMAP_PHASES: Phase[] = [
     intent: 'Clear every gate before a single student walks in.',
     items: [
       'Confirm WWCC, child-safe induction and WHS for every adult on site',
-      'Two-week founding-team induction into the four roles and Manhal',
+      'Two-to-four-week founding-team induction into the four roles and Manhal',
       'Onboard the founding cohort; families meet their Murabbi',
       'Smoke-test systems: timetable, meal program, LRS evidence capture',
+    ],
+    artefacts: [
+      'Child-safe register: WWCC, inductions + WHS sign-off for every adult',
+      'Founding-team induction handbook (four roles + Manhal)',
+      'Year 7–8 timetable + Full Meal Program roster',
+      'LRS evidence-capture smoke-test report; family onboarding pack',
     ],
     flag: 'plan',
   },
@@ -57,6 +73,12 @@ export const ROADMAP_PHASES: Phase[] = [
       'First ’Amal Challenges shipped; Athar portfolios begin to fill',
       'Iterate Manhal from real evidence; tune mastery thresholds',
     ],
+    artefacts: [
+      'First ’Amal Challenges shipped across all three streams',
+      'Athar portfolios populated with xAPI-evidenced artefacts',
+      'Live role dashboards: student / coach / parent / leadership',
+      'Manhal v1 tuned from real mastery evidence',
+    ],
     flag: 'plan',
   },
   {
@@ -69,6 +91,12 @@ export const ROADMAP_PHASES: Phase[] = [
       'Activate the next studio cluster as the roll grows',
       'Expand the partnership roster; embed Experts in Residence',
       'Manhal graph widens to Stage 5 outcomes; gating deepens',
+    ],
+    artefacts: [
+      'Stage 5 outcomes imported; prerequisite gating deepened',
+      'Second studio cluster activated and fitted out',
+      'Expanded partner roster + a mastery-stage project library',
+      'Stream-specialisation pathways documented',
     ],
     flag: 'plan',
   },
@@ -83,6 +111,55 @@ export const ROADMAP_PHASES: Phase[] = [
       'Open Badges 3.0 issued at capstone — credentials that travel',
       'Approach the ~600-student endstate the building is sized for',
     ],
+    artefacts: [
+      'Impact-stage capstones delivered as ’Amal Challenges',
+      'First HSC + ATAR results; university-pathway report',
+      'Open Badges 3.0 issued at capstone',
+      'Whole-school evidence + accountability reporting pack',
+    ],
+    flag: 'plan',
+  },
+];
+
+// --- Recruitment & onboarding ramp -----------------------------------------
+// The time-phased hiring sequence, aligned to the phases above. Who comes in
+// when, and the running headcount it builds to. The full role model, salary
+// bands and skill profiles live in People & staffing; this is the timeline view.
+export interface HiringMilestone {
+  window: string;
+  hires: string;
+  cumulativeFte: number;
+  onboarding: string;
+  flag: FlagKind;
+}
+
+export const HIRING_SEQUENCE: HiringMilestone[] = [
+  {
+    window: 'Jul – Sep 2026',
+    hires: 'Head of School, Learning-design & curriculum lead, EdTech/Manhal lead',
+    cumulativeFte: 3,
+    onboarding: 'Governance + child-safe induction; leadership builds the spine the team will work against.',
+    flag: 'plan',
+  },
+  {
+    window: 'Oct – Dec 2026',
+    hires: 'Operations & business manager; open educator recruitment',
+    cumulativeFte: 5,
+    onboarding: 'Compliance, finance and enrolment systems stood up; offers issued to founding educators.',
+    flag: 'plan',
+  },
+  {
+    window: 'Jan 2027 — pre-term',
+    hires: 'The four educator roles, wellbeing, Islamic studies, learning support, meal-program',
+    cumulativeFte: 20.5,
+    onboarding: 'Whole founding team in for the 2–4 week induction: PBL 101, the four roles and Manhal.',
+    flag: 'plan',
+  },
+  {
+    window: '2028 – 2029',
+    hires: 'Stage 5 educators + a second cluster’s coaches as the roll grows',
+    cumulativeFte: 32,
+    onboarding: 'Returning staff coach new hires; the induction handbook becomes a living playbook.',
     flag: 'plan',
   },
 ];

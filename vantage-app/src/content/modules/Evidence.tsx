@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import {
   STANDARDS,
   MASTERY_PLATFORMS,
@@ -5,9 +6,19 @@ import {
   COMPARATORS,
   type Comparator,
 } from '../data/standards';
+import {
+  NESA_STAGE4_MATHS_SOURCE,
+  NESA_STRAND_ORDER,
+  type NesaStrand,
+} from '../data/manhal/nesaStage4Maths';
+import { importNesaOutcomes } from '../../lib/nesaImport';
 import { Flag } from '../../components/Flag';
 
 const CATEGORIES: Comparator['category'][] = ['School', 'NSW / Australia', 'University'];
+
+// Run the real importer at render — this is the live pipeline, not a mock.
+const IMPORT = importNesaOutcomes(NESA_STAGE4_MATHS_SOURCE);
+const NODE_BY_CODE = new Map(IMPORT.nodes.map((n) => [n.id, n]));
 
 export default function Evidence() {
   return (
@@ -25,6 +36,85 @@ export default function Evidence() {
           <Flag kind="verify">outcome figures are directional, not guarantees</Flag>
         </div>
       </header>
+
+      {/* Live NESA syllabus import */}
+      <section>
+        <h2 className="serif text-2xl text-itq mb-1">The NESA syllabus, imported live</h2>
+        <p className="text-sm text-ink/60 mb-4 max-w-3xl">
+          Manhal isn’t hand-typed outcome by outcome. A verified syllabus source feeds a pure
+          importer that emits CASE-wrapped graph nodes and prerequisite edges. The table below is
+          rendered straight from that importer running on the real Stage&nbsp;4 Mathematics
+          outcomes — re-import when NESA revises the syllabus and the graph refreshes itself.
+        </p>
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <Flag kind="nesa">{IMPORT.summary.total} real Stage-4 outcomes</Flag>
+          <Flag kind="fact">{IMPORT.summary.edges} prerequisite edges</Flag>
+          <Flag kind="plan">prerequisite order is Manhal’s design</Flag>
+        </div>
+
+        {/* the pipeline, named */}
+        <div className="rounded-xl border border-sand bg-sand/30 p-4 mb-4">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+            <code className="text-xs text-itq">nesaStage4Maths.ts</code>
+            <span className="text-bronze">→</span>
+            <code className="text-xs text-itq">importNesaOutcomes()</code>
+            <span className="text-bronze">→</span>
+            <span className="text-ink/70">CASE-wrapped OutcomeNode[] + GraphEdge[]</span>
+            <span className="text-bronze">→</span>
+            <span className="text-ink/70">graph + gating</span>
+          </div>
+          <p className="text-xs text-ink/50 mt-2">
+            {IMPORT.summary.framework}. Source codes and focus areas are verified NESA facts;
+            descriptors are short paraphrases (the full syllabus text is copyright).
+          </p>
+        </div>
+
+        <div className="overflow-hidden rounded-xl border border-sand bg-white">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-sand/60 text-left">
+                <th className="px-4 py-2.5 font-medium text-itq whitespace-nowrap">Outcome</th>
+                <th className="px-4 py-2.5 font-medium text-itq">Focus area</th>
+                <th className="px-4 py-2.5 font-medium text-itq">What it requires</th>
+                <th className="px-4 py-2.5 font-medium text-itq">Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              {NESA_STRAND_ORDER.map((strand: NesaStrand) => {
+                const inStrand = NESA_STAGE4_MATHS_SOURCE.outcomes.filter(
+                  (o) => o.strand === strand,
+                );
+                if (inStrand.length === 0) return null;
+                return (
+                  <FragmentRows key={strand} strand={strand} count={inStrand.length}>
+                    {inStrand.map((o) => {
+                      const node = NODE_BY_CODE.get(o.code);
+                      const nesa = node?.standards?.find((s) => s.framework === 'NESA');
+                      return (
+                        <tr key={o.code} className="border-t border-sand align-top">
+                          <td className="px-4 py-2.5 whitespace-nowrap">
+                            <code className="text-xs text-itq font-medium">{o.code}</code>
+                          </td>
+                          <td className="px-4 py-2.5 text-ink/80">{o.focusArea}</td>
+                          <td className="px-4 py-2.5 text-ink/60">{o.descriptor}</td>
+                          <td className="px-4 py-2.5">
+                            <Flag kind={nesa?.flag ?? 'nesa'} />
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </FragmentRows>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-xs text-ink/50 mt-2">
+          The interactive graph shows a curated, fully-authored 12-outcome slice; this importer
+          ingests the complete verified Stage-4 set. A test asserts every node in the demo graph
+          maps back to a real outcome here, so the two never drift apart.
+        </p>
+      </section>
 
       {/* Standards */}
       <section>
@@ -120,5 +210,30 @@ export default function Evidence() {
         </div>
       </section>
     </div>
+  );
+}
+
+// A strand sub-header row followed by its outcome rows (table-friendly fragment).
+function FragmentRows({
+  strand,
+  count,
+  children,
+}: {
+  strand: string;
+  count: number;
+  children: ReactNode;
+}) {
+  return (
+    <>
+      <tr className="bg-cream/70">
+        <td
+          colSpan={4}
+          className="px-4 py-1.5 text-[11px] uppercase tracking-widest text-bronze border-t border-sand"
+        >
+          {strand} · {count}
+        </td>
+      </tr>
+      {children}
+    </>
   );
 }
